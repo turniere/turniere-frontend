@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import "../style.css"
 
 class TournamentPage extends React.Component {
 
@@ -12,7 +13,7 @@ class TournamentPage extends React.Component {
                 <Head>
                     <title>Turnie.re - Turnieranzeige</title>
                 </Head>
-                <p>Turnieranzeige</p>
+                <p className="example">Turnieranzeige</p>
                 <p>Code: {this.props.query.code}</p>
             </div>
         );
