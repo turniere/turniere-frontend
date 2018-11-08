@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'Halt';
+    src: url('/static/fonts/Halt.ttf') format('truetype');
+}
+
+.big-image h1, .marketing h2, .custom-font {
+    font-family: Halt, sans-serif;
+}
+
+.navbar-brand {
+    font-family: Halt, sans-serif;
+    font-size: 2em;
+}
+
+.big-image {
+    background: url("/static/images/landingpage-background.jpg") no-repeat center;
+    background-size: cover;
+    padding: 3vw 5vw;
+    text-align: center;
+    color: white;
+    margin-bottom: 2em;
+}
+
+.big-image h1 {
+    font-size: 6em;
+    text-shadow: 0.1em 0.1em black;
+}
+
+body {
+    position: relative;
+    min-height: 100vh;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.border-fix {
+    border-top-left-radius: .25rem !important;
+    border-bottom-left-radius: .25rem !important;
+}
+
+main {
+    padding-bottom: 5em;
+}
