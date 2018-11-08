@@ -12,7 +12,7 @@ First of course you'll need to clone this repository:
 $ git clone https://github.com/turniere/turniere-frontend.git
 ```
 
-Afterwards you'll have to navigate into the created folder and install React aswell as Express with your pacakge manager:
+Afterwards you'll have to navigate into the created folder and install React, Next aswell as Express with your pacakge manager:
 
 ```
 $ yarn add --save react react-dom next express
