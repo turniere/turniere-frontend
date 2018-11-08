@@ -1,8 +1,12 @@
 import Link from 'next/link'
+import Head from 'next/head'
 
 const Index = (props) => {
     return (
         <div>
+            <Head>
+                <title>Turnie.re - Startseite</title>
+            </Head>
             <p>Dies ist die Startseite!</p>
             <ul>
                 <li><Link href="/privacy">Datenschutzerklärung</Link></li>
