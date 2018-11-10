@@ -1,29 +1,11 @@
 import Head from 'next/head'
 import React from 'react'
 
-import {
-    Button,
-    Navbar,
-    NavbarBrand,
-    NavbarToggler,
-    Collapse,
-    Nav,
-    NavItem, 
-    NavLink,
-    Badge,
-    ButtonGroup,
-    Alert,
-    Card,
-    CardBody
-} from 'reactstrap';
+import {Alert, Button, Card, CardBody} from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import {
-    BigImage,
-    Footer,
-    TurniereNavigation
-} from '../js/CommonComponents.js'
+import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js'
 
 import '../static/everypage.css'
 import '../static/css/index.css'
