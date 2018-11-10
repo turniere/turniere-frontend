@@ -1,13 +1,30 @@
 import Head from 'next/head'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react'
+
+import {
+    Button,
+    Navbar,
+    NavbarBrand,
+    NavbarToggler,
+    Collapse,
+    Nav,
+    NavItem, 
+    NavLink,
+    Badge,
+    ButtonGroup,
+    Alert,
+    Card,
+    CardBody
+} from 'reactstrap';
+
 import '../static/everypage.css'
 import '../static/css/index.css'
 
 const Index = (props) => {
     return (
         <div>
-            <Nav/>
-            <Bigimage text="Einfach Turniere organisieren"/>
+            <TurniereNavigation/>
+            <BigImage text="Einfach Turniere organisieren"/>
             <Main/>
             <Footer/>
         </div>
@@ -32,7 +49,7 @@ function Footer() {
     );
 }
 
-function Bigimage(props) {
+function BigImage(props) {
     return (
         <div className="big-image">
             <h1 className="display-1">{props.text}</h1>
@@ -40,58 +57,70 @@ function Bigimage(props) {
     );
 }
 
-function Nav() {
-    return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a className="navbar-brand" href="/">turnie.re</a>
-            <Betabadge/>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-                    aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"/>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <Navlink target="/create" text="Turnier erstellen"/>
-                    <Navlink target="/list" text="Öffentliche Turniere"/>
-                    <Navlink target="/faq" text="FAQ"/>
-                </ul>
+class TurniereNavigation extends React.Component {
 
-                <LoginLogoutButtons/>
-            </div>
-        </nav>
-    );
+    constructor(props) {
+        super(props);
+
+        this.toggle = this.toggle.bind(this);
+        this.state = {
+            collapsed: true
+        };
+    }
+
+    toggle() {
+        this.setState({
+            collapsed: !this.state.collapsed
+        });
+    }
+
+    render() {
+        return (
+            <Navbar color="light" light expand="lg">
+                <NavbarBrand href="/">turnie.re</NavbarBrand>
+                <Betabadge/>
+                <NavbarToggler onClick={this.toggle} />
+                <Collapse isOpen={!this.state.collapsed} navbar>
+                    <Nav navbar>
+                        <Navlink target="/create" text="Turnier erstellen"/>
+                        <Navlink target="/list" text="Öffentliche Turniere"/>
+                        <Navlink target="/faq" text="FAQ"/>
+                    </Nav>
+                    <LoginLogoutButtons/>
+                </Collapse>
+            </Navbar>
+        );
+    }
 }
 
 function Navlink(props) {
     return (
-        <li className="nav-item active">
-            <a className="nav-link" href={props.target}>{props.text}</a>
-        </li>
+        <NavItem>
+            <NavLink href={props.target}>{props.text}</NavLink>
+        </NavItem>
     );
 }
 
 function Betabadge() {
-    return <span className="badge badge-danger mr-2">BETA</span>;
+    return (<Badge color="danger">BETA</Badge>);
 }
 
 function LoginLogoutButtons() {
     return (
-        <div className="nav-item btn-group">
-            <a className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5" role="button"
-               href="/login">Login</a>
-            <a className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5" role="button"
-               href="/register">Registrieren</a>
-        </div>
+        <ButtonGroup className="nav-item">
+            <Button href="/login" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Login</Button>
+            <Button href="/register" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Registrieren</Button>
+        </ButtonGroup>
     );
 }
 
 function Main() {
     return (
-        <main>
+        <div>
             <Marketing/>
             <MainPromotedLinks/>
             <MainBottomSummary/>
-        </main>
+        </div>
     );
 }
 
@@ -132,14 +161,14 @@ function Marketing() {
 
 function Betawarning() {
     return (
-        <div className="alert alert-danger shadow-sm mt-4">
+        <Alert color="danger" className="shadow-sm mt-4">
             <h4 className="alert-heading custom-font">Public Beta</h4>
             <p>
                 Diese Website ist noch in der Entwicklung.<br/>
                 Bei Problemen fülle bitte <a href="#" id="bugLink" className="alert-link">dieses </a>
                 und für Feedback <a href="#" id="feedbackLink" className="alert-link">dieses</a> Formular aus.
             </p>
-        </div>
+        </Alert>
     );
 }
 
@@ -185,24 +214,27 @@ function MainPromotedLinks() {
 }
 
 function PromotedLinkTournamentCode() {
-    return (<div className="container card shadow-lg mt-3">
-        <div className="card-body row">
-            <form id="turniercode-form" className="col-lg-4" action="/t" method="get">
-                <input className="form-control" type="search" name="code" placeholder="Turnier-Code"/>
-                <button className="btn btn-outline-success w-100 my-2" type="submit">Turnier-Code öffnen</button>
-            </form>
-            <div className="col-lg-8">
-                <p>Gib hier einen Turnier Code ein, um direkt zum entsprechenden Turnier zu gelangen.</p>
-            </div>
-        </div>
-    </div>);
+    return (
+        <Card className="container shadow-lg mt-3">
+            <CardBody className="row">
+                <form id="turniercode-form" className="col-lg-4" action="/t" method="get">
+                    <input className="form-control" type="search" name="code" placeholder="Turnier-Code"/>
+                    <button className="btn btn-outline-success w-100 my-2" type="submit">Turnier-Code öffnen</button>
+                </form>
+                <div className="col-lg-8">
+                    <p>Gib hier einen Turnier Code ein, um direkt zum entsprechenden Turnier zu gelangen.</p>
+                </div>
+            </CardBody>
+        </Card>
+    );
 }
+
 function PromotedLinkListTournaments() {
     return (
-        <div className="container card shadow-lg my-4">
-            <div className="card-body row">
+        <Card className="container shadow-lg my-4">
+            <CardBody className="row">
                 <div className="col-lg-4 pb-3">
-                    <a className="btn btn-outline-success w-100" role="button" href="/list">Alle Turniere anzeigen</a>
+                    <Button outline color="success" className="w-100" href="/list">Alle Turniere anzeigen</Button>
                 </div>
                 <div className="col-lg-8">
                     <p>
@@ -214,13 +246,14 @@ function PromotedLinkListTournaments() {
                         Wenn du eingeloggt bist, findest du hier auch deine eigenen Turniere.
                     </p>
                 </div>
-            </div>
-        </div>
+            </CardBody>
+        </Card>
     );
 }
+
 function PromotedLinkCreateTournament() {
-    return (<div className="container card shadow-lg mb-3">
-        <div className="card-body row">
+    return (<Card className="container shadow-lg mb-3">
+        <CardBody className="row">
             <div className="col-lg-8">
                 <p>
                     <strong>Einfach ausprobieren:</strong> Einen Turnier-Namen, ein paar Team-Namen, und schon
@@ -229,10 +262,10 @@ function PromotedLinkCreateTournament() {
                 </p>
             </div>
             <div className="col-lg-4">
-                <a className="btn btn-success btn-lg w-100" role="button" href="/create">Turnier erstellen</a>
+                <Button color="success" size="lg" className="w-100" href="/create">Turnier erstellen</Button>
             </div>
-        </div>
-    </div>);
+        </CardBody>
+    </Card>);
 }
 
 export default () => (
