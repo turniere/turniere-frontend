@@ -10,17 +10,6 @@ import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js'
 import '../static/everypage.css'
 import '../static/css/index.css'
 
-const Index = (props) => {
-    return (
-        <div>
-            <TurniereNavigation/>
-            <BigImage text="Einfach Turniere organisieren"/>
-            <Main/>
-            <Footer/>
-        </div>
-    );
-};
-
 function Main() {
     return (
         <div className="main">
@@ -180,6 +169,9 @@ export default () => (
         <Head>
             <title>turnie.re</title>
         </Head>
-        <Index code="asdf1234"/>
+        <TurniereNavigation/>
+        <BigImage text="Einfach Turniere organisieren"/>
+        <Main/>
+        <Footer/>
     </div>
 );
