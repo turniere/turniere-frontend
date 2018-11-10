@@ -41,7 +41,7 @@ const Index = (props) => {
 
 function Main() {
     return (
-        <div>
+        <div className="main">
             <Marketing/>
             <MainPromotedLinks/>
             <MainBottomSummary/>
@@ -86,7 +86,7 @@ function Marketing() {
 
 function Betawarning() {
     return (
-        <Alert color="danger" className="shadow-sm mt-4">
+        <Alert color="danger" className="shadow-sm mt-4" fade={false}>
             <h4 className="alert-heading custom-font">Public Beta</h4>
             <p>
                 Diese Website ist noch in der Entwicklung.<br/>

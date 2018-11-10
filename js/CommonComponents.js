@@ -44,7 +44,7 @@ export class TurniereNavigation extends React.Component {
                 <Betabadge/>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={!this.state.collapsed} navbar>
-                    <Nav navbar>
+                    <Nav navbar className="mr-auto">
                         <Navlink target="/create" text="Turnier erstellen"/>
                         <Navlink target="/list" text="Öffentliche Turniere"/>
                         <Navlink target="/faq" text="FAQ"/>
@@ -58,14 +58,14 @@ export class TurniereNavigation extends React.Component {
 
 function Navlink(props) {
     return (
-        <NavItem>
+        <NavItem active={true}>
             <NavLink href={props.target}>{props.text}</NavLink>
         </NavItem>
     );
 }
 
 function Betabadge() {
-    return (<Badge color="danger">BETA</Badge>);
+    return (<Badge color="danger" className="mr-2">BETA</Badge>);
 }
 
 function LoginLogoutButtons() {
