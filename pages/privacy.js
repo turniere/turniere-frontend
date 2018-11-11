@@ -4,11 +4,10 @@ import {Container} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js'
 import '../static/everypage.css'
-import '../static/css/privacy.css'
 
 function Main() {
     return (
-        <div className="main">
+        <div className="main running-text">
             <PrivacyText/>
         </div>
     );

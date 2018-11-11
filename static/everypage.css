@@ -46,3 +46,19 @@ footer {
 .main {
     padding-bottom: 5em;
 }
+
+.running-text h2, .running-text h3, .running-text h4 {
+    font-family: Halt, sans-serif;
+}
+
+.running-text p {
+    text-align: justify;
+}
+
+.running-text h3 {
+    margin-top: 2em;
+}
+
+.running-text h4 {
+    margin-top: 1em;
+}
