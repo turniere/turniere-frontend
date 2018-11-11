@@ -26,8 +26,8 @@ function Login() {
                     <h1 className="custom-font">Login</h1>
                     <LoginForm/>
                     <div className="mt-3">
-                        <a href="#" className="mr-3">Account anlegen</a>
-                        <a href="#">Warum ist ein Account nötig?</a>
+                        <a href="/register" className="mr-3">Account anlegen</a>
+                        <a href="/register#account-requirement">Warum ist ein Account nötig?</a>
                     </div>
                 </CardBody>
             </Card>
@@ -46,7 +46,7 @@ function LoginForm() {
                 <Label for="password">Passwort</Label>
                 <Input type="password" name="password"/>
             </FormGroup>
-            <Button color="success" size="lg" className="w-100">Anmelden</Button>
+            <Button color="success" size="lg" className="w-100 shadow-sm">Anmelden</Button>
         </Form>
     );
 }
