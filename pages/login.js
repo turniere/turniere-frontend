@@ -1,10 +1,52 @@
 import Head from 'next/head'
+import '../static/everypage.css'
+import '../static/css/login.css'
+import {Footer, TurniereNavigation} from "../js/CommonComponents";
+import React from "react";
+import {Button, Card, CardBody, Container, Form, FormGroup, Input, Label} from "reactstrap";
 
 export default () => (
-    <div>
+    <div className="main stadium-bg">
         <Head>
-            <title>Turnie.re - Login</title>
+            <title>Login: turnie.re</title>
         </Head>
-        <p>Login</p>
+        <TurniereNavigation/>
+        <div>
+            <Login/>
+        </div>
+        <Footer/>
     </div>
 )
+
+function Login() {
+    return (
+        <Container className="py-5">
+            <Card className="shadow">
+                <CardBody>
+                    <h1 className="custom-font">Login</h1>
+                    <LoginForm/>
+                    <div className="mt-3">
+                        <a href="#" className="mr-3">Account anlegen</a>
+                        <a href="#">Warum ist ein Account nötig?</a>
+                    </div>
+                </CardBody>
+            </Card>
+        </Container>
+    );
+}
+
+function LoginForm() {
+    return (
+        <Form>
+            <FormGroup>
+                <Label for="username">E-Mail-Adresse</Label>
+                <Input type="email" name="username"/>
+            </FormGroup>
+            <FormGroup>
+                <Label for="password">Passwort</Label>
+                <Input type="password" name="password"/>
+            </FormGroup>
+            <Button color="success" size="lg" className="w-100">Anmelden</Button>
+        </Form>
+    );
+}
