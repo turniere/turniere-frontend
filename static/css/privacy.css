@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Halt';
+    src: url('/static/fonts/Halt.ttf') format('truetype');
+}
+
+.main h2, .main h3, .main h4 {
+    font-family: Halt, sans-serif;
+}
+
+.main p {
+    text-align: justify;
+}
+
+.main h3 {
+    margin-top: 2em;
+}
+
+.main h4 {
+    margin-top: 1em;
+}
