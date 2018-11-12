@@ -1,0 +1,9 @@
+.error-code-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-code-box h1 {
+    font-size: 10em;
+}
