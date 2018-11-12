@@ -47,7 +47,7 @@ footer {
     padding-bottom: 5em;
 }
 
-.running-text h2, .running-text h3, .running-text h4 {
+.running-text h1, .running-text h2, .running-text h3, .running-text h4 {
     font-family: Halt, sans-serif;
 }
 
