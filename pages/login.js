@@ -1,12 +1,11 @@
 import Head from 'next/head'
 import '../static/everypage.css'
-import '../static/css/login.css'
 import {Footer, TurniereNavigation} from "../js/CommonComponents";
 import React from "react";
 import {Button, Card, CardBody, Container, Form, FormGroup, Input, Label} from "reactstrap";
 
 export default () => (
-    <div className="main stadium-bg">
+    <div className="main generic-fullpage-bg">
         <Head>
             <title>Login: turnie.re</title>
         </Head>
