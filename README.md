@@ -12,10 +12,16 @@ First of course you'll need to clone this repository:
 $ git clone https://github.com/turniere/turniere-frontend.git
 ```
 
-Afterwards you'll have to navigate into the created folder and install React, Next, CSS-support for Next aswell as Express with your pacakge manager:
+Afterwards you'll have to navigate into the created folder and install several libraries using following command:
 
 ```
-$ yarn add react react-dom next express @zeit/next-css
+$ yarn add react react-dom reactstrap next express @zeit/next-css axios
+```
+
+Alternatively you can simply use our dependencies file:
+
+```
+yarn install
 ```
 
 Afterwards you may simply run the developer version of the project:
