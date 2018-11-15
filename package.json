@@ -21,5 +21,8 @@
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "reactstrap": "^6.5.0"
+  },
+  "devDependencies": {
+    "react-editable-list": "0.0.3"
   }
 }
