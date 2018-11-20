@@ -12,13 +12,7 @@ First of course you'll need to clone this repository:
 $ git clone https://github.com/turniere/turniere-frontend.git
 ```
 
-Afterwards you'll have to navigate into the created folder and install several libraries using following command:
-
-```
-$ yarn add react react-dom reactstrap next express @zeit/next-css axios
-```
-
-Alternatively you can simply use our dependencies file:
+Afterwards you'll have to install the used libraries using following command:
 
 ```
 yarn install
