@@ -5,10 +5,12 @@ import {Alert, Button, Card, CardBody} from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js'
+import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js'
 
 import '../static/everypage.css'
 import '../static/css/index.css'
+
+import { connect } from 'react-redux'
 
 function Main() {
     return (
@@ -164,14 +166,21 @@ function PromotedLinkCreateTournament() {
     </Card>);
 }
 
-export default () => (
-    <div>
-        <Head>
-            <title>turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <BigImage text="Einfach Turniere organisieren"/>
-        <Main/>
-        <Footer/>
-    </div>
-);
+
+class Index extends React.Component {
+    render () {
+        return (
+            <div>
+                <Head>
+                    <title>turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <BigImage text="Einfach Turniere organisieren"/>
+                <Main/>
+                <Footer/>
+            </div>
+        );
+    }
+}
+
+export default connect()(Index);
