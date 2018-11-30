@@ -17,6 +17,8 @@ const actiontypes_userinfo = {
     'LOGIN_RESULT_SUCCESS'      : 'LOGIN_RESULT_SUCCESS',
     'LOGIN_RESULT_ERROR'        : 'LOGIN_RESULT_ERROR',
 
+    'STORE_AUTH_HEADERS'        : 'STORE_AUTH_HEADERS',
+
     'REHYDRATE'                 : 'USERINFO_REHYDRATE',
 }
 
@@ -32,17 +34,78 @@ const defaultstate_userinfo = {
     uid : null
 }
 
+function postRequest(url, data) {
+    return axios.post(url, data, {
+        headers : generateHeaders()
+    });
+}
+
+function getRequest(url, data) {
+    return axios.get(url, data, {
+        headers : generateHeaders()
+    });
+}
+
+function deleteRequest(url, data) {
+    return axios.delete(url, data, {
+        headers : generateHeaders()
+    });
+}
+
+function generateHeaders() {
+    var userinfostate = __store.getState().userinfo;
+    if(userinfostate.isSignedIn) {
+        return {
+            'access-token' : userinfostate.accesstoken,
+            'client' : userinfostate.client,
+            'uid' : userinfostate.uid
+        };
+    } else {
+        return {};
+    }
+}
+
+function storeOptionalToken(response) {
+    if(checkForAuthenticationHeaders(response)) {
+        __store.dispatch({
+            type : actiontypes_userinfo.STORE_AUTH_HEADERS,
+            parameters : {
+                accesstoken : resp.headers['access-token'],
+                client : resp.headers['client'],
+                expiry : resp.headers['expiry'],
+                uid : resp.headers['uid']
+            }
+        })
+    }
+}
+
+function checkForAuthenticationHeaders(response) {
+    if(response.headers) {
+        const requiredHeaders = [
+            'access-token', 'client', 'uid', 'expiry', // TODO: Add last header that is required (I don't remember it right now lol) 
+        ];
+        for(var i = 0; i < requiredHeaders.length; i++) {
+            if(!response.headers[requiredHeaders[i]]) {
+                return false;
+            }
+        }
+        return false;
+    }
+    return false;
+}
+
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     switch(action.type) {
         case actiontypes_userinfo.REGISTER:
-            axios.post(api_url + '/users', {
+            postRequest(api_url + '/users', {
                 'username' : action.parameters.username,
                 'email' : action.parameters.email,
                 'password' : action.parameters.password
             }).then((resp) => {
                 __store.dispatch({
                     type : actiontypes_userinfo.REGISTER_RESULT_SUCCESS
-                })
+                });
+                storeOptionalToken(resp);
             }).catch((error) => {
                 if (error.response) {
                     __store.dispatch({
@@ -50,7 +113,8 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                         'parameters' : {
                             'errorMessages' : error.response.data.errors.full_messages
                         }
-                    })
+                    });
+                    storeOptionalToken(error.response);
                 } else {
                     __store.dispatch({
                         'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
@@ -74,33 +138,27 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 errorMessages : action.parameters.errorMessages
             });
         case actiontypes_userinfo.LOGIN:
-            axios.post(api_url + '/users/sign_in', {
+            postRequest(api_url + '/users/sign_in', {
                 email : action.parameters.email,
                 password : action.parameters.password
             }).then((resp) => {
-                console.log(resp);
                 __store.dispatch({
                     type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
                     parameters : {
                         username : resp.data.data.username,
-                        accesstoken : resp.headers['access-token'],
-                        client : resp.headers['client'],
-                        expiry : resp.headers['expiry'],
-                        uid : resp.headers['uid']
                     }
                 });
+                storeOptionalToken(resp);
             }).catch((error) => {
                 if(error.response) {
-                    console.log(error.response);
                     __store.dispatch({
                         'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
                         'parameters' : {
                             'errorMessages' : error.response.data.errors
                         }
-                    })
+                    });
+                    storeOptionalToken(error.response);
                 } else {
-                    console.log(error);
-                    console.log(errorMessages['login_errorunknown']['en']);
                     __store.dispatch({
                         'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
                         'parameters' : {
@@ -115,18 +173,19 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 isSignedIn : true,
                 error : false,
                 errorMessages : [],
-
                 username : action.parameters.username,
-
-                accesstoken : action.parameters.accesstoken,
-                client : action.parameters.client,
-                expiry : action.parameters.expiry,
-                uid : action.parameters.uid
             });
         case actiontypes_userinfo.LOGIN_RESULT_ERROR:
             return Object.assign({}, state, {
                 error : true,
                 errorMessages : action.parameters.errorMessages
+            });
+        case actiontypes_userinfo.STORE_AUTH_HEADERS:
+            return Object.assign({}, state, {
+                accesstoken : action.parameters.accesstoken,
+                client : action.parameters.client,
+                expiry : action.parameters.expiry,
+                uid : action.parameters.uid
             });
         case actiontypes_userinfo.REHYDRATE:
             return Object.assign({}, state, action.parameters);
@@ -158,6 +217,8 @@ export function initializeStore(initialState = default_applicationstate) {
 
 export function verifyCredentials() {
     rehydrateApplicationState();
+
+    // TODO: Actually perform a verification of the loaded credentials
 }
 
 export function register(username, email, password) {
