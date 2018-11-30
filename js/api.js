@@ -102,10 +102,10 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                     console.log(error);
                     console.log(errorMessages['login_errorunknown']['en']);
                     __store.dispatch({
-                        type : actiontypes_userinfo.LOGIN_RESULT_ERROR,
-                        parameters : [
-                            errorMessages['login_errorunknown']['en']
-                        ]
+                        'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
+                        'parameters' : {
+                            'errorMessages' : [ errorMessages['login_errorunknown']['en'] ]
+                        }
                     });
                 }
             });
