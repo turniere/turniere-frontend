@@ -17,7 +17,8 @@ const actiontypes_userinfo = {
     'LOGIN_RESULT_SUCCESS'      : 'LOGIN_RESULT_SUCCESS',
     'LOGIN_RESULT_ERROR'        : 'LOGIN_RESULT_ERROR',
 
-    'LOGOUT'                     : 'LOGOUT',
+    'LOGOUT'                    : 'LOGOUT',
+    'APPLY_SIGN_OUT'            : 'APPLY_SIGN_OUT',
 
     'STORE_AUTH_HEADERS'        : 'STORE_AUTH_HEADERS',
 
@@ -42,14 +43,14 @@ export function postRequest(state, url, data) {
     });
 }
 
-export function getRequest(state, url, data) {
-    return axios.get(api_url + url, data, {
+export function getRequest(state, url) {
+    return axios.get(api_url + url, {
         headers : generateHeaders(state)
     });
 }
 
-export function deleteRequest(state, url, data) {
-    return axios.delete(api_url + url, data, {
+export function deleteRequest(state, url) {
+    return axios.delete(api_url + url, {
         headers : generateHeaders(state)
     });
 }
@@ -71,10 +72,10 @@ function storeOptionalToken(response) {
         __store.dispatch({
             type : actiontypes_userinfo.STORE_AUTH_HEADERS,
             parameters : {
-                accesstoken : resp.headers['access-token'],
-                client : resp.headers['client'],
-                expiry : resp.headers['expiry'],
-                uid : resp.headers['uid']
+                accesstoken : response.headers['access-token'],
+                client : response.headers['client'],
+                expiry : response.headers['expiry'],
+                uid : response.headers['uid']
             }
         })
     }
@@ -90,7 +91,7 @@ function checkForAuthenticationHeaders(response) {
                 return false;
             }
         }
-        return false;
+        return true;
     }
     return false;
 }
@@ -183,23 +184,24 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             });
         
         case actiontypes_userinfo.LOGOUT:
-            deleteRequest(state, '/users/sign_out', {}).then((resp) => {
-
+            deleteRequest(state, '/users/sign_out').then((resp) => {
+                __store.dispatch({ type : actiontypes_userinfo.APPLY_SIGN_OUT });
             }).catch((error) => {
-
+                __store.dispatch({ type : actiontypes_userinfo.APPLY_SIGN_OUT });
             });
-            /*
+            return Object.assign({}, state, {});
+        case actiontypes_userinfo.APPLY_SIGN_OUT:
             return Object.assign({}, state, {
                 isSignedIn : false,
                 username : null,
+                error : false,
+                errorMessages : [],
 
                 accesstoken : null,
                 client : null,
                 expiry : null,
                 uid : null
             });
-            */
-
         case actiontypes_userinfo.STORE_AUTH_HEADERS:
             return Object.assign({}, state, {
                 accesstoken : action.parameters.accesstoken,
