@@ -17,6 +17,8 @@ const actiontypes_userinfo = {
     'LOGIN_RESULT_SUCCESS'      : 'LOGIN_RESULT_SUCCESS',
     'LOGIN_RESULT_ERROR'        : 'LOGIN_RESULT_ERROR',
 
+    'LOGOUT'                     : 'LOGOUT',
+
     'STORE_AUTH_HEADERS'        : 'STORE_AUTH_HEADERS',
 
     'REHYDRATE'                 : 'USERINFO_REHYDRATE',
@@ -34,31 +36,30 @@ const defaultstate_userinfo = {
     uid : null
 }
 
-export function postRequest(url, data) {
+export function postRequest(state, url, data) {
     return axios.post(api_url + url, data, {
-        headers : generateHeaders()
+        headers : generateHeaders(state)
     });
 }
 
-export function getRequest(url, data) {
+export function getRequest(state, url, data) {
     return axios.get(api_url + url, data, {
-        headers : generateHeaders()
+        headers : generateHeaders(state)
     });
 }
 
-export function deleteRequest(url, data) {
+export function deleteRequest(state, url, data) {
     return axios.delete(api_url + url, data, {
-        headers : generateHeaders()
+        headers : generateHeaders(state)
     });
 }
 
-function generateHeaders() {
-    var userinfostate = __store.getState().userinfo;
-    if(userinfostate.isSignedIn) {
+function generateHeaders(state) {
+    if(state.isSignedIn) {
         return {
-            'access-token' : userinfostate.accesstoken,
-            'client' : userinfostate.client,
-            'uid' : userinfostate.uid
+            'access-token' : state.accesstoken,
+            'client' : state.client,
+            'uid' : state.uid
         };
     } else {
         return {};
@@ -81,6 +82,9 @@ function storeOptionalToken(response) {
 
 function checkForAuthenticationHeaders(response) {
     if(response.headers) {
+
+        console.log(response);
+
         const requiredHeaders = [
             'access-token', 'client', 'uid', 'expiry', // TODO: Add last header that is required (I don't remember it right now lol) 
         ];
@@ -97,7 +101,7 @@ function checkForAuthenticationHeaders(response) {
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     switch(action.type) {
         case actiontypes_userinfo.REGISTER:
-            postRequest('/users', {
+            postRequest(state, '/users', {
                 'username' : action.parameters.username,
                 'email' : action.parameters.email,
                 'password' : action.parameters.password
@@ -138,7 +142,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 errorMessages : action.parameters.errorMessages
             });
         case actiontypes_userinfo.LOGIN:
-            postRequest('/users/sign_in', {
+            postRequest(state, '/users/sign_in', {
                 email : action.parameters.email,
                 password : action.parameters.password
             }).then((resp) => {
@@ -180,7 +184,20 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 error : true,
                 errorMessages : action.parameters.errorMessages
             });
+        
+        case actiontypes_userinfo.LOGOUT:
+            return Object.assign({}, state, {
+                isSignedIn : false,
+                username : null,
+
+                accesstoken : null,
+                client : null,
+                expiry : null,
+                uid : null
+            });
+
         case actiontypes_userinfo.STORE_AUTH_HEADERS:
+            console.log("Token has been stored.");
             return Object.assign({}, state, {
                 accesstoken : action.parameters.accesstoken,
                 client : action.parameters.client,
@@ -240,6 +257,10 @@ export function login(email, password) {
             password: password
         }
     })
+}
+
+export function logout() {
+    __store.dispatch({ type : actiontypes_userinfo.LOGOUT });
 }
 
 export function getState() {
