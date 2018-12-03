@@ -34,20 +34,20 @@ const defaultstate_userinfo = {
     uid : null
 }
 
-function postRequest(url, data) {
-    return axios.post(url, data, {
+export function postRequest(url, data) {
+    return axios.post(api_url + url, data, {
         headers : generateHeaders()
     });
 }
 
-function getRequest(url, data) {
-    return axios.get(url, data, {
+export function getRequest(url, data) {
+    return axios.get(api_url + url, data, {
         headers : generateHeaders()
     });
 }
 
-function deleteRequest(url, data) {
-    return axios.delete(url, data, {
+export function deleteRequest(url, data) {
+    return axios.delete(api_url + url, data, {
         headers : generateHeaders()
     });
 }
@@ -97,7 +97,7 @@ function checkForAuthenticationHeaders(response) {
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     switch(action.type) {
         case actiontypes_userinfo.REGISTER:
-            postRequest(api_url + '/users', {
+            postRequest('/users', {
                 'username' : action.parameters.username,
                 'email' : action.parameters.email,
                 'password' : action.parameters.password
@@ -138,7 +138,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 errorMessages : action.parameters.errorMessages
             });
         case actiontypes_userinfo.LOGIN:
-            postRequest(api_url + '/users/sign_in', {
+            postRequest('/users/sign_in', {
                 email : action.parameters.email,
                 password : action.parameters.password
             }).then((resp) => {
