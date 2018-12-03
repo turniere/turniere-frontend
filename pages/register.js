@@ -4,6 +4,7 @@ import {Footer, TurniereNavigation} from "../js/CommonComponents";
 import React from "react";
 import {Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label} from "reactstrap";
 import { register } from '../js/api'
+import { connect } from 'react-redux'
 
 export default () => (
     <div className="main generic-fullpage-bg">
@@ -35,6 +36,41 @@ function Register() {
     );
 }
 
+class RegisterErrorList extends React.Component {
+
+    render() {
+        const { error, errorMessages } = this.props;
+        if(error) {
+            return (
+                <ul>
+                    { errorMessages.map((message, index) => 
+                        <li key={index}>
+                            <style jsx>{`
+                                li {
+                                    color:red;
+                                }
+                            `}</style>
+                            {message}
+                        </li>
+
+                    ) }
+                </ul>
+            );
+        } else {
+            return null;
+        }
+    }
+}
+
+const mapStateToErrorMessages = (state) => {
+    const { errorMessages, error } = state.userinfo;
+    return { errorMessages, error }
+};
+
+const VisibleRegisterErrorList = connect(
+    mapStateToErrorMessages
+)(RegisterErrorList);
+
 class RegisterForm extends React.Component {
 
     constructor(props) {
@@ -45,16 +81,6 @@ class RegisterForm extends React.Component {
             email : '',
             password : ''
         };
-    }
-
-    handleRegisterClick(state) {
-        const { username, email, password } = state;
-
-        console.log(state);
-
-        console.log(username);
-        console.log(email);
-        console.log(password);
     }
 
     render() {
@@ -78,7 +104,8 @@ class RegisterForm extends React.Component {
                 <FormText className="mb-2 mt-4">
                     Du akzeptierst die <a href="/privacy">Datenschutzbestimmungen</a>, wenn du auf Registrieren klickst.
                 </FormText>
-                <Button onClick={ this.handleRegisterClick.bind(this.state) /* register.bind(this.state.username, this.state.email, this.state.password) */ } color="success" size="lg" className="w-100 shadow-sm">Registrieren</Button>
+                <Button onClick={ register.bind(this, this.state.username, this.state.email, this.state.password) } color="success" size="lg" className="w-100 shadow-sm">Registrieren</Button>
+                <VisibleRegisterErrorList/>
             </Form>
         );
     }
