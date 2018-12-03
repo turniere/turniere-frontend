@@ -9,20 +9,24 @@ const api_url = 'https://api.turnie.re';
 
 
 const actiontypes_userinfo = {
-    'REGISTER'                  : 'REGISTER',
-    'REGISTER_RESULT_SUCCESS'   : 'REGISTER_RESULT_SUCCESS',
-    'REGISTER_RESULT_ERROR'     : 'REGISTER_RESULT_ERROR',
+    'REGISTER'                     : 'REGISTER',
+    'REGISTER_RESULT_SUCCESS'      : 'REGISTER_RESULT_SUCCESS',
+    'REGISTER_RESULT_ERROR'        : 'REGISTER_RESULT_ERROR',
 
-    'LOGIN'                     : 'LOGIN',
-    'LOGIN_RESULT_SUCCESS'      : 'LOGIN_RESULT_SUCCESS',
-    'LOGIN_RESULT_ERROR'        : 'LOGIN_RESULT_ERROR',
+    'LOGIN'                        : 'LOGIN',
+    'LOGIN_RESULT_SUCCESS'         : 'LOGIN_RESULT_SUCCESS',
+    'LOGIN_RESULT_ERROR'           : 'LOGIN_RESULT_ERROR',
+ 
+    'LOGOUT'                       : 'LOGOUT',
 
-    'LOGOUT'                    : 'LOGOUT',
-    'APPLY_SIGN_OUT'            : 'APPLY_SIGN_OUT',
+    'VERIFY_CREDENTIALS'           : 'VERIFY_CREDENTIALS',
+    'VERIFY_CREDENTIALS_SUCCESS'   : 'VERIFY_CREDENTIALS_SUCCESS',
+    'VERIFY_CREDENTIALS_ERROR'     : 'VERIFY_CREDENTIALS_ERROR',
 
-    'STORE_AUTH_HEADERS'        : 'STORE_AUTH_HEADERS',
+    'STORE_AUTH_HEADERS'           : 'STORE_AUTH_HEADERS',
 
-    'REHYDRATE'                 : 'USERINFO_REHYDRATE',
+    'REHYDRATE'                    : 'USERINFO_REHYDRATE',
+    'CLEAR'                        : 'USERINFO_CLEAR',
 }
 
 const defaultstate_userinfo = {
@@ -185,12 +189,30 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
         
         case actiontypes_userinfo.LOGOUT:
             deleteRequest(state, '/users/sign_out').then((resp) => {
-                __store.dispatch({ type : actiontypes_userinfo.APPLY_SIGN_OUT });
+                __store.dispatch({ type : actiontypes_userinfo.CLEAR });
             }).catch((error) => {
-                __store.dispatch({ type : actiontypes_userinfo.APPLY_SIGN_OUT });
+                __store.dispatch({ type : actiontypes_userinfo.CLEAR });
             });
             return Object.assign({}, state, {});
-        case actiontypes_userinfo.APPLY_SIGN_OUT:
+        case actiontypes_userinfo.STORE_AUTH_HEADERS:
+            return Object.assign({}, state, {
+                accesstoken : action.parameters.accesstoken,
+                client : action.parameters.client,
+                expiry : action.parameters.expiry,
+                uid : action.parameters.uid
+            });
+        
+        case actiontypes_userinfo.VERIFY_CREDENTIALS:
+            getRequest(state, '/users/validate_token').then((resp) => {
+                storeOptionalToken(resp);
+            }).catch((error) => {
+                __store.dispatch({ type: actiontypes_userinfo.CLEAR });
+            });
+            return Object.assign({}, state, {});
+
+        case actiontypes_userinfo.REHYDRATE:
+            return Object.assign({}, state, action.parameters);
+        case actiontypes_userinfo.CLEAR:
             return Object.assign({}, state, {
                 isSignedIn : false,
                 username : null,
@@ -202,15 +224,6 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 expiry : null,
                 uid : null
             });
-        case actiontypes_userinfo.STORE_AUTH_HEADERS:
-            return Object.assign({}, state, {
-                accesstoken : action.parameters.accesstoken,
-                client : action.parameters.client,
-                expiry : action.parameters.expiry,
-                uid : action.parameters.uid
-            });
-        case actiontypes_userinfo.REHYDRATE:
-            return Object.assign({}, state, action.parameters);
         default: return state;
     }
 }
@@ -240,7 +253,9 @@ export function initializeStore(initialState = default_applicationstate) {
 export function verifyCredentials() {
     rehydrateApplicationState();
 
-    // TODO: Actually perform a verification of the loaded credentials
+    if(__store.getState().userinfo.isSignedIn) {
+        __store.dispatch({ type: actiontypes_userinfo.VERIFY_CREDENTIALS });
+    }
 }
 
 export function register(username, email, password) {
