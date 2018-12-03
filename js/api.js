@@ -82,11 +82,8 @@ function storeOptionalToken(response) {
 
 function checkForAuthenticationHeaders(response) {
     if(response.headers) {
-
-        console.log(response);
-
         const requiredHeaders = [
-            'access-token', 'client', 'uid', 'expiry', // TODO: Add last header that is required (I don't remember it right now lol) 
+            'access-token', 'client', 'uid', 'expiry'
         ];
         for(var i = 0; i < requiredHeaders.length; i++) {
             if(!response.headers[requiredHeaders[i]]) {
@@ -186,6 +183,12 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             });
         
         case actiontypes_userinfo.LOGOUT:
+            deleteRequest(state, '/users/sign_out', {}).then((resp) => {
+
+            }).catch((error) => {
+
+            });
+            /*
             return Object.assign({}, state, {
                 isSignedIn : false,
                 username : null,
@@ -195,9 +198,9 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 expiry : null,
                 uid : null
             });
+            */
 
         case actiontypes_userinfo.STORE_AUTH_HEADERS:
-            console.log("Token has been stored.");
             return Object.assign({}, state, {
                 accesstoken : action.parameters.accesstoken,
                 client : action.parameters.client,
