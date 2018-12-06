@@ -27,6 +27,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "eslint": "^5.9.0",
     "react-editable-list": "0.0.3"
   }
 }
