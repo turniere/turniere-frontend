@@ -1,12 +1,11 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import thunkMiddleware from 'redux-thunk'
-import { errorMessages } from './constants'
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunkMiddleware from 'redux-thunk';
+import { errorMessages } from './constants';
 
 const axios = require('axios');
 
 const api_url = 'https://api.turnie.re';
-
 
 const actiontypes_userinfo = {
     'REGISTER'                     : 'REGISTER',
@@ -27,7 +26,7 @@ const actiontypes_userinfo = {
 
     'REHYDRATE'                    : 'USERINFO_REHYDRATE',
     'CLEAR'                        : 'USERINFO_CLEAR',
-}
+};
 
 const defaultstate_userinfo = {
     isSignedIn : false,
@@ -39,7 +38,7 @@ const defaultstate_userinfo = {
     client : null,
     expiry : null,
     uid : null
-}
+};
 
 export function postRequest(state, url, data) {
     return axios.post(api_url + url, data, {
@@ -81,7 +80,7 @@ function storeOptionalToken(response) {
                 expiry : response.headers['expiry'],
                 uid : response.headers['uid']
             }
-        })
+        });
     }
 }
 
@@ -102,139 +101,136 @@ function checkForAuthenticationHeaders(response) {
 
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     switch(action.type) {
-        case actiontypes_userinfo.REGISTER:
-            postRequest(state, '/users', {
-                'username' : action.parameters.username,
-                'email' : action.parameters.email,
-                'password' : action.parameters.password
-            }).then((resp) => {
+    case actiontypes_userinfo.REGISTER:
+        postRequest(state, '/users', {
+            'username' : action.parameters.username,
+            'email' : action.parameters.email,
+            'password' : action.parameters.password
+        }).then((resp) => {
+            __store.dispatch({
+                type : actiontypes_userinfo.REGISTER_RESULT_SUCCESS
+            });
+            storeOptionalToken(resp);
+        }).catch((error) => {
+            if (error.response) {
                 __store.dispatch({
-                    type : actiontypes_userinfo.REGISTER_RESULT_SUCCESS
-                });
-                storeOptionalToken(resp);
-            }).catch((error) => {
-                if (error.response) {
-                    __store.dispatch({
-                        'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
-                        'parameters' : {
-                            'errorMessages' : error.response.data.errors.full_messages
-                        }
-                    });
-                    storeOptionalToken(error.response);
-                } else {
-                    __store.dispatch({
-                        'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
-                        'parameters' : {
-                            'errorMessages' : [
-                                errorMessages['registration_errorunknown']['en']
-                            ]
-                        }
-                    })
-                }
-            });
-            return Object.assign({}, state, {});
-        case actiontypes_userinfo.REGISTER_RESULT_SUCCESS:
-            return Object.assign({}, state, {
-                error : false,
-                errorMessages : []
-            });
-        case actiontypes_userinfo.REGISTER_RESULT_ERROR:
-            return Object.assign({}, state, {
-                error : true,
-                errorMessages : action.parameters.errorMessages
-            });
-        case actiontypes_userinfo.LOGIN:
-            postRequest(state, '/users/sign_in', {
-                email : action.parameters.email,
-                password : action.parameters.password
-            }).then((resp) => {
-                __store.dispatch({
-                    type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
-                    parameters : {
-                        username : resp.data.data.username,
+                    'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
+                    'parameters' : {
+                        'errorMessages' : error.response.data.errors.full_messages
                     }
                 });
-                storeOptionalToken(resp);
-            }).catch((error) => {
-                if(error.response) {
-                    __store.dispatch({
-                        'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
-                        'parameters' : {
-                            'errorMessages' : error.response.data.errors
-                        }
-                    });
-                    storeOptionalToken(error.response);
-                } else {
-                    __store.dispatch({
-                        'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
-                        'parameters' : {
-                            'errorMessages' : [ errorMessages['login_errorunknown']['en'] ]
-                        }
-                    });
+                storeOptionalToken(error.response);
+            } else {
+                __store.dispatch({
+                    'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
+                    'parameters' : {
+                        'errorMessages' : [
+                            errorMessages['registration_errorunknown']['en']
+                        ]
+                    }
+                });
+            }
+        });
+        return Object.assign({}, state, {});
+    case actiontypes_userinfo.REGISTER_RESULT_SUCCESS:
+        return Object.assign({}, state, {
+            error : false,
+            errorMessages : []
+        });
+    case actiontypes_userinfo.REGISTER_RESULT_ERROR:
+        return Object.assign({}, state, {
+            error : true,
+            errorMessages : action.parameters.errorMessages
+        });
+    case actiontypes_userinfo.LOGIN:
+        postRequest(state, '/users/sign_in', {
+            email : action.parameters.email,
+            password : action.parameters.password
+        }).then((resp) => {
+            __store.dispatch({
+                type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
+                parameters : {
+                    username : resp.data.data.username,
                 }
             });
-            return Object.assign({}, state, {});
-        case actiontypes_userinfo.LOGIN_RESULT_SUCCESS:
-            return Object.assign({}, state, {
-                isSignedIn : true,
-                error : false,
-                errorMessages : [],
-                username : action.parameters.username,
-            });
-        case actiontypes_userinfo.LOGIN_RESULT_ERROR:
-            return Object.assign({}, state, {
-                error : true,
-                errorMessages : action.parameters.errorMessages
-            });
-        
-        case actiontypes_userinfo.LOGOUT:
-            deleteRequest(state, '/users/sign_out').then((resp) => {
-                __store.dispatch({ type : actiontypes_userinfo.CLEAR });
-            }).catch((error) => {
-                __store.dispatch({ type : actiontypes_userinfo.CLEAR });
-            });
-            return Object.assign({}, state, {});
-        case actiontypes_userinfo.STORE_AUTH_HEADERS:
-            return Object.assign({}, state, {
-                accesstoken : action.parameters.accesstoken,
-                client : action.parameters.client,
-                expiry : action.parameters.expiry,
-                uid : action.parameters.uid
-            });
-        
-        case actiontypes_userinfo.VERIFY_CREDENTIALS:
-            getRequest(state, '/users/validate_token').then((resp) => {
-                storeOptionalToken(resp);
-            }).catch((error) => {
-                __store.dispatch({ type: actiontypes_userinfo.CLEAR });
-            });
-            return Object.assign({}, state, {});
+            storeOptionalToken(resp);
+        }).catch((error) => {
+            if(error.response) {
+                __store.dispatch({
+                    'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
+                    'parameters' : {
+                        'errorMessages' : error.response.data.errors
+                    }
+                });
+                storeOptionalToken(error.response);
+            } else {
+                __store.dispatch({
+                    'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
+                    'parameters' : {
+                        'errorMessages' : [ errorMessages['login_errorunknown']['en'] ]
+                    }
+                });
+            }
+        });
+        return Object.assign({}, state, {});
+    case actiontypes_userinfo.LOGIN_RESULT_SUCCESS:
+        return Object.assign({}, state, {
+            isSignedIn : true,
+            error : false,
+            errorMessages : [],
+            username : action.parameters.username,
+        });
+    case actiontypes_userinfo.LOGIN_RESULT_ERROR:
+        return Object.assign({}, state, {
+            error : true,
+            errorMessages : action.parameters.errorMessages
+        });
+    case actiontypes_userinfo.LOGOUT:
+        deleteRequest(state, '/users/sign_out').then(() => {
+            __store.dispatch({ type : actiontypes_userinfo.CLEAR });
+        }).catch(() => {
+            __store.dispatch({ type : actiontypes_userinfo.CLEAR });
+        });
+        return Object.assign({}, state, {});
+    case actiontypes_userinfo.STORE_AUTH_HEADERS:
+        return Object.assign({}, state, {
+            accesstoken : action.parameters.accesstoken,
+            client : action.parameters.client,
+            expiry : action.parameters.expiry,
+            uid : action.parameters.uid
+        });
+    case actiontypes_userinfo.VERIFY_CREDENTIALS:
+        getRequest(state, '/users/validate_token').then((resp) => {
+            storeOptionalToken(resp);
+        }).catch(() => {
+            __store.dispatch({ type: actiontypes_userinfo.CLEAR });
+        });
+        return Object.assign({}, state, {});
+    case actiontypes_userinfo.REHYDRATE:
+        return Object.assign({}, state, action.parameters);
+    case actiontypes_userinfo.CLEAR:
+        return Object.assign({}, state, {
+            isSignedIn : false,
+            username : null,
+            error : false,
+            errorMessages : [],
 
-        case actiontypes_userinfo.REHYDRATE:
-            return Object.assign({}, state, action.parameters);
-        case actiontypes_userinfo.CLEAR:
-            return Object.assign({}, state, {
-                isSignedIn : false,
-                username : null,
-                error : false,
-                errorMessages : [],
-
-                accesstoken : null,
-                client : null,
-                expiry : null,
-                uid : null
-            });
-        default: return state;
+            accesstoken : null,
+            client : null,
+            expiry : null,
+            uid : null
+        });
+    default: return state;
     }
-}
+};
 
 const reducers = {
     userinfo: reducer_userinfo
-}
+};
 
 const default_applicationstate = {
     userinfo : defaultstate_userinfo
-}
+};
 
 var __store;
 
@@ -245,7 +241,7 @@ export function initializeStore(initialState = default_applicationstate) {
         composeWithDevTools(applyMiddleware(thunkMiddleware))
     );
     __store.subscribe(() => {
-        localStorage.setItem('reduxState', JSON.stringify(__store.getState()))
+        localStorage.setItem('reduxState', JSON.stringify(__store.getState()));
     });
     return __store;
 }
@@ -276,7 +272,7 @@ export function login(email, password) {
             email: email,
             password: password
         }
-    })
+    });
 }
 
 export function logout() {
