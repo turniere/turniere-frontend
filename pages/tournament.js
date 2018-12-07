@@ -75,15 +75,9 @@ class Match extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isHovered: false,
             modal: false
         };
-        this.handleHover = this.handleHover.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
-    }
-
-    handleHover() {
-        this.setState({isHovered: !this.state.isHovered});
     }
 
     toggleModal() {
@@ -128,8 +122,7 @@ class Match extends React.Component {
         }
         return (
             <div className='mb-3'>
-                <Card className={(this.state.isHovered ? 'shadow' : 'shadow-sm')} onMouseEnter={this.handleHover}
-                      onMouseLeave={this.handleHover} onClick={this.toggleModal}>
+                <Card className='shadow-sm match' onClick={this.toggleModal}>
                     <CardBody className={'border py-2 ' + cardClass}>
                         <MatchTable match={this.props.match}/>
                     </CardBody>
