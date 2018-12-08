@@ -5,7 +5,7 @@ import {
     Card,
     CardBody,
     Col,
-    Container,
+    Container, Input, InputGroup, InputGroupAddon,
     ListGroup,
     ListGroupItem,
     Modal,
@@ -136,10 +136,12 @@ class Match extends React.Component {
 
 function MatchModal(props) {
     let title;
+    let actionButton = '';
     //possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
     switch (props.match.state) {
         case 'in_progress':
             title = 'Spiel läuft';
+            actionButton = <Button color='primary' onClick={props.toggle}>Spiel beenden</Button>
             break;
         case 'team1_won':
             title = 'Spiel beendet';
@@ -155,6 +157,7 @@ function MatchModal(props) {
             break;
         case 'not_started':
             title = 'Spiel kann gestartet werden';
+            actionButton = <Button color='primary' onClick={props.toggle}>Spiel starten</Button>;
             break;
         case 'undecided':
             title = 'Spiel beendet';
@@ -164,11 +167,11 @@ function MatchModal(props) {
         <Modal isOpen={props.isOpen} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>{title}</ModalHeader>
             <ModalBody>
-                <MatchTable match={props.match}/>
+                {props.match.state === 'in_progress' ? <EditableMatchTable match={props.match}/> :
+                    <MatchTable match={props.match}/>}
             </ModalBody>
             <ModalFooter>
-                {props.match.state === 'not_started' ?
-                    <Button color='primary' onClick={props.toggle}>Spiel Starten</Button> : ''}{' '}
+                {actionButton}
                 <Button color='secondary' onClick={props.toggle}>Abbrechen</Button>
             </ModalFooter>
         </Modal>
@@ -215,6 +218,57 @@ function MatchTable(props) {
             </tbody>
         </Table>
     )
+}
+
+function EditableMatchTable(props) {
+    return (
+        <Table className='mb-0'>
+            <tbody>
+            <tr>
+                <td className='scoreInput border-top-0'>
+                    <ScoreInput score={props.match.scoreTeam1}/>
+                </td>
+                <td className='align-middle border-top-0'>{props.match.team1}</td>
+            </tr>
+            <tr>
+                <td className='scoreInput'>
+                    <ScoreInput score={props.match.scoreTeam2}/>
+                </td>
+                <td className='align-middle'>{props.match.team2}</td>
+            </tr>
+            </tbody>
+        </Table>
+    )
+}
+
+class ScoreInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {score: this.props.score};
+        this.updateScore = this.updateScore.bind(this);
+        this.increaseScore = this.increaseScore.bind(this);
+        this.decreaseScore = this.decreaseScore.bind(this);
+    }
+
+    updateScore(event){
+        this.setState({score: event.target.value});
+    }
+
+    increaseScore(){
+        this.setState({score: Number(this.state.score) + 1});
+    }
+
+    decreaseScore(){
+        this.setState({score: Number(this.state.score) - 1});
+    }
+
+    render() {
+        return (<InputGroup>
+            <InputGroupAddon addonType="prepend"><Button onClick={this.decreaseScore} color='danger' outline={true}>-1</Button></InputGroupAddon>
+            <Input className='font-weight-bold' value={this.state.score} onChange={this.updateScore} type='number' step='1' placeholder='0'/>
+            <InputGroupAddon addonType="append"><Button onClick={this.increaseScore} color='success'>+1</Button></InputGroupAddon>
+        </InputGroup>);
+    }
 }
 
 

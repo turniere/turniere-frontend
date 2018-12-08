@@ -22,3 +22,7 @@
     border-width: 3px !important;
     margin: -2px;
 }
+
+.scoreInput {
+    width: 11rem;
+}
