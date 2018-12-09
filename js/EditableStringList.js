@@ -1,5 +1,5 @@
-import React from "react";
-import {Alert, Button, Input, InputGroup, InputGroupAddon} from "reactstrap";
+import React from 'react';
+import { Alert, Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 
 export default class EditableStringList extends React.Component {
     constructor(props) {
@@ -31,17 +31,14 @@ export default class EditableStringList extends React.Component {
         if ((typeof this.state.entries !== 'undefined') && this.state.entries.length > 0) {
             return (
                 <div className="bg-light p-3 text-secondary font-italic">
-                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder}
-                                 addButtonText={this.props.addButtonText}/>
-                    {this.state.entries.map((text) => <Item text={text} key={text}
-                                                            removeItem={this.remove}/>)}
+                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
+                    {this.state.entries.map((text) => <Item text={text} key={text} removeItem={this.remove}/>)}
                 </div>
             );
         } else {
             return (
                 <div className="bg-light p-3 text-secondary text-center font-italic">
-                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder}
-                                 addButtonText={this.props.addButtonText}/>
+                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
                     {this.props.placeholder}
                 </div>
             );
@@ -64,8 +61,7 @@ class StringInput extends React.Component {
     render() {
         return (
             <InputGroup className="mb-3">
-                <Input placeholder={this.props.placeholder} type="text" size="255" value={this.state.value} required
-                       onChange={this.handleChange} onKeyPress={(e) => {
+                <Input placeholder={this.props.placeholder} type="text" size="255" value={this.state.value} required onChange={this.handleChange} onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                         this.submit();
                         return false;
@@ -73,10 +69,10 @@ class StringInput extends React.Component {
                 }}/>
                 <InputGroupAddon addonType="append">
                     <Button color="success" outline={true}
-                            onClick={(e) => this.submit()}>{this.props.addButtonText}</Button>
+                        onClick={() => this.submit()}>{this.props.addButtonText}</Button>
                 </InputGroupAddon>
             </InputGroup>
-        )
+        );
     }
 
     submit() {

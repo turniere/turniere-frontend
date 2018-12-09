@@ -1,10 +1,10 @@
-import Head from 'next/head'
-import '../static/everypage.css'
-import {Footer, TurniereNavigation} from "../js/CommonComponents";
-import React from "react";
-import {Button, Card, CardBody, Container, Form, FormGroup, Input, Label} from "reactstrap";
-import { login } from '../js/api'
-import { connect } from 'react-redux'
+import Head from 'next/head';
+import '../static/everypage.css';
+import {Footer, TurniereNavigation} from '../js/CommonComponents';
+import React from 'react';
+import { Button, Card, CardBody, Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { login } from '../js/api';
+import { connect } from 'react-redux';
 
 export default () => (
     <div className="main generic-fullpage-bg">
@@ -17,7 +17,7 @@ export default () => (
         </div>
         <Footer/>
     </div>
-)
+);
 
 function Login() {
     return (
@@ -37,7 +37,6 @@ function Login() {
 }
 
 class LoginErrorList extends React.Component {
-
     render() {
         const { error, errorMessages } = this.props;
         if(error) {
@@ -64,7 +63,7 @@ class LoginErrorList extends React.Component {
 
 const mapStateToErrorMessages = (state) => {
     const { errorMessages, error } = state.userinfo;
-    return { errorMessages, error }
+    return { errorMessages, error };
 };
 
 const VisibleLoginErrorList = connect(

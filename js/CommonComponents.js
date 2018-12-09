@@ -11,11 +11,11 @@ import {
     NavLink
 } from 'reactstrap';
 
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
-import React from "react";
+import React from 'react';
 
-import { logout } from './api'
+import { logout } from './api';
 
 export function BigImage(props) {
     return (
@@ -77,7 +77,7 @@ function Betabadge() {
 class InvisibleLoginLogoutButtons extends React.Component {
 
     render() {
-        const { isSignedIn, username } = this.props
+        const { isSignedIn, username } = this.props;
 
         if(isSignedIn) {
             return (
@@ -100,12 +100,12 @@ class InvisibleLoginLogoutButtons extends React.Component {
 
 const mapStateToLoginLogoutButtonProperties = (state) => {
     const { isSignedIn, username } = state.userinfo;
-    return { isSignedIn, username }
-}
+    return { isSignedIn, username };
+};
 
 const LoginLogoutButtons = connect(
     mapStateToLoginLogoutButtonProperties
-)(InvisibleLoginLogoutButtons)
+)(InvisibleLoginLogoutButtons);
 
 export function Footer() {
     return (
