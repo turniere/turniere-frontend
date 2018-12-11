@@ -1,15 +1,15 @@
-import Head from 'next/head'
-import React from 'react'
-import {Footer, TurniereNavigation} from "../js/CommonComponents";
+import Head from 'next/head';
+import React from 'react';
+import {Footer, TurniereNavigation} from '../js/CommonComponents';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container} from "reactstrap";
-import '../static/everypage.css'
-import '../static/css/error.css'
+import {Container} from 'reactstrap';
+import '../static/everypage.css';
+import '../static/css/error.css';
 
 export default class Error extends React.Component {
     static getInitialProps({ res, err }) {
         const statusCode = res ? res.statusCode : err ? err.statusCode : 400;
-        return { statusCode }
+        return { statusCode };
     }
 
     render() {
@@ -22,7 +22,7 @@ export default class Error extends React.Component {
                 <ErrorPage statusCode={this.props.statusCode}/>
                 <Footer/>
             </div>
-        )
+        );
     }
 }
 
@@ -44,43 +44,43 @@ function ErrorPage(props){
 
 function ErrorMessage(props) {
     switch (props.code) {
-        case 400:
-            return (<div className="running-text">
-                <h2>Deine Anfrage ist fehlerhaft.</h2>
-                <p>
-                    Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
-                </p>
-            </div>);
-        case 403:
-            return (<div className="running-text">
-                <h2>Du bist nicht autorisiert, diese Seite aufzurufen.</h2>
-                <p>
-                    Bitte stelle sicher, dass Du angemeldet bist und auf dieses Turnier oder dieses Match zugreifen darfst.
-                </p>
-                <p>
-                    Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
-                </p>
-            </div>);
-        case 404:
-            return (<div className="running-text">
-                <h2>Die aufgerufene Seite wurde leider nicht gefunden.</h2>
-                <p>
-                    Entweder hast Du dich vertippt, oder die gesuchte Seite gibt es nicht.
-                </p>
-                <p>
-                    Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
-                </p>
-            </div>);
-        case 500:
-            return (<div className="running-text">
-                <h2>Diese Seite funktioniert nicht.</h2>
-                <p>
-                    turnie.re kann Deine Anfrage im Moment nicht verarbeiten. Bitte versuche es später erneut.
-                </p>
-            </div>);
-        default:
-            return (<div>
-                <h2>Ein unbekannter Fehler ist aufgetreten.</h2>
-            </div>);
+    case 400:
+        return (<div className="running-text">
+            <h2>Deine Anfrage ist fehlerhaft.</h2>
+            <p>
+                Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
+            </p>
+        </div>);
+    case 403:
+        return (<div className="running-text">
+            <h2>Du bist nicht autorisiert, diese Seite aufzurufen.</h2>
+            <p>
+                Bitte stelle sicher, dass Du angemeldet bist und auf dieses Turnier oder dieses Match zugreifen darfst.
+            </p>
+            <p>
+                Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
+            </p>
+        </div>);
+    case 404:
+        return (<div className="running-text">
+            <h2>Die aufgerufene Seite wurde leider nicht gefunden.</h2>
+            <p>
+                Entweder hast Du dich vertippt, oder die gesuchte Seite gibt es nicht.
+            </p>
+            <p>
+                Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
+            </p>
+        </div>);
+    case 500:
+        return (<div className="running-text">
+            <h2>Diese Seite funktioniert nicht.</h2>
+            <p>
+                turnie.re kann Deine Anfrage im Moment nicht verarbeiten. Bitte versuche es später erneut.
+            </p>
+        </div>);
+    default:
+        return (<div>
+            <h2>Ein unbekannter Fehler ist aufgetreten.</h2>
+        </div>);
     }
 }

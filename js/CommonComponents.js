@@ -10,7 +10,12 @@ import {
     NavItem,
     NavLink
 } from 'reactstrap';
-import React from "react";
+
+import { connect } from 'react-redux';
+
+import React from 'react';
+
+import { logout } from './api';
 
 export function BigImage(props) {
     return (
@@ -26,6 +31,7 @@ export class TurniereNavigation extends React.Component {
         super(props);
 
         this.toggle = this.toggle.bind(this);
+
         this.state = {
             collapsed: true
         };
@@ -68,14 +74,38 @@ function Betabadge() {
     return (<Badge color="danger" className="mr-2">BETA</Badge>);
 }
 
-function LoginLogoutButtons() {
-    return (
-        <ButtonGroup className="nav-item">
-            <Button href="/login" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Login</Button>
-            <Button href="/register" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Registrieren</Button>
-        </ButtonGroup>
-    );
+class InvisibleLoginLogoutButtons extends React.Component {
+
+    render() {
+        const { isSignedIn, username } = this.props;
+
+        if(isSignedIn) {
+            return (
+                <ButtonGroup className="nav-item">
+                    <Button href="/profile" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">{ username }</Button>
+                    <Button onClick={logout.bind(this)} className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Logout</Button>
+                </ButtonGroup>
+            );
+        } else {
+            return (
+                <ButtonGroup className="nav-item">
+                    <Button href="/login" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Login</Button>
+                    <Button href="/register" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Registrieren</Button>
+                </ButtonGroup>
+            );
+        }
+    }
+
 }
+
+const mapStateToLoginLogoutButtonProperties = (state) => {
+    const { isSignedIn, username } = state.userinfo;
+    return { isSignedIn, username };
+};
+
+const LoginLogoutButtons = connect(
+    mapStateToLoginLogoutButtonProperties
+)(InvisibleLoginLogoutButtons);
 
 export function Footer() {
     return (

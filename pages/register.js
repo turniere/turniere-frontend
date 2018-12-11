@@ -1,8 +1,10 @@
-import Head from 'next/head'
-import '../static/everypage.css'
-import {Footer, TurniereNavigation} from "../js/CommonComponents";
-import React from "react";
-import {Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label} from "reactstrap";
+import Head from 'next/head';
+import '../static/everypage.css';
+import {Footer, TurniereNavigation} from '../js/CommonComponents';
+import React from 'react';
+import { Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label } from 'reactstrap';
+import { register } from '../js/api';
+import { connect } from 'react-redux';
 
 export default () => (
     <div className="main generic-fullpage-bg">
@@ -16,7 +18,7 @@ export default () => (
         </div>
         <Footer/>
     </div>
-)
+);
 
 function Register() {
     return (
@@ -34,30 +36,90 @@ function Register() {
     );
 }
 
-function RegisterForm() {
-    return (
-        <Form>
-            <FormGroup>
-                <Label for="username">Benutzername</Label>
-                <Input name="username"/>
-                <FormText>Wenn du anderen dein Turnier zeigst, können sie deinen Benutzernamen sehen.</FormText>
-            </FormGroup>
-            <FormGroup>
-                <Label for="email">E-Mail-Adresse</Label>
-                <Input type="email" name="email"/>
-                <FormText>Deine E-Mail-Adresse kann nur von dir gesehen werden.</FormText>
-            </FormGroup>
-            <FormGroup>
-                <Label for="password">Passwort</Label>
-                <Input type="password" name="password"/>
-                <FormText>Dein Passwort muss mindestens 12 Zeichen lang sein. Alle Zeichen sind erlaubt.</FormText>
-            </FormGroup>
-            <FormText className="mb-2 mt-4">
-                Du akzeptierst die <a href="/privacy">Datenschutzbestimmungen</a>, wenn du auf Registrieren klickst.
-            </FormText>
-            <Button color="success" size="lg" className="w-100 shadow-sm">Registrieren</Button>
-        </Form>
-    );
+class RegisterErrorList extends React.Component {
+    render() {
+        const { error, errorMessages } = this.props;
+        if(error) {
+            return (
+                <ul>
+                    { errorMessages.map((message, index) => 
+                        <li key={index}>
+                            <style jsx>{`
+                                li {
+                                    color:red;
+                                }
+                            `}</style>
+                            {message}
+                        </li>
+
+                    ) }
+                </ul>
+            );
+        } else {
+            return null;
+        }
+    }
+}
+
+const mapStateToErrorMessages = (state) => {
+    const { errorMessages, error } = state.userinfo;
+    return { errorMessages, error };
+};
+
+const VisibleRegisterErrorList = connect(
+    mapStateToErrorMessages
+)(RegisterErrorList);
+
+class RegisterForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            username : '',
+            email : '',
+            password : ''
+        };
+    }
+
+    render() {
+        return (
+            <Form>
+                <FormGroup>
+                    <Label for="username">Benutzername</Label>
+                    <Input name="username" value={this.state.username} onChange={ this.handleUsernameInput.bind(this) } />
+                    <FormText>Wenn du anderen dein Turnier zeigst, können sie deinen Benutzernamen sehen.</FormText>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="email">E-Mail-Adresse</Label>
+                    <Input type="email" name="email" value={this.state.email} onChange={ this.handleEmailInput.bind(this) } />
+                    <FormText>Deine E-Mail-Adresse kann nur von dir gesehen werden.</FormText>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="password">Passwort</Label>
+                    <Input type="password" name="password" value={this.state.password} onChange={ this.handlePasswordInput.bind(this) } />
+                    <FormText>Dein Passwort muss mindestens 12 Zeichen lang sein. Alle Zeichen sind erlaubt.</FormText>
+                </FormGroup>
+                <FormText className="mb-2 mt-4">
+                    Du akzeptierst die <a href="/privacy">Datenschutzbestimmungen</a>, wenn du auf Registrieren klickst.
+                </FormText>
+                <Button onClick={ register.bind(this, this.state.username, this.state.email, this.state.password) } color="success" size="lg" className="w-100 shadow-sm">Registrieren</Button>
+                <VisibleRegisterErrorList/>
+            </Form>
+        );
+    }
+
+    handlePasswordInput(input) {
+        this.setState({ password : input.target.value });
+    }
+
+    handleEmailInput(input) {
+        this.setState({ email : input.target.value });
+    }
+
+    handleUsernameInput(input) {
+        this.setState({ username : input.target.value });
+    }
 }
 
 function AccountRequirementMarketing() {

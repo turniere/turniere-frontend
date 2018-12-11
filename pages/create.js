@@ -1,9 +1,22 @@
-import Head from 'next/head'
-import '../static/everypage.css'
-import {Footer, TurniereNavigation} from "../js/CommonComponents";
-import React from "react";
-import {Button, Card, CardBody, Container, CustomInput, Fade, Form, FormGroup, Input, Label} from "reactstrap";
-import EditableStringList from "../js/EditableStringList";
+import Head from 'next/head';
+import '../static/everypage.css';
+import { Footer, TurniereNavigation } from '../js/CommonComponents';
+import React from 'react';
+
+import {
+    Button,
+    Card,
+    CardBody,
+    Container,
+    CustomInput,
+    Fade,
+    Form,
+    FormGroup,
+    Input,
+    Label
+} from 'reactstrap';
+
+import EditableStringList from '../js/EditableStringList';
 
 export default () => (
     <div className="main generic-fullpage-bg">
@@ -16,7 +29,7 @@ export default () => (
         </div>
         <Footer/>
     </div>
-)
+);
 
 function CreateTournamentCard() {
     return (
@@ -53,12 +66,12 @@ class CreateTournamentForm extends React.Component {
                     </FormGroup>
                     <FormGroup>
                         <CustomInput type="checkbox" id="public"
-                                     label="Turnier öffentlich anzeigen (schreibgeschützt)"/>
+                            label="Turnier öffentlich anzeigen (schreibgeschützt)"/>
                         <CustomInput type="checkbox" id="mix-teams" label="Teams mischen"/>
                         <CustomInput type="checkbox" id="group-phase" label="Gruppenphase" onClick={this.toggle}/>
                     </FormGroup>
                     <Fade in={this.state.fadeIn} tag="div" className="mt-3" baseClass="d-none"
-                          baseClassActive="d-block">
+                        baseClassActive="d-block">
                         <FormGroup>
                             <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
                             <Input type="number" name="teams-per-group" size="255"/>
@@ -72,7 +85,7 @@ class CreateTournamentForm extends React.Component {
                 </Form>
                 <h3 className="custom-font mt-4">Teams</h3>
                 <EditableStringList addButtonText="hinzufügen" placeholder="Keine Teams hinzugefügt!" entries={[]}
-                                    onChange={this.teamListUpdate} inputPlaceholder="Teamname"/>
+                    onChange={this.teamListUpdate} inputPlaceholder="Teamname"/>
                 <Button color="success" size="lg" className="w-100 shadow-sm mt-4">Turnier erstellen</Button>
             </div>
         );
