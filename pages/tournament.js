@@ -26,7 +26,7 @@ import {getRequest} from '../js/api';
 
 function Tournament(props) {
     return (
-        <div>
+        <div className='pb-5'>
             <Container>
                 <a href='edit' className='btn btn-outline-secondary'>Turnier bearbeiten</a>
                 <p>{props.tournament.description}</p>
@@ -90,28 +90,32 @@ class Match extends React.Component {
     }
 
     render() {
-        let cardClass, team1Class, team2Class, smallMessage;
+        let cardClass, team1Class, team2Class, smallMessage, borderClass;
         //possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
         switch (this.props.match.state) {
             case 'in_progress':
-                cardClass = 'table-warning border-warning';
+                cardClass = 'table-warning';
+                borderClass = 'border-warning';
                 smallMessage = 'Spiel läuft';
                 break;
             case 'team1_won':
                 team1Class = 'font-weight-bold';
                 team2Class = 'lost-team';
-                cardClass = 'table-success border-success';
+                cardClass = 'table-success';
+                borderClass = 'border-success';
                 smallMessage = 'Gewinner: ' + this.props.match.team1;
                 break;
             case 'team2_won':
                 team1Class = 'lost-team';
                 team2Class = 'font-weight-bold';
-                cardClass = 'table-success border-success';
+                cardClass = 'table-success';
+                borderClass = 'border-success';
                 smallMessage = 'Gewinner: ' + this.props.match.team2;
                 break;
             case 'single_team':
                 team2Class = 'text-muted';
-                cardClass = 'table-success border-success';
+                cardClass = 'table-success';
+                borderClass = 'border-success';
                 smallMessage = 'kein Gegner, Team kommt weiter';
                 break;
             case 'not_ready':
@@ -121,15 +125,16 @@ class Match extends React.Component {
                 smallMessage = 'Spiel kann gestartet werden';
                 break;
             case 'undecided':
-                cardClass = 'table-success border-success';
+                cardClass = 'table-success';
+                borderClass = 'border-success';
                 smallMessage = 'Spiel beendet, unentschieden';
                 break;
         }
         return (
             <div className='mb-3'>
                 <Card className='shadow-sm match' onClick={this.toggleModal}>
-                    <CardBody className={'border py-2 ' + cardClass}>
-                        <MatchTable match={this.props.match}/>
+                    <CardBody className={borderClass + ' border py-2 ' + cardClass}>
+                        <MatchTable match={this.props.match} borderColor={borderClass}/>
                     </CardBody>
                 </Card>
                 <small className='text-muted'>{smallMessage}</small>
@@ -215,7 +220,7 @@ function MatchTable(props) {
                     <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
                 </tr>
                 <tr>
-                    <td className={team2Class}>kein Gegner</td>
+                    <td className={props.borderColor + ' ' + team2Class}>kein Gegner</td>
                 </tr>
                 </tbody>
             </Table>
@@ -229,8 +234,8 @@ function MatchTable(props) {
                     <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
                 </tr>
                 <tr>
-                    <th className='stage'>{props.match.scoreTeam2}</th>
-                    <td className={team2Class}>{props.match.team2}</td>
+                    <th className={'stage ' + props.borderColor}>{props.match.scoreTeam2}</th>
+                    <td className={props.borderColor + ' ' + team2Class}>{props.match.team2}</td>
                 </tr>
                 </tbody>
             </Table>
