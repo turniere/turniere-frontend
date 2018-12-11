@@ -145,7 +145,7 @@ function MatchModal(props) {
     switch (props.match.state) {
         case 'in_progress':
             title = 'Spiel läuft';
-            actionButton = <Button color='primary' onClick={props.toggle}>Spiel beenden</Button>
+            actionButton = <Button color='primary' onClick={props.toggle}>Spiel beenden</Button>;
             break;
         case 'team1_won':
             title = 'Spiel beendet';
@@ -206,22 +206,35 @@ function MatchTable(props) {
         case 'undecided':
             break;
     }
-    return (
-        <Table className='mb-0'>
-            <tbody>
-            <tr>
-                {props.match.state !== 'single_team' ?
-                    <th className='stage border-top-0'>{props.match.scoreTeam1}</th> : ''}
-                <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
-            </tr>
-            <tr>
-                {props.match.state !== 'single_team' ?
-                    <th className='stage'>{props.match.scoreTeam2}</th> : ''}
-                <td className={team2Class}>{props.match.state === 'single_team' ? 'kein Gegner' : props.match.team2}</td>
-            </tr>
-            </tbody>
-        </Table>
-    )
+    if(props.match.state === 'single_team'){
+        return (
+            <Table className='mb-0'>
+                <tbody>
+                <tr>
+                    <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
+                </tr>
+                <tr>
+                    <td className={team2Class}>kein Gegner</td>
+                </tr>
+                </tbody>
+            </Table>
+        )
+    }else{
+        return (
+            <Table className='mb-0'>
+                <tbody>
+                <tr>
+                    <th className='stage border-top-0'>{props.match.scoreTeam1}</th>
+                    <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
+                </tr>
+                <tr>
+                    <th className='stage'>{props.match.scoreTeam2}</th>
+                    <td className={team2Class}>{props.match.team2}</td>
+                </tr>
+                </tbody>
+            </Table>
+        )
+    }
 }
 
 function EditableMatchTable(props) {
