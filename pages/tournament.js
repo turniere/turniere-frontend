@@ -22,14 +22,15 @@ import '../static/css/tournament.css'
 import {getRequest} from '../js/api';
 
 function Tournament(props) {
-    let matches = [
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'in_progress'},
-        {scoreTeam1: 3, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'team1_won'},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 3, team2: 'Zwei', state: 'team2_won'},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'single_team'},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'not_ready'},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'not_started'},
-        {scoreTeam1: 2, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'undecided'}];
+    let demoMatches = [
+        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'in_progress', id: 0},
+        {scoreTeam1: 3, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'team1_won', id: 1},
+        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 3, team2: 'Zwei', state: 'team2_won', id: 2},
+        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'single_team', id: 3},
+        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'not_ready', id: 4},
+        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'not_started', id: 5},
+        {scoreTeam1: 2, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'undecided', id: 6}];
+    let stages = [{level: 0, matches: demoMatches}, {level: 1, matches: demoMatches}];
     return (
         <div>
             <Container>
@@ -43,11 +44,19 @@ function Tournament(props) {
                 </ListGroup>
             </Container>
             <div className='stages pt-5'>
-                <Stage level={'Viertelfinale'} matches={matches}/>
-                <Stage level={'Achtelfinale'} matches={matches}/>
+                {stages.map(stage => <Stage level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
             </div>
         </div>
     );
+}
+
+function getLevelName(levelNumber) {
+    const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
+    if(levelNumber < names.length){
+        return names[levelNumber]
+    }else {
+        return Math.pow(2, levelNumber) + 'tel-Finale'
+    }
 }
 
 function TournamentContainer(props) {
@@ -64,7 +73,7 @@ function Stage(props) {
             <h1 className='custom-font'>{props.level}</h1>
             <Row>
                 {props.matches.map((match => (
-                    <Col className='minw-25'><Match match={match}/></Col>
+                    <Col className='minw-25' key={match.id}><Match match={match}/></Col>
                 )))}
             </Row>
         </Container>
