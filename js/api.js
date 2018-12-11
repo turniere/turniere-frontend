@@ -59,11 +59,11 @@ export function deleteRequest(state, url) {
 }
 
 function generateHeaders(state) {
-    if(state.isSignedIn) {
+    if(state.userinfo.isSignedIn) {
         return {
-            'access-token' : state.accesstoken,
-            'client' : state.client,
-            'uid' : state.uid
+            'access-token' : state.userinfo.accesstoken,
+            'client' : state.userinfo.client,
+            'uid' : state.userinfo.uid
         };
     } else {
         return {};
@@ -102,7 +102,7 @@ function checkForAuthenticationHeaders(response) {
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     switch(action.type) {
     case actiontypes_userinfo.REGISTER:
-        postRequest(state, '/users', {
+        postRequest(action.state, '/users', {
             'username' : action.parameters.username,
             'email' : action.parameters.email,
             'password' : action.parameters.password
@@ -143,7 +143,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             errorMessages : action.parameters.errorMessages
         });
     case actiontypes_userinfo.LOGIN:
-        postRequest(state, '/users/sign_in', {
+        postRequest(action.state, '/users/sign_in', {
             email : action.parameters.email,
             password : action.parameters.password
         }).then((resp) => {
@@ -186,7 +186,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             errorMessages : action.parameters.errorMessages
         });
     case actiontypes_userinfo.LOGOUT:
-        deleteRequest(state, '/users/sign_out').then(() => {
+        deleteRequest(action.state, '/users/sign_out').then(() => {
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
         }).catch(() => {
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
@@ -200,7 +200,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             uid : action.parameters.uid
         });
     case actiontypes_userinfo.VERIFY_CREDENTIALS:
-        getRequest(state, '/users/validate_token').then((resp) => {
+        getRequest(action.state, '/users/validate_token').then((resp) => {
             storeOptionalToken(resp);
         }).catch(() => {
             __store.dispatch({ type: actiontypes_userinfo.CLEAR });
@@ -250,7 +250,10 @@ export function verifyCredentials() {
     rehydrateApplicationState();
 
     if(__store.getState().userinfo.isSignedIn) {
-        __store.dispatch({ type: actiontypes_userinfo.VERIFY_CREDENTIALS });
+        __store.dispatch({
+            type: actiontypes_userinfo.VERIFY_CREDENTIALS,
+            state: __store.getState()
+        });
     }
 }
 
@@ -261,7 +264,8 @@ export function register(username, email, password) {
             username: username,
             email: email,
             password: password
-        }
+        },
+        state: __store.getState()
     });
 }
 
@@ -271,16 +275,16 @@ export function login(email, password) {
         parameters: {
             email: email,
             password: password
-        }
+        },
+        state: __store.getState()
     });
 }
 
 export function logout() {
-    __store.dispatch({ type : actiontypes_userinfo.LOGOUT });
-}
-
-export function getState() {
-    return __store.getState();
+    __store.dispatch({
+        type : actiontypes_userinfo.LOGOUT,
+        state: __store.getState()
+    });
 }
 
 function rehydrateApplicationState() {
