@@ -35,6 +35,7 @@ function Tournament(props) {
                         {props.tournament.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
                     </ListGroupItem>
                     <ListGroupItem>Turnier-Code: <b>{props.tournament.code}</b></ListGroupItem>
+                    <ListGroupItem>von <b>{props.tournament.ownerUsername}</b></ListGroupItem>
                 </ListGroup>
             </Container>
             <div className='stages pt-5'>
@@ -310,6 +311,7 @@ function convertTournament(apiTournament) {
         description: apiTournament.description,
         name: apiTournament.name,
         public: apiTournament.public,
+        ownerUsername: apiTournament.owner_username,
         groupStage: groupStage,
         playoffStages: playoffStages
     };
