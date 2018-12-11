@@ -5,7 +5,10 @@ import {
     Card,
     CardBody,
     Col,
-    Container, Input, InputGroup, InputGroupAddon,
+    Container,
+    Input,
+    InputGroup,
+    InputGroupAddon,
     ListGroup,
     ListGroupItem,
     Modal,
@@ -22,15 +25,6 @@ import '../static/css/tournament.css'
 import {getRequest} from '../js/api';
 
 function Tournament(props) {
-    let demoMatches = [
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'in_progress', id: 0},
-        {scoreTeam1: 3, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'team1_won', id: 1},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 3, team2: 'Zwei', state: 'team2_won', id: 2},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'single_team', id: 3},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'not_ready', id: 4},
-        {scoreTeam1: 1, team1: 'Eins', scoreTeam2: 0, team2: 'Zwei', state: 'not_started', id: 5},
-        {scoreTeam1: 2, team1: 'Eins', scoreTeam2: 2, team2: 'Zwei', state: 'undecided', id: 6}];
-    let stages = [{level: 0, matches: demoMatches}, {level: 1, matches: demoMatches}];
     return (
         <div>
             <Container>
@@ -44,7 +38,8 @@ function Tournament(props) {
                 </ListGroup>
             </Container>
             <div className='stages pt-5'>
-                {stages.map(stage => <Stage level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
+                {props.tournament.playoffStages.map(stage =>
+                    <Stage level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
             </div>
         </div>
     );
@@ -280,6 +275,52 @@ class ScoreInput extends React.Component {
     }
 }
 
+function convertTournament(apiTournament) {
+    let groupStage = null;
+    let playoffStages = [];
+    for (let stage of apiTournament.stages) {
+        if(stage.groups.length > 0){
+            //group stage
+            groupStage = {groups: stage.groups.map(group => convertGroup(group))};
+        }else{
+            //playoff stage
+            playoffStages.push({
+                id: stage.id,
+                level: stage.level,
+                matches: stage.matches.map(match => convertMatch(match))
+            })
+        }
+    }
+    return {
+        id: apiTournament.id,
+        code: apiTournament.code,
+        description: apiTournament.description,
+        name: apiTournament.name,
+        public: apiTournament.public,
+        groupStage: groupStage,
+        playoffStages: playoffStages
+    };
+}
+
+function convertGroup(apiGroup) {
+    return {
+        id: apiGroup.id,
+        number: apiGroup.number,
+        scores: apiGroup.group_scores,
+        matches: apiGroup.matches.map(match => convertMatch(match))
+    }
+}
+
+function convertMatch(apiMatch) {
+    return {
+        id: apiMatch.id,
+        state: apiMatch.state,
+        team1: apiMatch.match_scores[0].team.name,
+        team2: apiMatch.match_scores[1].team.name,
+        scoreTeam1: apiMatch.match_scores[0].points,
+        scoreTeam2: apiMatch.match_scores[1].points
+    }
+}
 
 class Main extends React.Component {
     constructor(props) {
@@ -287,18 +328,7 @@ class Main extends React.Component {
         const code = this.props.query.code;
         getRequest('/tournaments/' + code, {})
             .then(response => {
-                const attributes = response.data.data.attributes;
-                const relationships = response.data.data.relationships;
-                this.setState({
-                    tournament: {
-                        name: attributes.name,
-                        code: attributes.code,
-                        description: attributes.description,
-                        isPublic: attributes.public,
-                        teams: relationships.teams.data.map(team => team.id),
-                        stages: relationships.stages.data.map(stage => stage.id)
-                    }
-                });
+                this.setState({tournament: convertTournament(response.data)});
             })
             .catch(error => console.log(error));
     }
@@ -317,7 +347,6 @@ class Main extends React.Component {
                 <TurniereNavigation/>
                 <BigImage text={tournamentName}/>
                 <TournamentContainer data={this.state}/>
-                {JSON.stringify(this.state)}
                 <Footer/>
             </div>
         );
