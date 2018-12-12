@@ -146,19 +146,19 @@ class EditTournamentForm extends React.Component {
             <div>
                 <div className="form-group">
                     <label htmlFor="name">Turnier-Name</label>
-                    <input className="form-control" type="text" name="name" id="name" value={ name } placeholder={ name } onChange={ this.handleNameInput.bind(this) } />
+                    <input className="form-control" type="text" name="name" id="edittournament-textfield-name" value={ name } placeholder={ name } onChange={ this.handleNameInput.bind(this) } />
                 </div>
                 <div className="form-group">
                     <label htmlFor="name">Turnier-Beschreibung</label>
-                    <input className="form-control" type="text" name="name" id="name" value={ description } placeholder={ description } onChange={ this.handleDescriptionInput.bind(this) } />
+                    <input className="form-control" type="text" name="name" id="edittournament-textfield-description" value={ description } placeholder={ description } onChange={ this.handleDescriptionInput.bind(this) } />
                 </div>
                 <div className="form-group custom-control custom-checkbox">
-                    <input className="custom-control-input" type="checkbox" name="isPublic" id="isPublic" value={ isPublic } onChange={ this.handlePublicInput.bind(this) } />
+                    <input className="custom-control-input" type="checkbox" name="isPublic" id="edittournament-checkbox-isPublic" value={ isPublic } onChange={ this.handlePublicInput.bind(this) } />
                     <label htmlFor="isPublic" className="custom-control-label">Das Turnier öffentlich anzeigen</label>
                 </div>
                 <div className="form-group">
                     <div className="input-group">
-                        <Button color="success" className="px-5" onClick={ this.handleClick.bind(this) }>Ändern</Button>
+                        <Button color="success" className="px-5" id="edittournament-button" onClick={ this.handleClick.bind(this) }>Ändern</Button>
                     </div>
                 </div>
             </div>
@@ -240,8 +240,8 @@ class EditTeamNamesForm extends React.Component {
                         {
                             teams.map((team, index) => 
                                 <tr key={index}>
-                                    <td><Button outline size="sm" className="changeTeamnameButton" onClick={ this.handleClick.bind(this, index) }>Ändern</Button></td>
-                                    <td className="w-100"><input className="form-control" type="text" id="name" value={ team.name } placeholder={ team.name } onChange={ this.handleNameInput.bind(this, index) } /></td>
+                                    <td><Button outline size="sm" className="changeTeamnameButton" id={ 'editteam-button-team_' + team.id } onClick={ this.handleClick.bind(this, index) }>Ändern</Button></td>
+                                    <td className="w-100"><input className="form-control" type="text" id={ 'editteam-textfield-team_' + team.id } value={ team.name } placeholder={ team.name } onChange={ this.handleNameInput.bind(this, index) } /></td>
                                 </tr>
                             )
                         }
