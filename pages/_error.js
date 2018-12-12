@@ -1,4 +1,5 @@
 import { ErrorPageComponent } from '../js/components/ErrorComponents.js';
+import React from 'react';
 
 import {
     verifyCredentials

@@ -60,7 +60,7 @@ const defaultstate_tournamentinfo = {
     isPublic : '',
     stages: [],
     teams : []
-}
+};
 
 export function postRequest(state, url, data) {
     return axios.post(api_url + url, data, {
@@ -262,7 +262,7 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
             });
             storeOptionalToken(resp);
             action.parameters.successCallback();
-        }).catch((error) => {
+        }).catch(() => {
             action.parameters.errorCallback();
         });
         return Object.assign({}, state, {});
@@ -304,7 +304,7 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
         return Object.assign({}, state, {});
     default: return state;
     }
-}
+};
 
 const reducers = {
     userinfo: reducer_userinfo,

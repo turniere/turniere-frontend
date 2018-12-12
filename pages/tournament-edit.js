@@ -13,7 +13,6 @@ import {
     Button,
     Card,
     CardBody,
-    CardTitle,
     Table
 } from 'reactstrap';
 
@@ -87,8 +86,6 @@ export default connect(
 class EditTournamentContent extends React.Component {
 
     render() {
-        const { code } = this.props;
-
         return (
             <div className='mb-5'>
                 <ReturnToTournamentButton/>
@@ -178,7 +175,7 @@ class EditTournamentForm extends React.Component {
         });
     }
 
-    handleClick(input) {
+    handleClick() {
         // TODO: Apply changes to the tournament properties
     }
 
@@ -272,7 +269,7 @@ class EditTeamNamesForm extends React.Component {
         });
     }
 
-    handleClick(index, input) {
+    handleClick(index) {
         updateTeamName(this.state.teams[index], () => {
             notify.show('Team Name wurde erfolgreich geändert.', 'success', 5000);
         }, () => {
