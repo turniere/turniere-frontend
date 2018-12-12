@@ -40,6 +40,28 @@ const defaultstate_userinfo = {
     uid : null
 };
 
+const actiontypes_tournamentinfo = {
+    'REQUEST_TOURNAMENT'           : 'REQUEST_TOURNAMENT',
+    'REQUEST_TOURNAMENT_SUCCESS'   : 'REQUEST_TOURNAMENT_SUCCESS',
+
+    'MODIFY_TOURNAMENT'            : 'MODIFY_TOURNAMENT',
+    'MODIFY_TOURNAMENT_SUCCESS'    : 'MODIFY_TOURNAMENT_SUCCESS',
+    'MODIFY_TOURNAMENT_ERROR'      : 'MODIFY_TOURNAMENT_ERROR',
+
+    'REHYDRATE'                    : 'TOURNAMENTINFO_REHYDRATE',
+    'CLEAR'                        : 'TOURNAMENTINFO_CLEAR',
+};
+
+const defaultstate_tournamentinfo = {
+    code : '',
+    description : '',
+    id : -1,
+    name : '',
+    isPublic : '',
+    stages: [],
+    teams : []
+}
+
 export function postRequest(state, url, data) {
     return axios.post(api_url + url, data, {
         headers : generateHeaders(state)
@@ -57,6 +79,9 @@ export function deleteRequest(state, url) {
         headers : generateHeaders(state)
     });
 }
+
+// PATCH /teams/{ id }
+// { 'name' : ... }
 
 function generateHeaders(state) {
     if(state.userinfo.isSignedIn) {
@@ -224,12 +249,59 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     }
 };
 
+const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => {
+    switch(action.type) {
+    case actiontypes_tournamentinfo.REQUEST_TOURNAMENT:
+        getRequest(action.state, '/tournaments/' + action.parameters.code).then((resp) => {
+            __store.dispatch({
+                type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS,
+                parameters: resp.data
+            });
+            storeOptionalToken(resp);
+            action.parameters.successCallback();
+        }).catch((error) => {
+            console.log(error);
+            action.parameters.errorCallback();
+        });
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS:
+        return Object.assign({}, state, {
+            code : action.parameters.code,
+            description : action.parameters.description,
+            id : action.parameters.id,
+            name : action.parameters.name,
+            isPublic : action.parameters.public,
+            stages: action.parameters.stages,
+            teams : action.parameters.teams
+        });
+    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT:
+
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_SUCCESS:
+
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_ERROR:
+
+        return Object.assign({}, state, {});
+        
+    case actiontypes_tournamentinfo.REHYDRATE:
+
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.CLEAR:
+
+        return Object.assign({}, state, {});
+    default: return state;
+    }
+}
+
 const reducers = {
-    userinfo: reducer_userinfo
+    userinfo: reducer_userinfo,
+    tournamentinfo: reducer_tournamentinfo
 };
 
 const default_applicationstate = {
-    userinfo : defaultstate_userinfo
+    userinfo : defaultstate_userinfo,
+    tournamentinfo: defaultstate_tournamentinfo
 };
 
 var __store;
@@ -287,6 +359,18 @@ export function logout() {
     });
 }
 
+export function requestTournament(code, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT,
+        parameters: {
+            code: code,
+            successCallback: successCallback,
+            errorCallback: errorCallback
+        },
+        state: __store.getState()
+    });
+}
+
 function rehydrateApplicationState() {
     const persistedState = localStorage.getItem('reduxState') ?
         JSON.parse(localStorage.getItem('reduxState')) :
@@ -296,6 +380,10 @@ function rehydrateApplicationState() {
         __store.dispatch({
             type : actiontypes_userinfo.REHYDRATE,
             parameters : Object.assign({}, persistedState.userinfo, {})
+        });
+        __store.dispatch({
+            type : actiontypes_tournamentinfo.REHYDRATE,
+            parameters : Object.assign({}, persistedState.tournamentinfo, {})
         });
     }
 }

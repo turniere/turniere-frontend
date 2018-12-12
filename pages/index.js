@@ -114,7 +114,7 @@ function PromotedLinkTournamentCode() {
             <CardBody className="row">
                 <form id="turniercode-form" className="col-lg-4" action="/t" method="get">
                     <input className="form-control" type="search" name="code" placeholder="Turnier-Code"/>
-                    <button className="btn btn-outline-success w-100 my-2" type="submit">Turnier-Code öffnen</button>
+                    <Button className="btn btn-outline-success w-100 my-2" type="submit">Turnier-Code öffnen</Button>
                 </form>
                 <div className="col-lg-8">
                     <p>Gib hier einen Turnier Code ein, um direkt zum entsprechenden Turnier zu gelangen.</p>
