@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { requestTournament } from '../js/api';
 import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js';
@@ -48,7 +49,7 @@ class EditTournamentPage extends React.Component {
 
         if(validCode) {
             return (
-                <div>
+                <div className='pb-5'>
                     <Head>
                         <title>Turnie.re - Turnier bearbeiten</title>
                     </Head>
@@ -83,7 +84,7 @@ class EditTournamentContent extends React.Component {
         const { code } = this.props;
 
         return (
-            <div>
+            <div className='mb-5'>
                 <ReturnToTournamentButton/>
                 <EditTournamentPropertiesField ref={(field) => { this._edittournamentpropertiesfield = field; }}/>
                 <EditTeamField ref={(field) => { this._editteamfield = field; }}/>
