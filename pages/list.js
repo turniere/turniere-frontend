@@ -1,9 +1,9 @@
-import Head from 'next/head'
-import '../static/everypage.css'
-import {Footer, TurniereNavigation} from "../js/CommonComponents";
-import React from "react";
-import {Card, CardBody, Container} from "reactstrap";
-import {getRequest} from "../js/api";
+import Head from 'next/head';
+import '../static/everypage.css';
+import { Footer, TurniereNavigation } from '../js/CommonComponents';
+import React from 'react';
+import { Card, CardBody, Container } from 'reactstrap';
+import { getRequest, getState } from '../js/api';
 
 export default () => (
     <div className="main generic-fullpage-bg">
@@ -16,7 +16,7 @@ export default () => (
         </div>
         <Footer/>
     </div>
-)
+);
 
 class TournamentList extends React.Component {
     constructor(props) {
@@ -29,11 +29,9 @@ class TournamentList extends React.Component {
     }
 
     componentDidMount() {
-        getRequest('/tournaments?type=public',{})
+        getRequest(getState(), '/tournaments?type=public')
             .then(
                 response => {
-                    console.log('response:');
-                    console.log(response);
                     this.setState({
                         isLoaded: true,
                         items: response.data
@@ -45,7 +43,7 @@ class TournamentList extends React.Component {
                         error
                     });
                 }
-            )
+            );
     }
 
     render() {
@@ -67,7 +65,7 @@ class TournamentList extends React.Component {
 
 function TournamentListEntry(props) {
     return (
-        <a className="w-100 d-inline-block mt-2 text-left btn btn-outline-primary" href={"/t/"+props.code}>
+        <a className="w-100 d-inline-block mt-2 text-left btn btn-outline-primary" href={ '/t/' + props.code }>
             {props.name}
         </a>
     );
