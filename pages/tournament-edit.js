@@ -235,9 +235,12 @@ class EditTeamNamesForm extends React.Component {
                 <Table className="table-striped mt-3">
                     <tbody>
                         {
-                            teams.map((team, index) => {
-
-                            })
+                            teams.map((team, index) => 
+                                <tr key={index}>
+                                    <td><Button outline size="sm" className="changeTeamnameButton">Ändern</Button></td>
+                                    <td className="w-100">{ team.name }</td>
+                                </tr>
+                            )
                         }
                     </tbody>
                 </Table>
@@ -253,12 +256,8 @@ class EditTeamNamesForm extends React.Component {
         });
     }
 
-    handleClick(input) {
+    handleClick(input, index) {
         // TODO: Apply changes to the tournament properties
-    }
-
-    handleNameInput(input) {
-        this.setState({ name : input.target.value });
     }
 }
 
