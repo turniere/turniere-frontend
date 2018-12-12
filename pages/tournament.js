@@ -354,7 +354,7 @@ class Main extends React.Component {
     }
 
     static async getInitialProps({query}) {
-        return {query}
+        return {query};
     }
 
     render() {

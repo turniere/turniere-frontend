@@ -11,9 +11,11 @@ import {
     NavLink
 } from 'reactstrap';
 
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
-import React from "react";
+import React from 'react';
+
+import { logout } from './api';
 
 export function BigImage(props) {
     return (
@@ -74,23 +76,14 @@ function Betabadge() {
 
 class InvisibleLoginLogoutButtons extends React.Component {
 
-    logoutClick() {
-        console.log("Logged out.");
-
-        /*
-        /users/sign_out <- DELETE Token invalidieren
-        /users/validate_token <- GET Token valide?
-        */
-    }
-
     render() {
-        const { isSignedIn, username, logout } = this.props
+        const { isSignedIn, username } = this.props;
 
         if(isSignedIn) {
             return (
                 <ButtonGroup className="nav-item">
                     <Button href="/profile" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">{ username }</Button>
-                    <Button onClick={this.logoutClick} className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Logout</Button>
+                    <Button onClick={logout.bind(this)} className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Logout</Button>
                 </ButtonGroup>
             );
         } else {
@@ -107,12 +100,12 @@ class InvisibleLoginLogoutButtons extends React.Component {
 
 const mapStateToLoginLogoutButtonProperties = (state) => {
     const { isSignedIn, username } = state.userinfo;
-    return { isSignedIn, username }
-}
+    return { isSignedIn, username };
+};
 
 const LoginLogoutButtons = connect(
     mapStateToLoginLogoutButtonProperties
-)(InvisibleLoginLogoutButtons)
+)(InvisibleLoginLogoutButtons);
 
 export function Footer() {
     return (
