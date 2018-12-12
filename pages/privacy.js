@@ -5,6 +5,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js';
 import '../static/everypage.css';
 
+import {
+    verifyCredentials
+} from '../js/api';
+
 function Main() {
     return (
         <div className="main running-text">
@@ -488,14 +492,23 @@ function PrivacyText(){
 }
 
 
-export default () => (
-    <div>
-        <Head>
-            <title>Datenschutzerklärung: turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <BigImage text="Datenschutzerklärung"/>
-        <Main/>
-        <Footer/>
-    </div>
-);
+export default class PrivacyPage extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+
+    render() {
+        return (
+            <div>
+                <Head>
+                    <title>Datenschutzerklärung: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <BigImage text="Datenschutzerklärung"/>
+                <Main/>
+                <Footer/>
+            </div>
+        );
+    }
+}

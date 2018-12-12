@@ -5,6 +5,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js';
 import '../static/everypage.css';
 
+import {
+    verifyCredentials
+} from '../js/api';
+
 function Main() {
     return (
         <div className="main">
@@ -216,14 +220,23 @@ function TournamentFaq() {
     );
 }
 
-export default () => (
-    <div>
-        <Head>
-            <title>FAQ: turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <BigImage text="FAQ"/>
-        <Main/>
-        <Footer/>
-    </div>
-);
+export default class FaqPage extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+
+    render() {
+        return (
+            <div>
+                <Head>
+                    <title>FAQ: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <BigImage text="FAQ"/>
+                <Main/>
+                <Footer/>
+            </div>
+        );
+    }
+}

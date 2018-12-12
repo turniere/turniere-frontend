@@ -6,19 +6,32 @@ import { Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, La
 import { register } from '../js/api';
 import { connect } from 'react-redux';
 
-export default () => (
-    <div className="main generic-fullpage-bg">
-        <Head>
-            <title>Registrieren: turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <div>
-            <Register/>
-            <AccountRequirementMarketing/>
-        </div>
-        <Footer/>
-    </div>
-);
+import {
+    verifyCredentials
+} from '../js/api';
+
+export default class RegisterPage extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+
+    render() {
+        return (
+            <div className="main generic-fullpage-bg">
+                <Head>
+                    <title>Registrieren: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <div>
+                    <Register/>
+                    <AccountRequirementMarketing/>
+                </div>
+                <Footer/>
+            </div>
+        );
+    }
+}
 
 function Register() {
     return (

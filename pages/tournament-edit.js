@@ -18,6 +18,7 @@ import {
 } from 'reactstrap';
 
 import {
+    verifyCredentials,
     updateTeamName
 } from '../js/api';
 
@@ -39,6 +40,7 @@ class EditTournamentPage extends React.Component {
     }
 
     componentDidMount() {
+        verifyCredentials();
         requestTournament(this.props.query.code, () => {
             this.setState({ validCode: true });
             this._edittournamentcontent.notifyOfContentUpdate();

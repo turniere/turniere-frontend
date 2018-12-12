@@ -1,10 +1,18 @@
 import Head from 'next/head';
 import React from 'react';
 
+import {
+    verifyCredentials
+} from '../js/api';
+
 class FullscreenTournamentPage extends React.Component {
 
     static async getInitialProps({query}) {
         return {query};
+    }
+    
+    componentDidMount() {
+        verifyCredentials();
     }
 
     render() {

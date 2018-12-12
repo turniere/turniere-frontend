@@ -6,18 +6,31 @@ import { Button, Card, CardBody, Container, Form, FormGroup, Input, Label } from
 import { login } from '../js/api';
 import { connect } from 'react-redux';
 
-export default () => (
-    <div className="main generic-fullpage-bg">
-        <Head>
-            <title>Login: turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <div>
-            <Login/>
-        </div>
-        <Footer/>
-    </div>
-);
+import {
+    verifyCredentials
+} from '../js/api';
+
+export default class LoginPage extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+
+    render() {
+        return (
+            <div className="main generic-fullpage-bg">
+                <Head>
+                    <title>Login: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <div>
+                    <Login/>
+                </div>
+                <Footer/>
+            </div>
+        );
+    }
+}
 
 function Login() {
     return (

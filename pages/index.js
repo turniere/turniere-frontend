@@ -12,6 +12,10 @@ import '../static/css/index.css';
 
 import { connect } from 'react-redux';
 
+import {
+    verifyCredentials
+} from '../js/api';
+
 function Main() {
     return (
         <div className="main">
@@ -165,6 +169,11 @@ function PromotedLinkCreateTournament() {
 
 
 class Index extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+
     render () {
         return (
             <div>

@@ -16,20 +16,34 @@ import {
     Label
 } from 'reactstrap';
 
+import {
+    verifyCredentials
+} from '../js/api';
+
 import EditableStringList from '../js/EditableStringList';
 
-export default () => (
-    <div className="main generic-fullpage-bg">
-        <Head>
-            <title>Turnier erstellen: turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <div>
-            <CreateTournamentCard/>
-        </div>
-        <Footer/>
-    </div>
-);
+export default class CreatePage extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+
+    render() {
+        return (
+            <div className="main generic-fullpage-bg">
+                <Head>
+                    <title>Turnier erstellen: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <div>
+                    <CreateTournamentCard/>
+                </div>
+                <Footer/>
+            </div>
+        );
+    }
+} 
+
 
 function CreateTournamentCard() {
     return (
