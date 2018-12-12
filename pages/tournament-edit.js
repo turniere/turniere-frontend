@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { connect } from 'react-redux';
+import { notify } from 'react-notify-toast';
 
 import { requestTournament } from '../js/api';
 import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js';
@@ -15,7 +17,9 @@ import {
     Table
 } from 'reactstrap';
 
-import { connect } from 'react-redux';
+import {
+    updateTeamName
+} from '../js/api';
 
 import '../static/everypage.css';
 import '../static/css/index.css';
@@ -237,8 +241,8 @@ class EditTeamNamesForm extends React.Component {
                         {
                             teams.map((team, index) => 
                                 <tr key={index}>
-                                    <td><Button outline size="sm" className="changeTeamnameButton">Ändern</Button></td>
-                                    <td className="w-100">{ team.name }</td>
+                                    <td><Button outline size="sm" className="changeTeamnameButton" onClick={ this.handleClick.bind(this, index) }>Ändern</Button></td>
+                                    <td className="w-100"><input className="form-control" type="text" id="name" value={ team.name } placeholder={ team.name } onChange={ this.handleNameInput.bind(this, index) } /></td>
                                 </tr>
                             )
                         }
@@ -256,8 +260,22 @@ class EditTeamNamesForm extends React.Component {
         });
     }
 
-    handleClick(input, index) {
-        // TODO: Apply changes to the tournament properties
+    handleNameInput(index, input) {
+        var team = this.state.teams.slice();
+
+        team[index].name = input.target.value;
+
+        this.setState({
+            teams : team
+        });
+    }
+
+    handleClick(index, input) {
+        updateTeamName(this.state.teams[index], () => {
+            notify.show('Team Name wurde erfolgreich geändert.', 'success', 5000);
+        }, () => {
+            notify.show('Team Name konnte nicht geändert werden.', 'warning', 5000);
+        });
     }
 }
 

@@ -80,8 +80,11 @@ export function deleteRequest(state, url) {
     });
 }
 
-// PATCH /teams/{ id }
-// { 'name' : ... }
+export function patchRequest(state, url, data) {
+    return axios.patch(api_url + url, data, {
+        headers : generateHeaders(state)
+    });
+}
 
 function generateHeaders(state) {
     if(state.userinfo.isSignedIn) {
@@ -260,7 +263,6 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
             storeOptionalToken(resp);
             action.parameters.successCallback();
         }).catch((error) => {
-            console.log(error);
             action.parameters.errorCallback();
         });
         return Object.assign({}, state, {});
@@ -275,7 +277,17 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
             teams : action.parameters.teams
         });
     case actiontypes_tournamentinfo.MODIFY_TOURNAMENT:
-
+        patchRequest(action.state, '/teams/' + action.parameters.teamid, {
+            name: action.parameters.name
+        }).then((resp) => {
+            storeOptionalToken(resp);
+            action.parameters.onSuccess();
+        }).catch((error) => {
+            if(error.response) {
+                storeOptionalToken(error.response);
+            }
+            action.parameters.onError();
+        });
         return Object.assign({}, state, {});
     case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_SUCCESS:
 
@@ -366,6 +378,19 @@ export function requestTournament(code, successCallback, errorCallback) {
             code: code,
             successCallback: successCallback,
             errorCallback: errorCallback
+        },
+        state: __store.getState()
+    });
+}
+
+export function updateTeamName(team, successCB, errorCB) {
+    __store.dispatch({
+        type: actiontypes_tournamentinfo.MODIFY_TOURNAMENT,
+        parameters: {
+            teamid: team.id,
+            name: team.name,
+            onSuccess : successCB,
+            onError : errorCB
         },
         state: __store.getState()
     });
