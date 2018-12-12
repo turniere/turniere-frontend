@@ -36,7 +36,7 @@ class TournamentList extends React.Component {
                     console.log(response);
                     this.setState({
                         isLoaded: true,
-                        items: response.data.data
+                        items: response.data
                     });
                 },
                 error => {
@@ -55,7 +55,8 @@ class TournamentList extends React.Component {
                     <CardBody>
                         <h1 className="custom-font">Öffentliche Turniere</h1>
                         {this.state.items.map(item => (
-                            <TournamentListEntry name={item.attributes.name} code={item.attributes.code} key={item.id}/>
+                            //The code should be item.code but the api just supports it this way by now
+                            <TournamentListEntry name={item.name} code={item.id} key={item.id}/>
                         ))}
                     </CardBody>
                 </Card>
