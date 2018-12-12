@@ -1,0 +1,28 @@
+.stage {
+    width: 1em;
+}
+
+.lost-team {
+    text-decoration: line-through;
+}
+
+.stages > div:nth-child(odd) {
+    background-color: #f8f8f8;
+}
+
+.minw-25 {
+    min-width: 25%;
+}
+
+.match:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.match:hover > div {
+    border-width: 3px !important;
+    margin: -2px;
+}
+
+.scoreInput {
+    width: 11rem;
+}
