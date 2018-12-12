@@ -7,5 +7,5 @@ export const errorMessages = {
     login_errorunknown : {
         en : 'An unknown error prevented a successful login.'
     }
-}
+};
 

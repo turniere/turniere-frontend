@@ -1,10 +1,11 @@
-import Head from 'next/head'
-import "../style.css"
+import Head from 'next/head';
+import React from 'react';
+import '../style.css';
 
 class TournamentPage extends React.Component {
 
     static async getInitialProps({query}) {
-        return {query}
+        return {query};
     }
 
     render() {
@@ -20,4 +21,4 @@ class TournamentPage extends React.Component {
     }
 }
 
-export default TournamentPage
+export default TournamentPage;

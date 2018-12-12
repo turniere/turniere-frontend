@@ -1,16 +1,16 @@
-import Head from 'next/head'
-import React from 'react'
+import Head from 'next/head';
+import React from 'react';
 
-import {Alert, Button, Card, CardBody} from 'reactstrap';
+import { Alert, Button, Card, CardBody } from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js'
+import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js';
 
-import '../static/everypage.css'
-import '../static/css/index.css'
+import '../static/everypage.css';
+import '../static/css/index.css';
 
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 function Main() {
     return (
@@ -26,7 +26,6 @@ function Marketing() {
     return (
         <div className="container marketing my-5">
             <div className="row">
-
                 <div className="col-lg-4">
                     <h2>Für jede Sportart</h2>
                     <p>
@@ -88,12 +87,10 @@ function MainBottomSummary() {
             <div className="col-lg-6">
                 <h2>Ich habe einen Turniercode bekommen. Was nun?</h2>
                 <p>
-                    Der Turniercode führt dich direkt zu einem Turnier. Gebe dafür den Code <a className="text-success"
-                                                                                               href="#turniercode-form">oben </a>
-                    ein, dann wirst du sofort weitergeleitet.
+                    Der Turniercode führt dich direkt zu einem Turnier. Gebe dafür den Code
+                    <a className="text-success" href="#turniercode-form">oben</a> ein, dann wirst du sofort weitergeleitet.
                 </p>
             </div>
-
         </div>
         <div className="my-5 text-center">
             <p>
