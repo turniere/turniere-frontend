@@ -5,6 +5,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js';
 import '../static/everypage.css';
 
+import {
+    verifyCredentials
+} from '../js/api';
+
 function Main() {
     return (
         <div className="main running-text">
@@ -69,14 +73,23 @@ function ImprintText(){
 }
 
 
-export default () => (
-    <div>
-        <Head>
-            <title>Impressum: turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <BigImage text="Impressum / Haftungs&shy;ausschluss"/>
-        <Main/>
-        <Footer/>
-    </div>
-);
+export default class ImprintPage extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+
+    render() {
+        return (
+            <div>
+                <Head>
+                    <title>Impressum: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <BigImage text="Impressum / Haftungs&shy;ausschluss"/>
+                <Main/>
+                <Footer/>
+            </div>
+        );
+    }
+}

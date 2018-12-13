@@ -8,7 +8,7 @@ const handle = app.getRequestHandler();
 app.prepare()
     .then(() => {
         const server = express();
-
+        
         server.get('/t/:code', (req, res) => {
             const actualPage = '/tournament';
             const queryParam = { code: req.params.code };
@@ -17,6 +17,12 @@ app.prepare()
 
         server.get('/t/:code/fullscreen', (req, res) => {
             const actualPage = '/tournament-fullscreen';
+            const queryParam = { code: req.params.code };
+            app.render(req, res, actualPage, queryParam);
+        });
+
+        server.get('/t/:code/edit', (req, res) => {
+            const actualPage = '/tournament-edit';
             const queryParam = { code: req.params.code };
             app.render(req, res, actualPage, queryParam);
         });

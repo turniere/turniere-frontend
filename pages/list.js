@@ -1,22 +1,37 @@
 import Head from 'next/head';
-import '../static/everypage.css';
-import { Footer, TurniereNavigation } from '../js/CommonComponents';
 import React from 'react';
 import { Card, CardBody, Container } from 'reactstrap';
-import { getRequest, getState } from '../js/api';
 
-export default () => (
-    <div className="main generic-fullpage-bg">
-        <Head>
-            <title>Öffentliche Turniere: turnie.re</title>
-        </Head>
-        <TurniereNavigation/>
-        <div>
-            <TournamentList/>
-        </div>
-        <Footer/>
-    </div>
-);
+import { Footer, TurniereNavigation } from '../js/CommonComponents';
+import {
+    getRequest,
+    getState,
+    verifyCredentials
+} from '../js/api';
+
+import '../static/everypage.css';
+
+export default class ListPage extends React.Component {
+
+    componentDidMount() {
+        verifyCredentials();
+    }
+  
+    render() {
+        return (
+            <div className="main generic-fullpage-bg">
+                <Head>
+                    <title>Öffentliche Turniere: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <div>
+                    <TournamentList/>
+                </div>
+                <Footer/>
+            </div>
+        );
+    }
+}
 
 class TournamentList extends React.Component {
     constructor(props) {

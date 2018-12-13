@@ -40,6 +40,28 @@ const defaultstate_userinfo = {
     uid : null
 };
 
+const actiontypes_tournamentinfo = {
+    'REQUEST_TOURNAMENT'           : 'REQUEST_TOURNAMENT',
+    'REQUEST_TOURNAMENT_SUCCESS'   : 'REQUEST_TOURNAMENT_SUCCESS',
+
+    'MODIFY_TOURNAMENT'            : 'MODIFY_TOURNAMENT',
+    'MODIFY_TOURNAMENT_SUCCESS'    : 'MODIFY_TOURNAMENT_SUCCESS',
+    'MODIFY_TOURNAMENT_ERROR'      : 'MODIFY_TOURNAMENT_ERROR',
+
+    'REHYDRATE'                    : 'TOURNAMENTINFO_REHYDRATE',
+    'CLEAR'                        : 'TOURNAMENTINFO_CLEAR',
+};
+
+const defaultstate_tournamentinfo = {
+    code : '',
+    description : '',
+    id : -1,
+    name : '',
+    isPublic : '',
+    stages: [],
+    teams : []
+};
+
 export function postRequest(state, url, data) {
     return axios.post(api_url + url, data, {
         headers : generateHeaders(state)
@@ -58,12 +80,18 @@ export function deleteRequest(state, url) {
     });
 }
 
+export function patchRequest(state, url, data) {
+    return axios.patch(api_url + url, data, {
+        headers : generateHeaders(state)
+    });
+}
+
 function generateHeaders(state) {
-    if(state.isSignedIn) {
+    if(state.userinfo.isSignedIn) {
         return {
-            'access-token' : state.accesstoken,
-            'client' : state.client,
-            'uid' : state.uid
+            'access-token' : state.userinfo.accesstoken,
+            'client' : state.userinfo.client,
+            'uid' : state.userinfo.uid
         };
     } else {
         return {};
@@ -102,7 +130,7 @@ function checkForAuthenticationHeaders(response) {
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     switch(action.type) {
     case actiontypes_userinfo.REGISTER:
-        postRequest(state, '/users', {
+        postRequest(action.state, '/users', {
             'username' : action.parameters.username,
             'email' : action.parameters.email,
             'password' : action.parameters.password
@@ -143,7 +171,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             errorMessages : action.parameters.errorMessages
         });
     case actiontypes_userinfo.LOGIN:
-        postRequest(state, '/users/sign_in', {
+        postRequest(action.state, '/users/sign_in', {
             email : action.parameters.email,
             password : action.parameters.password
         }).then((resp) => {
@@ -186,7 +214,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             errorMessages : action.parameters.errorMessages
         });
     case actiontypes_userinfo.LOGOUT:
-        deleteRequest(state, '/users/sign_out').then(() => {
+        deleteRequest(action.state, '/users/sign_out').then(() => {
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
         }).catch(() => {
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
@@ -200,7 +228,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             uid : action.parameters.uid
         });
     case actiontypes_userinfo.VERIFY_CREDENTIALS:
-        getRequest(state, '/users/validate_token').then((resp) => {
+        getRequest(action.state, '/users/validate_token').then((resp) => {
             storeOptionalToken(resp);
         }).catch(() => {
             __store.dispatch({ type: actiontypes_userinfo.CLEAR });
@@ -224,12 +252,68 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     }
 };
 
+const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => {
+    switch(action.type) {
+    case actiontypes_tournamentinfo.REQUEST_TOURNAMENT:
+        getRequest(action.state, '/tournaments/' + action.parameters.code).then((resp) => {
+            __store.dispatch({
+                type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS,
+                parameters: resp.data
+            });
+            storeOptionalToken(resp);
+            action.parameters.successCallback();
+        }).catch(() => {
+            action.parameters.errorCallback();
+        });
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS:
+        return Object.assign({}, state, {
+            code : action.parameters.code,
+            description : action.parameters.description,
+            id : action.parameters.id,
+            name : action.parameters.name,
+            isPublic : action.parameters.public,
+            stages: action.parameters.stages,
+            teams : action.parameters.teams
+        });
+    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT:
+        patchRequest(action.state, '/teams/' + action.parameters.teamid, {
+            name: action.parameters.name
+        }).then((resp) => {
+            storeOptionalToken(resp);
+            action.parameters.onSuccess();
+        }).catch((error) => {
+            if(error.response) {
+                storeOptionalToken(error.response);
+            }
+            action.parameters.onError();
+        });
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_SUCCESS:
+
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_ERROR:
+
+        return Object.assign({}, state, {});
+        
+    case actiontypes_tournamentinfo.REHYDRATE:
+
+        return Object.assign({}, state, {});
+    case actiontypes_tournamentinfo.CLEAR:
+
+        return Object.assign({}, state, {});
+    default: return state;
+    }
+};
+
 const reducers = {
-    userinfo: reducer_userinfo
+    userinfo: reducer_userinfo,
+    tournamentinfo: reducer_tournamentinfo
 };
 
 const default_applicationstate = {
-    userinfo : defaultstate_userinfo
+    userinfo : defaultstate_userinfo,
+    tournamentinfo: defaultstate_tournamentinfo
 };
 
 var __store;
@@ -250,7 +334,10 @@ export function verifyCredentials() {
     rehydrateApplicationState();
 
     if(__store.getState().userinfo.isSignedIn) {
-        __store.dispatch({ type: actiontypes_userinfo.VERIFY_CREDENTIALS });
+        __store.dispatch({
+            type: actiontypes_userinfo.VERIFY_CREDENTIALS,
+            state: __store.getState()
+        });
     }
 }
 
@@ -261,7 +348,8 @@ export function register(username, email, password) {
             username: username,
             email: email,
             password: password
-        }
+        },
+        state: __store.getState()
     });
 }
 
@@ -271,12 +359,41 @@ export function login(email, password) {
         parameters: {
             email: email,
             password: password
-        }
+        },
+        state: __store.getState()
     });
 }
 
 export function logout() {
-    __store.dispatch({ type : actiontypes_userinfo.LOGOUT });
+    __store.dispatch({
+        type : actiontypes_userinfo.LOGOUT,
+        state: __store.getState()
+    });
+}
+
+export function requestTournament(code, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT,
+        parameters: {
+            code: code,
+            successCallback: successCallback,
+            errorCallback: errorCallback
+        },
+        state: __store.getState()
+    });
+}
+
+export function updateTeamName(team, successCB, errorCB) {
+    __store.dispatch({
+        type: actiontypes_tournamentinfo.MODIFY_TOURNAMENT,
+        parameters: {
+            teamid: team.id,
+            name: team.name,
+            onSuccess : successCB,
+            onError : errorCB
+        },
+        state: __store.getState()
+    });
 }
 
 export function getState() {
@@ -292,6 +409,10 @@ function rehydrateApplicationState() {
         __store.dispatch({
             type : actiontypes_userinfo.REHYDRATE,
             parameters : Object.assign({}, persistedState.userinfo, {})
+        });
+        __store.dispatch({
+            type : actiontypes_tournamentinfo.REHYDRATE,
+            parameters : Object.assign({}, persistedState.tournamentinfo, {})
         });
     }
 }
