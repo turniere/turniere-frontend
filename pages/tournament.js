@@ -31,31 +31,25 @@ import {
 
 class TournamentPage extends React.Component {
 
-    static async getInitialProps({query}) {
-        return {query};
-    }
-
-    componentDidMount() {
-        verifyCredentials();
-    }
-
     render() {
+        const { id, description, isPublic, code, ownerUsername, playoffStages } = this.props.tournament;
+        
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (
             <div className='pb-5'>
                 <Container>
-                    <a href={'/t/' + props.tournament.id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
-                    <p>{props.tournament.description}</p>
+                    <a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
+                    <p>{description}</p>
                     <ListGroup>
                         <ListGroupItem>
-                            {props.tournament.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
+                            {isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
                         </ListGroupItem>
-                        <ListGroupItem>Turnier-Code: <b>{props.tournament.code}</b></ListGroupItem>
-                        <ListGroupItem>von <b>{props.tournament.ownerUsername}</b></ListGroupItem>
+                        <ListGroupItem>Turnier-Code: <b>{code}</b></ListGroupItem>
+                        <ListGroupItem>von <b>{ownerUsername}</b></ListGroupItem>
                     </ListGroup>
                 </Container>
                 <div className='stages pt-5'>
-                    {props.tournament.playoffStages.map(stage =>
+                    {playoffStages.map(stage =>
                         <Stage level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
                 </div>
             </div>
@@ -73,10 +67,12 @@ function getLevelName(levelNumber) {
 }
 
 function TournamentContainer(props) {
-    if (props.data === null) {
+    const { tournament } = props.data;
+
+    if (tournament === null) {
         return <Container>null</Container>;
     } else {
-        return <Tournament tournament={props.data.tournament}/>;
+        return <TournamentPage tournament={tournament}/>;
     }
 }
 
@@ -355,9 +351,24 @@ function convertMatch(apiMatch) {
 }
 
 class Main extends React.Component {
+
+    static async getInitialProps({query}) {
+        return {query};
+    }
+
     constructor(props) {
         super(props);
+
+        this.state = {
+            tournament : null
+        };
+    }
+
+    componentDidMount() {
+        verifyCredentials();
+
         const code = this.props.query.code;
+
         getRequest(getState(), '/tournaments/' + code)
             .then(response => {
                 this.setState({tournament: convertTournament(response.data)});
@@ -365,8 +376,9 @@ class Main extends React.Component {
             .catch(() => { /* TODO: Show some kind of error or smth */ });
     }
 
+
     render() {
-        const tournamentName = this.state === null ? 'Turnier' : this.state.tournament.name;
+        const tournamentName = this.state.tournament === null ? 'Turnier' : this.state.tournament.name;
         return (
             <div>
                 <Head>
