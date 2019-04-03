@@ -82,15 +82,15 @@ class InvisibleLoginLogoutButtons extends React.Component {
         if(isSignedIn) {
             return (
                 <ButtonGroup className="nav-item">
-                    <Button href="/profile" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">{ username }</Button>
-                    <Button onClick={logout.bind(this)} className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Logout</Button>
+                    <Button outline color="success"  href="/profile" className="navbar-btn my-2 my-sm-0 px-5">{ username }</Button>
+                    <Button outline color="success" onClick={logout.bind(this)} className="navbar-btn my-2 my-sm-0 px-5">Logout</Button>
                 </ButtonGroup>
             );
         } else {
             return (
                 <ButtonGroup className="nav-item">
-                    <Button href="/login" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Login</Button>
-                    <Button href="/register" className="btn navbar-btn btn-outline-success my-2 my-sm-0 px-5">Registrieren</Button>
+                    <Button outline color="success" href="/login" className="navbar-btn my-2 my-sm-0 px-5">Login</Button>
+                    <Button outline color="success" href="/register" className="navbar-btn my-2 my-sm-0 px-5">Registrieren</Button>
                 </ButtonGroup>
             );
         }
