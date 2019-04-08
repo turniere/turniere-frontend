@@ -22,6 +22,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js';
 import '../static/everypage.css';
 import '../static/css/tournament.css';
+import { connect } from 'react-redux';
 
 import {
     getRequest,
@@ -38,7 +39,7 @@ class TournamentPage extends React.Component {
         return (
             <div className='pb-5'>
                 <Container>
-                    <a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
+                    <EditButton id={id} ownerName={ownerUsername}/>
                     <p>{description}</p>
                     <ListGroup>
                         <ListGroupItem>
@@ -56,6 +57,27 @@ class TournamentPage extends React.Component {
         );
     }
 }
+
+function PrivateEditButton(props) {
+    const { id, ownerName, isSignedIn, username } = props;
+
+    if(isSignedIn && ownerName === username) {
+        return (
+            <a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
+        );
+    } else {
+        return null;
+    }
+}
+
+function mapStateToEditButtonProperties(state) {
+    const { isSignedIn, username } = state.userinfo;
+    return { isSignedIn, username };
+}
+
+const EditButton = connect(
+    mapStateToEditButtonProperties
+)(PrivateEditButton);
 
 function getLevelName(levelNumber) {
     const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
