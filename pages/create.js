@@ -18,8 +18,7 @@ import {
 } from 'reactstrap';
 
 import {
-    verifyCredentials,
-    getState
+    verifyCredentials
 } from '../js/api';
 
 import EditableStringList from '../js/EditableStringList';

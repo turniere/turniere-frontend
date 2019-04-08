@@ -17,8 +17,6 @@ import {
     Input,
     Label
 } from 'reactstrap';
-import Head from 'next/head';
-
 
 import { connect } from 'react-redux';
 
