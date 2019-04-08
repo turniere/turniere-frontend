@@ -34,7 +34,7 @@ class EditTournamentPage extends React.Component {
         super(props);
 
         this.state = {
-            validCode: true
+            validCode: false
         };
     }
 
