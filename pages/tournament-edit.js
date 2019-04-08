@@ -70,18 +70,9 @@ class EditTournamentPage extends React.Component {
                     </div>
                 </Option>
                 <Option condition={ validCode && isSignedIn }>
-                    <div className='pb-5'>
-                        <Head>
-                            <title>Turnie.re - Turnier bearbeiten</title>
-                        </Head>
-                        <TurniereNavigation/>
-
-                        <BigImage text="TODO: Not allowed to edit tournament"/>
-
-                        <Footer/>
-                    </div>
+                    <ErrorPageComponent statusCode={ 403 }/>
                 </Option>
-                <Option condition={ validCode }>
+                <Option condition={ !isSignedIn }>
                     <div className="main generic-fullpage-bg">
                         <Head>
                             <title>Turnie.re - Turnier bearbeiten</title>
@@ -91,7 +82,6 @@ class EditTournamentPage extends React.Component {
                         <div>
                             <Login hint="Sie müssen angemeldet sein, um ein Turnier zu bearbeiten."/>
                         </div>
-
                         <Footer/>
                     </div>                      
                 </Option>
