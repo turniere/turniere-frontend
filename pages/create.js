@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import '../static/everypage.css';
-import { Footer, TurniereNavigation, SignedInEnforcer } from '../js/CommonComponents';
+import { Footer, TurniereNavigation, UserRestrictor, Option, Login } from '../js/CommonComponents';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     Button,
@@ -23,30 +24,56 @@ import {
 
 import EditableStringList from '../js/EditableStringList';
 
-export default class CreatePage extends React.Component {
+class PrivateCreatePage extends React.Component {
 
     componentDidMount() {
         verifyCredentials();
     }
 
     render() {
+        const { isSignedIn } = this.props;
+
         return (
-            <SignedInEnforcer>
-                <div className="main generic-fullpage-bg">
-                    <Head>
-                        <title>Turnier erstellen: turnie.re</title>
-                    </Head>
-                    <TurniereNavigation/>
-                    <div>
-                        <CreateTournamentCard/>
+            <UserRestrictor>
+                <Option condition={isSignedIn}>
+                    <div className="main generic-fullpage-bg">
+                        <Head>
+                            <title>Turnier erstellen: turnie.re</title>
+                        </Head>
+                        <TurniereNavigation/>
+                        <div>
+                            <CreateTournamentCard/>
+                        </div>
+                        <Footer/>
                     </div>
-                    <Footer/>
-                </div>
-            </SignedInEnforcer>
+                </Option>
+                <Option condition={true}>
+                    <div className="main generic-fullpage-bg">
+                        <Head>
+                            <title>Anmeldung</title>
+                        </Head>
+                        <TurniereNavigation/>
+                        <div>
+                            <Login hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
+                        </div>
+                        <Footer/>
+                    </div>
+                </Option>
+            </UserRestrictor>
         );
     }
-} 
+}
 
+function mapStateToCreatePageProperties(state) {
+    const { isSignedIn } = state.userinfo;
+    return { isSignedIn };
+}
+
+const CreatePage = connect(
+    mapStateToCreatePageProperties
+)(PrivateCreatePage);
+
+export default CreatePage;
 
 function CreateTournamentCard() {
     return (
