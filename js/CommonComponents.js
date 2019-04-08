@@ -261,5 +261,7 @@ function Hint(props) {
         return (
             <h3>{ props.hint }</h3>
         );
+    } else {
+        return null;
     }
 }
