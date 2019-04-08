@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { notify } from 'react-notify-toast';
 
 import { requestTournament } from '../js/api';
-import { BigImage, Footer, TurniereNavigation } from '../js/CommonComponents.js';
+import { BigImage, Footer, TurniereNavigation, Login, UserRestrictor, Option } from '../js/CommonComponents.js';
 import { ErrorPageComponent } from '../js/components/ErrorComponents.js';
 
 import {
@@ -42,7 +42,10 @@ class EditTournamentPage extends React.Component {
         verifyCredentials();
         requestTournament(this.props.query.code, () => {
             this.setState({ validCode: true });
-            this._edittournamentcontent.notifyOfContentUpdate();
+
+            if(this._edittournamentcontent != null) {
+                this._edittournamentcontent.notifyOfContentUpdate();
+            }
         }, () => {
             this.setState({ validCode: false });
         });
@@ -50,33 +53,60 @@ class EditTournamentPage extends React.Component {
 
     render() {
         const { validCode } = this.state;
-        const { name } = this.props;
+        const { tournamentname, ownerUsername, isSignedIn, username } = this.props;
 
-        if(validCode) {
-            return (
-                <div className='pb-5'>
-                    <Head>
-                        <title>Turnie.re - Turnier bearbeiten</title>
-                    </Head>
-                    <TurniereNavigation/>
-                    <BigImage text={ name }/>
+        return (
+            <UserRestrictor>
+                <Option condition={ validCode && isSignedIn && ownerUsername === username }>
+                    <div className='pb-5'>
+                        <Head>
+                            <title>Turnie.re - Turnier bearbeiten</title>
+                        </Head>
+                        <TurniereNavigation/>
 
-                    <EditTournamentContent ref={(edittournamentcontent) => { this._edittournamentcontent = edittournamentcontent; }}/>
-                    
-                    <Footer/>
-                </div>
-            );
-        } else {
-            return (
-                <ErrorPageComponent statusCode={ 404 }/>
-            );
-        }
+                        <BigImage text={ tournamentname }/>
+                        <EditTournamentContent ref={(edittournamentcontent) => { this._edittournamentcontent = edittournamentcontent; }}/>
+                        <Footer/>
+                    </div>
+                </Option>
+                <Option condition={ validCode && isSignedIn }>
+                    <div className='pb-5'>
+                        <Head>
+                            <title>Turnie.re - Turnier bearbeiten</title>
+                        </Head>
+                        <TurniereNavigation/>
+
+                        <BigImage text="TODO: Not allowed to edit tournament"/>
+
+                        <Footer/>
+                    </div>
+                </Option>
+                <Option condition={ validCode }>
+                    <div className="main generic-fullpage-bg">
+                        <Head>
+                            <title>Turnie.re - Turnier bearbeiten</title>
+                        </Head>
+                        <TurniereNavigation/>
+
+                        <div>
+                            <Login hint="Sie müssen angemeldet sein, um ein Turnier zu bearbeiten."/>
+                        </div>
+
+                        <Footer/>
+                    </div>                      
+                </Option>
+                <Option condition={true}>
+                    <ErrorPageComponent statusCode={ 404 }/>
+                </Option>
+            </UserRestrictor>
+        );
     }
 }
 
 function mapStateToTournamentInfo(state) {
-    const { name } = state.tournamentinfo;
-    return { name };
+    const { tournamentname, ownerUsername } = state.tournamentinfo;
+    const { isSignedIn, username } = state.userinfo;
+    return { tournamentname, ownerUsername, isSignedIn, username };
 }
 
 export default connect(

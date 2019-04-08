@@ -57,6 +57,7 @@ const defaultstate_tournamentinfo = {
     description : '',
     id : -1,
     name : '',
+    ownerUsername : '',
     isPublic : '',
     stages: [],
     teams : []
@@ -272,6 +273,7 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
             description : action.parameters.description,
             id : action.parameters.id,
             name : action.parameters.name,
+            ownerUsername : action.parameters.owner_username,
             isPublic : action.parameters.public,
             stages: action.parameters.stages,
             teams : action.parameters.teams
