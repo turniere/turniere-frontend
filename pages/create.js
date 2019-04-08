@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import '../static/everypage.css';
-import { Footer, TurniereNavigation } from '../js/CommonComponents';
+import { Footer, TurniereNavigation, SignedInEnforcer } from '../js/CommonComponents';
 import React from 'react';
 
 import {
@@ -17,7 +17,8 @@ import {
 } from 'reactstrap';
 
 import {
-    verifyCredentials
+    verifyCredentials,
+    getState
 } from '../js/api';
 
 import EditableStringList from '../js/EditableStringList';
@@ -30,16 +31,18 @@ export default class CreatePage extends React.Component {
 
     render() {
         return (
-            <div className="main generic-fullpage-bg">
-                <Head>
-                    <title>Turnier erstellen: turnie.re</title>
-                </Head>
-                <TurniereNavigation/>
-                <div>
-                    <CreateTournamentCard/>
+            <SignedInEnforcer>
+                <div className="main generic-fullpage-bg">
+                    <Head>
+                        <title>Turnier erstellen: turnie.re</title>
+                    </Head>
+                    <TurniereNavigation/>
+                    <div>
+                        <CreateTournamentCard/>
+                    </div>
+                    <Footer/>
                 </div>
-                <Footer/>
-            </div>
+            </SignedInEnforcer>
         );
     }
 } 

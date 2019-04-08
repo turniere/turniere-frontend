@@ -2,20 +2,29 @@ import {
     Badge,
     Button,
     ButtonGroup,
+    Card,
+    CardBody,
+    Container,
     Collapse,
+    Form,
+    FormGroup,
     Nav,
     Navbar,
     NavbarBrand,
     NavbarToggler,
     NavItem,
-    NavLink
+    NavLink,
+    Input,
+    Label
 } from 'reactstrap';
+import Head from 'next/head';
+
 
 import { connect } from 'react-redux';
 
 import React from 'react';
 
-import { logout } from './api';
+import { login, logout } from './api';
 
 export function BigImage(props) {
     return (
@@ -95,7 +104,6 @@ class InvisibleLoginLogoutButtons extends React.Component {
             );
         }
     }
-
 }
 
 const mapStateToLoginLogoutButtonProperties = (state) => {
@@ -123,4 +131,135 @@ export function Footer() {
             </div>
         </footer>
     );
+}
+
+class PrivateSignedInEnforcer extends React.Component {
+
+    render() {
+        const { isSignedIn, children } = this.props;
+
+        if(isSignedIn) {
+            return children;
+        } else {
+            return (
+                <div className="main generic-fullpage-bg">
+                    <Head>
+                        <title>Anmeldung</title>
+                    </Head>
+                    <TurniereNavigation/>
+                    <div>
+                        <Login hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
+                    </div>
+                    <Footer/>
+                </div>
+            );
+        }
+    }
+}
+
+const mapStateToSignedInEnforcerProperties = (state) => {
+    const { isSignedIn } = state.userinfo;
+    return { isSignedIn };
+}
+
+export const SignedInEnforcer = connect(
+    mapStateToSignedInEnforcerProperties
+)(PrivateSignedInEnforcer);
+
+export function Login(props) {
+    return (
+        <Container className="py-5">
+            <Card className="shadow">
+                <CardBody>
+                    <h1 className="custom-font">Login</h1>
+                    <Hint hint={props.hint}/>
+                    <LoginForm/>
+                    <div className="mt-3">
+                        <a href="/register" className="mr-3">Account anlegen</a>
+                        <a href="/register#account-requirement">Warum ist ein Account nötig?</a>
+                    </div>
+                </CardBody>
+            </Card>
+        </Container>
+    );
+}
+
+class LoginErrorList extends React.Component {
+    render() {
+        const { error, errorMessages } = this.props;
+        if(error) {
+            return (
+                <ul>
+                    { errorMessages.map((message, index) => 
+                        <li key={index}>
+                            <style jsx>{`
+                                li {
+                                    color:red;
+                                }
+                            `}</style>
+                            {message}
+                        </li>
+
+                    ) }
+                </ul>
+            );
+        } else {
+            return null;
+        }
+    }
+}
+
+const mapStateToErrorMessages = (state) => {
+    const { errorMessages, error } = state.userinfo;
+    return { errorMessages, error };
+};
+
+const VisibleLoginErrorList = connect(
+    mapStateToErrorMessages
+)(LoginErrorList);
+
+
+class LoginForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            email : '',
+            password : ''
+        };
+    }
+
+    render() {
+        return (
+            <Form>
+                <FormGroup>
+                    <Label for="username">E-Mail-Adresse</Label>
+                    <Input type="email" name="username" value={this.state.email} onChange={ this.handleEmailInput.bind(this) } />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="password">Passwort</Label>
+                    <Input type="password" name="password" value={this.state.password} onChange={ this.handlePasswordInput.bind(this) } />
+                </FormGroup>
+                <Button onClick={login.bind(this, this.state.email, this.state.password)} color="success" size="lg" className="w-100 shadow-sm">Anmelden</Button>
+                <VisibleLoginErrorList/>
+            </Form>
+        );
+    }
+
+    handlePasswordInput(input) {
+        this.setState({ password : input.target.value });
+    }
+
+    handleEmailInput(input) {
+        this.setState({ email : input.target.value });
+    }
+}
+
+function Hint(props) {
+    if(props.hint != null) {
+        return (
+            <h3>{ props.hint }</h3>
+        );
+    }
 }
