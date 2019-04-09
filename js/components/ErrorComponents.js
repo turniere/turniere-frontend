@@ -1,9 +1,12 @@
-import Head from 'next/head';
-import React from 'react';
+import Head                   from 'next/head';
+import React                  from 'react';
+import { Container }          from 'reactstrap';
+
 import { TurniereNavigation } from './Navigation';
-import { Footer } from './Footer'
+import { Footer }             from './Footer';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container} from 'reactstrap';
+
 import '../../static/everypage.css';
 import '../../static/css/error.css';
 

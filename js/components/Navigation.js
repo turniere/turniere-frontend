@@ -11,8 +11,9 @@ import {
     NavLink
 } from 'reactstrap';
 import { connect } from 'react-redux';
-import React from 'react';
-import { login, logout } from '../api';
+import React       from 'react';
+
+import { logout }  from '../api';
 
 export class TurniereNavigation extends React.Component {
 

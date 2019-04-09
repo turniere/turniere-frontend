@@ -1,5 +1,11 @@
 import React from 'react';
-import { Alert, Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { 
+    Alert,
+    Button, 
+    Input, 
+    InputGroup, 
+    InputGroupAddon 
+} from 'reactstrap';
 
 export default class EditableStringList extends React.Component {
     constructor(props) {

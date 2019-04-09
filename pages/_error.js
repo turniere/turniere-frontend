@@ -1,9 +1,7 @@
-import { ErrorPageComponent } from '../js/components/ErrorComponents.js';
-import React from 'react';
+import React                  from 'react';
 
-import {
-    verifyCredentials
-} from '../js/api';
+import { ErrorPageComponent } from '../js/components/ErrorComponents';
+import { verifyCredentials }  from '../js/api';
 
 export default class Error extends React.Component {
     static getInitialProps({ res, err }) {

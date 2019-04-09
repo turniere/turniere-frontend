@@ -8,9 +8,10 @@ import {
     Input,
     Button
 } from 'reactstrap';
-import React from 'react';
+import React       from 'react';
 import { connect } from 'react-redux';
-import { login } from '../api';
+
+import { login }   from '../api';
 
 export function Login(props) {
     return (

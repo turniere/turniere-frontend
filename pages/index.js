@@ -1,22 +1,24 @@
-import Head from 'next/head';
-import React from 'react';
-
-import { Alert, Button, Card, CardBody } from 'reactstrap';
-
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Head                   from 'next/head';
+import React                  from 'react';
+import { connect }            from 'react-redux';
+import {
+    Alert,
+    Button,
+    Card,
+    CardBody
+} from 'reactstrap';
 
 import { TurniereNavigation } from '../js/components/Navigation';
-import { BigImage } from '../js/components/BigImage';
-import { Footer } from '../js/components/Footer.js';
-
-import '../static/everypage.css';
-import '../static/css/index.css';
-
-import { connect } from 'react-redux';
-
+import { BigImage }           from '../js/components/BigImage';
+import { Footer }             from '../js/components/Footer';
 import {
     verifyCredentials
 } from '../js/api';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import '../static/everypage.css';
+import '../static/css/index.css';
 
 function Main() {
     return (

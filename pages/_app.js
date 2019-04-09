@@ -1,8 +1,9 @@
-import App, {Container} from 'next/app';
-import React from 'react';
-import { Provider } from 'react-redux';
-import withReduxStore from '../js/redux/reduxStoreBinder';
-import Notifications from 'react-notify-toast';
+import { App, Container } from 'next/app';
+import React              from 'react';
+import { Provider }       from 'react-redux';
+import Notifications      from 'react-notify-toast';
+
+import withReduxStore     from '../js/redux/reduxStoreBinder';
 
 class TurniereApp extends App {
 

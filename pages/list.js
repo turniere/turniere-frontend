@@ -1,9 +1,13 @@
-import Head from 'next/head';
-import React from 'react';
-import { Card, CardBody, Container } from 'reactstrap';
+import Head                   from 'next/head';
+import React                  from 'react';
+import {
+    Card,
+    CardBody,
+    Container
+} from 'reactstrap';
 
 import { TurniereNavigation } from '../js/components/Navigation';
-import { Footer } from '../js/components/Footer.js';
+import { Footer }             from '../js/components/Footer';
 import {
     getRequest,
     getState,

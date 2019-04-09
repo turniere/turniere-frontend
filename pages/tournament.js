@@ -1,5 +1,6 @@
-import Head from 'next/head';
-import React from 'react';
+import Head                   from 'next/head';
+import React                  from 'react';
+import { connect }            from 'react-redux';
 import {
     Button,
     Card,
@@ -18,20 +19,21 @@ import {
     Row,
     Table
 } from 'reactstrap';
-import { ErrorPageComponent } from '../js/components/ErrorComponents.js';
-import { Footer } from '../js/components/Footer.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { TurniereNavigation } from '../js/components/Navigation';
-import { BigImage } from '../js/components/BigImage';
-import '../static/everypage.css';
-import '../static/css/tournament.css';
-import { connect } from 'react-redux';
 
+import { ErrorPageComponent } from '../js/components/ErrorComponents';
+import { Footer }             from '../js/components/Footer';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { BigImage }           from '../js/components/BigImage';
 import {
     getRequest,
     getState,
     verifyCredentials
 } from '../js/api';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import '../static/everypage.css';
+import '../static/css/tournament.css';
 
 class TournamentPage extends React.Component {
 
