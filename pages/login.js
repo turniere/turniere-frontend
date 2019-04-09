@@ -1,11 +1,12 @@
-import Head from 'next/head';
-import '../static/everypage.css';
-import { Footer, TurniereNavigation, Login } from '../js/CommonComponents';
-import React from 'react';
+import Head                   from 'next/head';
+import React                  from 'react';
 
-import {
-    verifyCredentials
-} from '../js/api';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { Footer }             from '../js/components/Footer';
+import { Login }              from '../js/components/Login';
+import { verifyCredentials }  from '../js/api';
+
+import '../static/everypage.css';
 
 export default class LoginPage extends React.Component {
 

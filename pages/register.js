@@ -1,14 +1,24 @@
-import Head from 'next/head';
-import '../static/everypage.css';
-import {Footer, TurniereNavigation} from '../js/CommonComponents';
-import React from 'react';
-import { Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label } from 'reactstrap';
-import { register } from '../js/api';
-import { connect } from 'react-redux';
-
+import Head                   from 'next/head';
+import React                  from 'react';
+import { connect }            from 'react-redux';
 import {
-    verifyCredentials
-} from '../js/api';
+    Button,
+    Card,
+    CardBody,
+    Container,
+    Form,
+    FormGroup,
+    FormText,
+    Input,
+    Label
+} from 'reactstrap';
+
+import { TurniereNavigation } from '../js/components/Navigation';
+import { Footer }             from '../js/components/Footer';
+import { register }           from '../js/api';
+import { verifyCredentials }  from '../js/api';
+
+import '../static/everypage.css';
 
 export default class RegisterPage extends React.Component {
 
