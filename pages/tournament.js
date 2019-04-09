@@ -392,7 +392,11 @@ class Main extends React.Component {
                 this.setState({ status : response.status, tournament : convertTournament(response.data)});
             })
             .catch((err) => {
-                this.setState({ status : err.response.status });
+                if(err.response) {
+                    this.setState({ status : err.response.status });
+                } else {
+                    this.setState({ status : -1 });
+                }
             });
     }
 
