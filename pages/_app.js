@@ -3,6 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import withReduxStore from '../js/redux/reduxStoreBinder';
 import Notifications from 'react-notify-toast';
+import Favicon from 'react-favicon';
 
 class TurniereApp extends App {
 
@@ -11,6 +12,7 @@ class TurniereApp extends App {
         return (
             <Container>
                 <Notifications />
+                <Favicon url="../static/icons/favicon.ico"/>
                 <Provider store={reduxStore}>
                     <Component {...pageProps} />
                 </Provider>
