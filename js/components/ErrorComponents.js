@@ -26,7 +26,7 @@ export class ErrorPageComponent extends React.Component {
     }
 }
 
-function ErrorPage(props){
+export function ErrorPage(props){
     return (
         <Container className="mb-5">
             <div className="row mb-5">

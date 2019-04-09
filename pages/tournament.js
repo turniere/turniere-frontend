@@ -18,10 +18,12 @@ import {
     Row,
     Table
 } from 'reactstrap';
+import { ErrorPageComponent } from '../js/components/ErrorComponents.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js';
 import '../static/everypage.css';
 import '../static/css/tournament.css';
+import { connect } from 'react-redux';
 
 import {
     getRequest,
@@ -38,7 +40,7 @@ class TournamentPage extends React.Component {
         return (
             <div className='pb-5'>
                 <Container>
-                    <a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
+                    <EditButton id={id} ownerName={ownerUsername}/>
                     <p>{description}</p>
                     <ListGroup>
                         <ListGroupItem>
@@ -57,22 +59,33 @@ class TournamentPage extends React.Component {
     }
 }
 
+function PrivateEditButton(props) {
+    const { id, ownerName, isSignedIn, username } = props;
+
+    if(isSignedIn && ownerName === username) {
+        return (
+            <a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
+        );
+    } else {
+        return null;
+    }
+}
+
+function mapStateToEditButtonProperties(state) {
+    const { isSignedIn, username } = state.userinfo;
+    return { isSignedIn, username };
+}
+
+const EditButton = connect(
+    mapStateToEditButtonProperties
+)(PrivateEditButton);
+
 function getLevelName(levelNumber) {
     const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
     if(levelNumber < names.length){
         return names[levelNumber];
     }else {
         return Math.pow(2, levelNumber) + 'tel-Finale';
-    }
-}
-
-function TournamentContainer(props) {
-    const { tournament } = props.data;
-
-    if (tournament === null) {
-        return <Container>null</Container>;
-    } else {
-        return <TournamentPage tournament={tournament}/>;
     }
 }
 
@@ -371,25 +384,34 @@ class Main extends React.Component {
 
         getRequest(getState(), '/tournaments/' + code)
             .then(response => {
-                this.setState({tournament: convertTournament(response.data)});
+                this.setState({ status : response.status, tournament : convertTournament(response.data)});
             })
-            .catch(() => { /* TODO: Show some kind of error or smth */ });
+            .catch((err) => {
+                this.setState({ status : err.response.status });
+            });
     }
 
 
     render() {
         const tournamentName = this.state.tournament === null ? 'Turnier' : this.state.tournament.name;
-        return (
-            <div>
-                <Head>
-                    <title>{tournamentName}: turnie.re</title>
-                </Head>
-                <TurniereNavigation/>
-                <BigImage text={tournamentName}/>
-                <TournamentContainer data={this.state}/>
-                <Footer/>
-            </div>
-        );
+
+        const { status, tournament } = this.state;
+
+        if (status == 200) {
+            return (
+                <div>
+                    <Head>
+                        <title>{tournamentName}: turnie.re</title>
+                    </Head>
+                    <TurniereNavigation/>
+                    <BigImage text={tournamentName}/>
+                    <TournamentPage tournament={tournament}/>
+                    <Footer/>
+                </div>
+            );
+        } else {
+            return <ErrorPageComponent code={status}/>;
+        }
     }
 }
 
