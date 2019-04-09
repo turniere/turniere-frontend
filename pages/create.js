@@ -24,7 +24,7 @@ import {
     verifyCredentials
 } from '../js/api';
 
-import EditableStringList from '../js/EditableStringList';
+import EditableStringList from '../js/components/EditableStringList';
 
 class PrivateCreatePage extends React.Component {
 
