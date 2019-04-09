@@ -53,7 +53,7 @@ class PrivateTournamentPage extends React.Component {
                 </Container>
                 <div className='stages pt-5'>
                     {playoffStages.map(stage =>
-                        <Stage level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
+                        <Stage isSignedIn={isSignedIn} isOwner={username == ownerUsername} level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
                 </div>
             </div>
         );
@@ -113,7 +113,11 @@ class Match extends React.Component {
     }
 
     toggleModal() {
-        this.setState({modal: !this.state.modal});
+        const { isSignedIn, isOwner } = this.props;
+
+        if(isSignedIn && isOwner) {
+            this.setState({modal: !this.state.modal});
+        }
     }
 
     render() {
