@@ -1,8 +1,6 @@
-import Head from 'next/head';
-import '../static/everypage.css';
-import { Footer, TurniereNavigation, UserRestrictor, Option, Login } from '../js/CommonComponents';
-import React from 'react';
-import { connect } from 'react-redux';
+import Head                       from 'next/head';
+import React                      from 'react';
+import { connect }                from 'react-redux';
 
 import {
     Button,
@@ -17,11 +15,14 @@ import {
     Label
 } from 'reactstrap';
 
-import {
-    verifyCredentials
-} from '../js/api';
+import { TurniereNavigation }     from '../js/components/Navigation';
+import { Footer }                 from '../js/components/Footer';
+import { UserRestrictor, Option } from '../js/components/UserRestrictor';
+import { Login }                  from '../js/components/Login';
+import { verifyCredentials }      from '../js/api';
+import EditableStringList         from '../js/components/EditableStringList';
 
-import EditableStringList from '../js/EditableStringList';
+import '../static/everypage.css';
 
 class PrivateCreatePage extends React.Component {
 
