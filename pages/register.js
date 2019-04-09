@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import '../static/everypage.css';
-import {Footer, TurniereNavigation} from '../js/CommonComponents';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { Footer } from '../js/components/Footer.js';
 import React from 'react';
 import { Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label } from 'reactstrap';
 import { register } from '../js/api';

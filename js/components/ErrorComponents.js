@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
-import {Footer, TurniereNavigation} from '../CommonComponents';
+import { TurniereNavigation } from './Navigation';
+import { Footer } from './Footer'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container} from 'reactstrap';
 import '../../static/everypage.css';

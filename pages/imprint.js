@@ -2,7 +2,9 @@ import Head from 'next/head';
 import React from 'react';
 import {Container} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { BigImage } from '../js/components/BigImage';
+import { Footer } from '../js/components/Footer.js';
 import '../static/everypage.css';
 
 import {

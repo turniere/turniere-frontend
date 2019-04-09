@@ -19,8 +19,10 @@ import {
     Table
 } from 'reactstrap';
 import { ErrorPageComponent } from '../js/components/ErrorComponents.js';
+import { Footer } from '../js/components/Footer.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BigImage, Footer, TurniereNavigation} from '../js/CommonComponents.js';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { BigImage } from '../js/components/BigImage';
 import '../static/everypage.css';
 import '../static/css/tournament.css';
 import { connect } from 'react-redux';

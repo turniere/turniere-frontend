@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import '../static/everypage.css';
-import { Footer, TurniereNavigation, UserRestrictor, Option, Login } from '../js/CommonComponents';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { Footer } from '../js/components/Footer.js';
+import { UserRestrictor, Option } from '../js/components/UserRestrictor';
+import { Login } from '../js/components/Login.js';
 import React from 'react';
 import { connect } from 'react-redux';
 

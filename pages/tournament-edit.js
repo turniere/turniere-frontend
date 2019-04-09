@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import { notify } from 'react-notify-toast';
 
 import { requestTournament } from '../js/api';
-import { BigImage, Footer, TurniereNavigation, Login, UserRestrictor, Option } from '../js/CommonComponents.js';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { BigImage } from '../js/components/BigImage';
+import { UserRestrictor, Option } from '../js/components/UserRestrictor.js';
+import { Footer } from '../js/components/Footer.js';
+import { Login } from '../js/components/Login.js';
 import { ErrorPageComponent } from '../js/components/ErrorComponents.js';
 
 import {
