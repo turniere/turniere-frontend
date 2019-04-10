@@ -1,17 +1,9 @@
-import {
-    Container,
-    Card,
-    CardBody,
-    Form,
-    FormGroup,
-    Label,
-    Input,
-    Button
-} from 'reactstrap';
-import React       from 'react';
-import { connect } from 'react-redux';
+import {Card, CardBody, Container, Form, FormGroup, Input, Label} from 'reactstrap';
+import React from 'react';
+import {connect} from 'react-redux';
+import Router from 'next/router';
 
-import { login }   from '../api';
+import {login, verifyCredentials} from '../api';
 
 export function Login(props) {
     return (
@@ -65,6 +57,22 @@ const VisibleLoginErrorList = connect(
     mapStateToErrorMessages
 )(LoginErrorList);
 
+class LoginSuccessRedirectComponent extends React.Component {
+    render() {
+        if (this.props.isSignedIn) {
+            Router.push('/');
+        }
+        return null;
+    }
+}
+
+const mapLoginState = (state) => {
+    const {isSignedIn} = state.userinfo;
+    return {isSignedIn};
+};
+
+const LoginSuccessRedirect = connect(mapLoginState)(LoginSuccessRedirectComponent);
+
 class LoginForm extends React.Component {
 
     constructor(props) {
@@ -76,9 +84,15 @@ class LoginForm extends React.Component {
         };
     }
 
+    tryLogin(event) {
+        event.preventDefault();
+        login(this.state.email, this.state.password);
+        verifyCredentials();
+    }
+
     render() {
         return (
-            <Form>
+            <Form onSubmit={this.tryLogin.bind(this)}>
                 <FormGroup>
                     <Label for="username">E-Mail-Adresse</Label>
                     <Input type="email" name="username" value={this.state.email} onChange={ this.handleEmailInput.bind(this) } />
@@ -87,8 +101,9 @@ class LoginForm extends React.Component {
                     <Label for="password">Passwort</Label>
                     <Input type="password" name="password" value={this.state.password} onChange={ this.handlePasswordInput.bind(this) } />
                 </FormGroup>
-                <Button onClick={login.bind(this, this.state.email, this.state.password)} color="success" size="lg" className="w-100 shadow-sm">Anmelden</Button>
+                <input type="submit" className="btn btn-lg btn-success w-100 shadow-sm" value="Anmelden"/>
                 <VisibleLoginErrorList/>
+                <LoginSuccessRedirect/>
             </Form>
         );
     }
