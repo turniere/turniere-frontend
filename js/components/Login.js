@@ -87,7 +87,6 @@ class LoginForm extends React.Component {
     tryLogin(event) {
         event.preventDefault();
         login(this.state.email, this.state.password);
-        verifyCredentials();
     }
 
     render() {
