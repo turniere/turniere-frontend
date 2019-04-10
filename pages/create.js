@@ -1,5 +1,6 @@
 import Head                       from 'next/head';
 import React                      from 'react';
+import { notify }                 from 'react-notify-toast';
 import { connect }                from 'react-redux';
 
 import {
@@ -19,8 +20,11 @@ import { TurniereNavigation }     from '../js/components/Navigation';
 import { Footer }                 from '../js/components/Footer';
 import { UserRestrictor, Option } from '../js/components/UserRestrictor';
 import { Login }                  from '../js/components/Login';
-import { verifyCredentials }      from '../js/api';
 import EditableStringList         from '../js/components/EditableStringList';
+import {
+    verifyCredentials,
+    createTournament
+} from '../js/api';
 
 import '../static/everypage.css';
 
@@ -91,9 +95,22 @@ function CreateTournamentCard() {
 class CreateTournamentForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {fadeIn: false, teams: []};
+        this.state = { 
+            fadeIn: false,
+
+            name: '',
+            description: '',
+            public: false,
+            teams: []
+        };
         this.toggle = this.toggle.bind(this);
         this.teamListUpdate = this.teamListUpdate.bind(this);
+        this.create = this.create.bind(this);
+        this.handleNameInput = this.handleNameInput.bind(this);
+        this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
+        this.handlePublicInput = this.handlePublicInput.bind(this);
+
+        this.create = this.create.bind(this);
     }
 
     render() {
@@ -102,15 +119,15 @@ class CreateTournamentForm extends React.Component {
                 <Form>
                     <FormGroup>
                         <Label for="name">Name des Turniers</Label>
-                        <Input type="text" name="name" size="255" required/>
+                        <Input type="text" name="name" size="255" required value={this.state.name} onChange={this.handleNameInput}/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="description">Beschreibung (optional)</Label>
-                        <Input type="text" name="description" size="255"/>
+                        <Input type="text" name="description" size="255" value={this.state.description} onChange={this.handleDescriptionInput}/>
                     </FormGroup>
                     <FormGroup>
                         <CustomInput type="checkbox" id="public"
-                            label="Turnier öffentlich anzeigen (schreibgeschützt)"/>
+                            label="Turnier öffentlich anzeigen (schreibgeschützt)" checked={this.state.public} onChange={this.handlePublicInput}/>
                         <CustomInput type="checkbox" id="mix-teams" label="Teams mischen"/>
                         <CustomInput type="checkbox" id="group-phase" label="Gruppenphase" onClick={this.toggle}/>
                     </FormGroup>
@@ -130,7 +147,7 @@ class CreateTournamentForm extends React.Component {
                 <h3 className="custom-font mt-4">Teams</h3>
                 <EditableStringList addButtonText="hinzufügen" placeholder="Keine Teams hinzugefügt!" entries={[]}
                     onChange={this.teamListUpdate} inputPlaceholder="Teamname"/>
-                <Button color="success" size="lg" className="w-100 shadow-sm mt-4">Turnier erstellen</Button>
+                <Button color="success" size="lg" className="w-100 shadow-sm mt-4" onClick={this.create}>Turnier erstellen</Button>
             </div>
         );
     }
@@ -142,6 +159,31 @@ class CreateTournamentForm extends React.Component {
     toggle() {
         this.setState({
             fadeIn: !this.state.fadeIn
+        });
+    }
+
+    handleNameInput(input) {
+        this.setState({ name: input.target.value });
+    }
+
+    handleDescriptionInput(input) {
+        this.setState({ description: input.target.value });
+    }
+
+    handlePublicInput(input) {
+        this.setState({ public: input.target.checked });
+    }
+
+    create() {
+        createTournament({
+            'name': this.state.name,
+            'description': this.state.description,
+            'public': this.state.public,
+            'teams': this.state.teams
+        }, () => {
+            notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
+        }, () => {
+            notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
         });
     }
 }
