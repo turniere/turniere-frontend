@@ -345,7 +345,7 @@ function convertTournament(apiTournament) {
         code: apiTournament.code,
         description: apiTournament.description,
         name: apiTournament.name,
-        public: apiTournament.public,
+        isPublic: apiTournament.public,
         ownerUsername: apiTournament.owner_username,
         groupStage: groupStage,
         playoffStages: playoffStages

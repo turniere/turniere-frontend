@@ -268,7 +268,7 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
             action.parameters.successCallback();
         }).catch(() => {
             action.parameters.errorCallback();
-        })
+        });
         return Object.assign({}, state, {});
     case actiontypes_tournamentinfo.REQUEST_TOURNAMENT:
         getRequest(action.state, '/tournaments/' + action.parameters.code).then((resp) => {
