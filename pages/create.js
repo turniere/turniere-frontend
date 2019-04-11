@@ -21,18 +21,11 @@ import { Footer }                 from '../js/components/Footer';
 import { UserRestrictor, Option } from '../js/components/UserRestrictor';
 import { Login }                  from '../js/components/Login';
 import EditableStringList         from '../js/components/EditableStringList';
-import {
-    verifyCredentials,
-    createTournament
-} from '../js/api';
+import { createTournament }       from '../js/api';
 
 import '../static/everypage.css';
 
 class PrivateCreatePage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render() {
         const { isSignedIn } = this.props;

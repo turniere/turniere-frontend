@@ -16,15 +16,10 @@ import {
 import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
 import { register }           from '../js/api';
-import { verifyCredentials }  from '../js/api';
 
 import '../static/everypage.css';
 
 export default class RegisterPage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render() {
         return (

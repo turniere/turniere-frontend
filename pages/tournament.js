@@ -26,8 +26,7 @@ import { TurniereNavigation } from '../js/components/Navigation';
 import { BigImage }           from '../js/components/BigImage';
 import {
     getRequest,
-    getState,
-    verifyCredentials
+    getState
 } from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -387,8 +386,6 @@ class Main extends React.Component {
     }
 
     componentDidMount() {
-        verifyCredentials();
-
         const code = this.props.query.code;
 
         getRequest(getState(), '/tournaments/' + code)
