@@ -6431,6 +6431,11 @@ react-error-overlay@4.0.0:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.0.tgz#d198408a85b4070937a98667f500c832f86bd5d4"
   integrity sha512-FlsPxavEyMuR6TjVbSSywovXSEyOg6ZDj5+Z8nbsRl9EkOzAhEIcS+GLoQDC5fz/t9suhUXWmUrOBrgeUvrMxw==
 
+react-favicon@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/react-favicon/-/react-favicon-0.0.14.tgz#3c9c7b999d106e6e112f729ab929b8dbec05b280"
+  integrity sha512-dE1Q13jgc5/Z49G3O3LSdJ87XGK6I4sIYmx3+ROYOEkt0wcrdP9J5wf2oDLtq7D9bOm0j62HAWP+DoofjsHNJQ==
+
 react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"

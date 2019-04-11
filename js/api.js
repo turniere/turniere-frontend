@@ -1,7 +1,12 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import {
+    createStore,
+    applyMiddleware,
+    combineReducers
+} from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import thunkMiddleware from 'redux-thunk';
-import { errorMessages } from './constants';
+import thunkMiddleware         from 'redux-thunk';
+
+import { errorMessages }       from './constants';
 
 const axios = require('axios');
 

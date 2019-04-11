@@ -1,4 +1,4 @@
-import React from 'react';
+import React               from 'react';
 import { initializeStore } from '../api';
 
 const isServer = typeof window === 'undefined';
