@@ -179,11 +179,21 @@ class CreateTournamentForm extends React.Component {
             'name': this.state.name,
             'description': this.state.description,
             'public': this.state.public,
-            'teams': this.state.teams
+            'teams': this.createTeamArray(this.state.teams)
         }, () => {
             notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
         }, () => {
             notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
         });
+    }
+
+    createTeamArray(teamnames) {
+        var result = [];
+
+        for(var i = 0; i < teamnames.length; i++) {
+            result[i] = { 'name': teamnames[i] };
+        }
+
+        return result;
     }
 }
