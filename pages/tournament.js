@@ -35,16 +35,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../static/everypage.css';
 import '../static/css/tournament.css';
 
-class TournamentPage extends React.Component {
+class PrivateTournamentPage extends React.Component {
 
     render() {
         const { id, description, isPublic, code, ownerUsername, playoffStages } = this.props.tournament;
+        const { isSignedIn, username } = this.props;
         
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (
             <div className='pb-5'>
                 <Container>
-                    <EditButton id={id} ownerName={ownerUsername}/>
+                    <EditButton id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
                     <p>{description}</p>
                     <ListGroup>
                         <ListGroupItem>
@@ -56,14 +57,23 @@ class TournamentPage extends React.Component {
                 </Container>
                 <div className='stages pt-5'>
                     {playoffStages.map(stage =>
-                        <Stage level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
+                        <Stage isSignedIn={isSignedIn} isOwner={username == ownerUsername} level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
                 </div>
             </div>
         );
     }
 }
 
-function PrivateEditButton(props) {
+function mapStateToTournamentPageProperties(state) {
+    const { isSignedIn, username } = state.userinfo;
+    return { isSignedIn, username };
+}
+
+const TournamentPage = connect(
+    mapStateToTournamentPageProperties
+)(PrivateTournamentPage);
+
+function EditButton(props) {
     const { id, ownerName, isSignedIn, username } = props;
 
     if(isSignedIn && ownerName === username) {
@@ -74,15 +84,6 @@ function PrivateEditButton(props) {
         return null;
     }
 }
-
-function mapStateToEditButtonProperties(state) {
-    const { isSignedIn, username } = state.userinfo;
-    return { isSignedIn, username };
-}
-
-const EditButton = connect(
-    mapStateToEditButtonProperties
-)(PrivateEditButton);
 
 function getLevelName(levelNumber) {
     const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
@@ -116,7 +117,11 @@ class Match extends React.Component {
     }
 
     toggleModal() {
-        this.setState({modal: !this.state.modal});
+        const { isSignedIn, isOwner } = this.props;
+
+        if(isSignedIn && isOwner) {
+            this.setState({modal: !this.state.modal});
+        }
     }
 
     render() {
@@ -391,7 +396,11 @@ class Main extends React.Component {
                 this.setState({ status : response.status, tournament : convertTournament(response.data)});
             })
             .catch((err) => {
-                this.setState({ status : err.response.status });
+                if(err.response) {
+                    this.setState({ status : err.response.status });
+                } else {
+                    this.setState({ status : -1 });
+                }
             });
     }
 
