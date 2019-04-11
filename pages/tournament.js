@@ -361,14 +361,29 @@ function convertGroup(apiGroup) {
 }
 
 function convertMatch(apiMatch) {
-    return {
+    var result = {
         id: apiMatch.id,
-        state: apiMatch.state,
-        team1: apiMatch.match_scores[0].team.name,
-        team2: apiMatch.match_scores[1].team.name,
-        scoreTeam1: apiMatch.match_scores[0].points,
-        scoreTeam2: apiMatch.match_scores[1].points
+        state: apiMatch.state
     };
+
+    if(apiMatch.match_scores.length == 2) {
+        result.team1 = apiMatch.match_scores[0].team.name;
+        result.scoreTeam1 = apiMatch.match_scores[0].points;
+        result.team2 = apiMatch.match_scores[1].team.name;
+        result.scoreTeam2 = apiMatch.match_scores[1].points;
+    } else if(apiMatch.match_scores.length == 1) {
+        result.team1 = apiMatch.match_scores[0].team.name;
+        result.scoreTeam1 = apiMatch.match_scores[0].points;
+        result.team2 = 'TBD';
+        result.scoreTeam2 = 0;
+    } else {
+        result.team1 = 'TBD';
+        result.scoreTeam1 = 0;
+        result.team2 = 'TBD';
+        result.scoreTeam2 = 0;
+    }
+
+    return result;
 }
 
 class Main extends React.Component {
