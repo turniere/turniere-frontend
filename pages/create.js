@@ -1,6 +1,7 @@
 import Head                       from 'next/head';
 import React                      from 'react';
 import { connect }                from 'react-redux';
+import posed                      from 'react-pose';
 
 import {
     Button,
@@ -88,6 +89,17 @@ function CreateTournamentCard() {
     );
 }
 
+const GroupphaseFader = posed.div({
+    visible: {
+        opacity: 1,
+        height: 150
+    },
+    hidden: {
+        opacity: 0,
+        height: 0
+    }
+});
+
 class CreateTournamentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -118,8 +130,7 @@ class CreateTournamentForm extends React.Component {
                         <CustomInput type="checkbox" id="group-phase" label="Gruppenphase"
                             checked={this.state.groupPhaseEnabled} onChange={this.handleGroupPhaseEnabledInput}/>
                     </FormGroup>
-                    <Fade in={this.state.groupPhaseEnabled} tag="div" className="mt-3" baseClass="d-none"
-                        baseClassActive="d-block">
+                    <GroupphaseFader pose={this.state.groupPhaseEnabled? 'visible' : 'hidden'} className="groupphasefader">
                         <FormGroup>
                             <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
                             <Input type="number" name="teams-per-group" size="255"/>
@@ -129,7 +140,7 @@ class CreateTournamentForm extends React.Component {
                                 weiterkommen?</Label>
                             <Input type="number" name="teams-group-to-playoff" size="255"/>
                         </FormGroup>
-                    </Fade>
+                    </GroupphaseFader>
                 </Form>
                 <h3 className="custom-font mt-4">Teams</h3>
                 <EditableStringList addButtonText="hinzufügen" placeholder="Keine Teams hinzugefügt!" entries={[]}
