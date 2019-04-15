@@ -91,8 +91,11 @@ function CreateTournamentCard() {
 class CreateTournamentForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {fadeIn: false, teams: []};
-        this.toggle = this.toggle.bind(this);
+        this.state = { 
+            groupPhaseEnabled: false,
+            teams: []
+        };
+        this.handleGroupPhaseEnabledInput = this.handleGroupPhaseEnabledInput.bind(this);
         this.teamListUpdate = this.teamListUpdate.bind(this);
     }
 
@@ -112,9 +115,10 @@ class CreateTournamentForm extends React.Component {
                         <CustomInput type="checkbox" id="public"
                             label="Turnier öffentlich anzeigen (schreibgeschützt)"/>
                         <CustomInput type="checkbox" id="mix-teams" label="Teams mischen"/>
-                        <CustomInput type="checkbox" id="group-phase" label="Gruppenphase" onClick={this.toggle}/>
+                        <CustomInput type="checkbox" id="group-phase" label="Gruppenphase"
+                            checked={this.state.groupPhaseEnabled} onChange={this.handleGroupPhaseEnabledInput}/>
                     </FormGroup>
-                    <Fade in={this.state.fadeIn} tag="div" className="mt-3" baseClass="d-none"
+                    <Fade in={this.state.groupPhaseEnabled} tag="div" className="mt-3" baseClass="d-none"
                         baseClassActive="d-block">
                         <FormGroup>
                             <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
@@ -139,9 +143,7 @@ class CreateTournamentForm extends React.Component {
         this.setState({teams: list});
     }
 
-    toggle() {
-        this.setState({
-            fadeIn: !this.state.fadeIn
-        });
+    handleGroupPhaseEnabledInput(input) {
+        this.setState({ groupPhaseEnabled: input.target.checked });
     }
 }
