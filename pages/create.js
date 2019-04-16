@@ -109,7 +109,8 @@ class CreateTournamentForm extends React.Component {
             groupSize: 4,
             groupAdvance: 1,
 
-            teams: []
+            teams: [],
+            groups: []
         };
         this.handleGroupPhaseEnabledInput = this.handleGroupPhaseEnabledInput.bind(this);
         this.teamListUpdate = this.teamListUpdate.bind(this);
@@ -152,8 +153,17 @@ class CreateTournamentForm extends React.Component {
                     </GroupphaseFader>
                 </Form>
                 <h3 className="custom-font mt-4">Teams</h3>
-                <EditableStringList addButtonText="hinzufügen" placeholder="Keine Teams hinzugefügt!" entries={[]}
-                    onChange={this.teamListUpdate} inputPlaceholder="Teamname"/>
+                <EditableStringList 
+                    addButtonText="hinzufügen"
+                    teamPlaceholder="Keine Teams hinzugefügt!"
+                    groupPlaceHolder="Keine Gruppen verfügbar!"
+                    teams={[]}
+                    groups={[]}
+                    groupPhaseEnabled={this.state.groupPhaseEnabled}
+                    groupSize={this.state.groupSize}
+                    onTeamsChange={this.teamListUpdate}
+                    onGroupsChange={this.groupListUpdate}
+                    inputPlaceholder="Teamname"/>
                 <Button color="success" size="lg" className="w-100 shadow-sm mt-4">Turnier erstellen</Button>
             </div>
         );
@@ -161,6 +171,10 @@ class CreateTournamentForm extends React.Component {
 
     teamListUpdate(list) {
         this.setState({teams: list});
+    }
+
+    groupListUpdate(list) {
+        this.setState({groups: list});
     }
 
     handleGroupSizeInput(input) {

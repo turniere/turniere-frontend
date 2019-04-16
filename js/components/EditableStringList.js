@@ -11,41 +11,42 @@ export default class EditableStringList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            entries: props.entries
+            teams: props.teams,
+            groups: props.groups
         };
         this.add = this.add.bind(this);
         this.remove = this.remove.bind(this);
     }
 
     add(text) {
-        if (text === '' || this.state.entries.includes(text)) {
+        if (text === '' || this.props.teams.includes(text)) {
             return false;
         }
-        this.state.entries.push(text);
-        this.setState({entries: this.state.entries});
-        this.props.onChange(this.state.entries);
+        this.props.teams.push(text);
+        this.setState({teams: this.state.teams});
+        this.props.onTeamsChange(this.state.teams);
         return true;
     }
 
     remove(text) {
-        let tmp = this.state.entries.filter(item => item !== text);
-        this.setState({entries: tmp});
-        this.props.onChange(tmp);
+        let tmp = this.state.teams.filter(item => item !== text);
+        this.setState({teams: tmp});
+        this.props.onTeamsChange(tmp);
     }
 
     render() {
-        if ((typeof this.state.entries !== 'undefined') && this.state.entries.length > 0) {
+        if ((typeof this.state.teams !== 'undefined') && this.state.teams.length > 0) {
             return (
                 <div className="bg-light p-3 text-secondary font-italic">
                     <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                    {this.state.entries.map((text) => <Item text={text} key={text} removeItem={this.remove}/>)}
+                    {this.state.teams.map((text) => <Item text={text} key={text} removeItem={this.remove}/>)}
                 </div>
             );
         } else {
             return (
                 <div className="bg-light p-3 text-secondary text-center font-italic">
                     <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                    {this.props.placeholder}
+                    {this.props.teamPlaceholder}
                 </div>
             );
         }
