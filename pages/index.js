@@ -11,9 +11,6 @@ import {
 import { TurniereNavigation } from '../js/components/Navigation';
 import { BigImage }           from '../js/components/BigImage';
 import { Footer }             from '../js/components/Footer';
-import {
-    verifyCredentials
-} from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -173,10 +170,6 @@ function PromotedLinkCreateTournament() {
 
 
 class Index extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render () {
         return (

@@ -4,15 +4,10 @@ import React                  from 'react';
 import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
 import { Login }              from '../js/components/Login';
-import { verifyCredentials }  from '../js/api';
 
 import '../static/everypage.css';
 
 export default class LoginPage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render() {
         return (
