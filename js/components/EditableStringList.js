@@ -198,6 +198,7 @@ class GroupView extends React.Component {
                             <CardTitle>Group {groupindex + 1}</CardTitle>
                             {group.map((team, teamindex) => (
                                 <div key={team} draggable droppable="droppable"
+                                    className="grouped-team-item"
                                     onDragStart={(e) => this.onDragStart(e, groupindex,teamindex)}
                                     onDragOver={(e) => this.onDragOver(e)}
                                     onDrop={(e) => this.onDrop(e, groupindex, teamindex)}>

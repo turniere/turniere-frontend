@@ -10,6 +10,16 @@
     display: inline-block;
 }
 
-.group-card .team-item {
+.grouped-team-item {
     display: block;
+    margin-bottom: .5rem;
+    border-radius: .25rem;
+}
+
+.grouped-team-item:last-child {
+    margin-bottom: 0px;
+}
+
+.grouped-team-item > .m-2 {
+    margin: 0 !important;
 }
