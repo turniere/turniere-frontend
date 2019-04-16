@@ -30,7 +30,7 @@ export default class EditableStringList extends React.Component {
         this.state.teams.push(text);
         
         var lastGroup = this.state.groups[this.state.groups.length - 1];
-        if(lastGroup === undefined || lastGroup.length === this.props.groupSize) {
+        if(lastGroup === undefined || lastGroup.length >= this.props.groupSize) {
             this.state.groups[this.state.groups.length] = [];
         }
         lastGroup = this.state.groups[this.state.groups.length - 1];
