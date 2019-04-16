@@ -17,7 +17,6 @@ import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
 import {
     register,
-    verifyCredentials,
     clearErrors
 }  from '../js/api';
 
