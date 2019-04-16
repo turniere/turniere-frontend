@@ -25,7 +25,7 @@ import { createTournament }       from '../js/api';
 
 import '../static/everypage.css';
 
-class PrivateCreatePage extends React.Component {
+class CreatePage extends React.Component {
 
     render() {
         const { isSignedIn } = this.props;
@@ -66,11 +66,9 @@ function mapStateToCreatePageProperties(state) {
     return { isSignedIn };
 }
 
-const CreatePage = connect(
+export default connect(
     mapStateToCreatePageProperties
-)(PrivateCreatePage);
-
-export default CreatePage;
+)(CreatePage);
 
 function CreateTournamentCard() {
     return (
