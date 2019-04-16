@@ -19,12 +19,26 @@ export default class EditableStringList extends React.Component {
     }
 
     add(text) {
-        if (text === '' || this.props.teams.includes(text)) {
+        if (text === '' || this.state.teams.includes(text)) {
             return false;
         }
-        this.props.teams.push(text);
-        this.setState({teams: this.state.teams});
+        this.state.teams.push(text);
+        
+        var lastGroup = this.state.groups[this.state.groups.length - 1];
+        if(lastGroup === undefined || lastGroup.length === this.props.groupSize) {
+            this.state.groups[this.state.groups.length] = [];
+        }
+        lastGroup = this.state.groups[this.state.groups.length - 1];
+        lastGroup[lastGroup.length] = text;
+
+        this.setState({
+            teams: this.state.teams,
+            groups: this.state.groups
+        });
+
         this.props.onTeamsChange(this.state.teams);
+        this.props.onGroupsChange(this.state.groups);
+
         return true;
     }
 
@@ -35,21 +49,61 @@ export default class EditableStringList extends React.Component {
     }
 
     render() {
-        if ((typeof this.state.teams !== 'undefined') && this.state.teams.length > 0) {
-            return (
-                <div className="bg-light p-3 text-secondary font-italic">
-                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                    {this.state.teams.map((text) => <Item text={text} key={text} removeItem={this.remove}/>)}
-                </div>
-            );
+        if(this.props.groupPhaseEnabled) {
+            if ((typeof this.state.teams !== 'undefined') && this.state.teams.length > 0) {
+                return (
+                    <div className="bg-light p-3 text-secondary font-italic">
+                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
+                        <GroupView groups={this.state.groups} onGroupSwitched={this.onGroupSwitch}/>
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="bg-light p-3 text-secondary text-center font-italic">
+                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
+                        {this.props.groupPlaceHolder}
+                    </div>
+                );
+            }
         } else {
-            return (
-                <div className="bg-light p-3 text-secondary text-center font-italic">
-                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                    {this.props.teamPlaceholder}
-                </div>
-            );
+            if ((typeof this.state.teams !== 'undefined') && this.state.teams.length > 0) {
+                return (
+                    <div className="bg-light p-3 text-secondary font-italic">
+                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
+                        {this.state.teams.map((text) => <Item text={text} key={text} removeItem={this.remove}/>)}
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="bg-light p-3 text-secondary text-center font-italic">
+                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
+                        {this.props.teamPlaceholder}
+                    </div>
+                );
+            }
         }
+    }
+}
+
+class GroupView extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div>
+                {this.props.groups.map((group, groupindex) => (
+                    <div className="group-container" key={groupindex}>
+                        Group {groupindex + 1}
+                        {group.map((team, teamindex) => (
+                            <div className="team" key={teamindex}>{team}</div>
+                        ))}
+                    </div>
+                ))}
+            </div>
+        );
     }
 }
 

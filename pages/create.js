@@ -114,6 +114,7 @@ class CreateTournamentForm extends React.Component {
         };
         this.handleGroupPhaseEnabledInput = this.handleGroupPhaseEnabledInput.bind(this);
         this.teamListUpdate = this.teamListUpdate.bind(this);
+        this.groupListUpdate = this.groupListUpdate.bind(this);
 
         this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
         this.handleGroupAdvanceInput = this.handleGroupAdvanceInput.bind(this);
