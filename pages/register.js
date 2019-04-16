@@ -15,16 +15,14 @@ import {
 
 import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
-import { register }           from '../js/api';
-import { verifyCredentials }  from '../js/api';
+import {
+    register,
+    clearErrors
+}  from '../js/api';
 
 import '../static/everypage.css';
 
 export default class RegisterPage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render() {
         return (
@@ -43,20 +41,27 @@ export default class RegisterPage extends React.Component {
     }
 }
 
-function Register() {
-    return (
-        <Container className="py-5">
-            <Card className="shadow">
-                <CardBody>
-                    <h1 className="custom-font">Account anlegen</h1>
-                    <RegisterForm/>
-                    <div className="mt-3">
-                        <a href="/login" className="mr-3">Ich habe bereits einen Account!</a>
-                    </div>
-                </CardBody>
-            </Card>
-        </Container>
-    );
+class Register extends React.Component {
+
+    componentDidMount() {
+        clearErrors();
+    }
+
+    render() {
+        return (
+            <Container className="py-5">
+                <Card className="shadow">
+                    <CardBody>
+                        <h1 className="custom-font">Account anlegen</h1>
+                        <RegisterForm/>
+                        <div className="mt-3">
+                            <a href="/login" className="mr-3">Ich habe bereits einen Account!</a>
+                        </div>
+                    </CardBody>
+                </Card>
+            </Container>
+        );
+    }
 }
 
 class RegisterErrorList extends React.Component {

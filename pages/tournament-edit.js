@@ -17,10 +17,7 @@ import { UserRestrictor, Option } from '../js/components/UserRestrictor';
 import { Footer }                 from '../js/components/Footer';
 import { Login }                  from '../js/components/Login';
 import { ErrorPageComponent }     from '../js/components/ErrorComponents';
-import {
-    verifyCredentials,
-    updateTeamName
-} from '../js/api';
+import { updateTeamName }         from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -42,7 +39,6 @@ class EditTournamentPage extends React.Component {
     }
 
     componentDidMount() {
-        verifyCredentials();
         requestTournament(this.props.query.code, () => {
             this.setState({ validCode: true });
 

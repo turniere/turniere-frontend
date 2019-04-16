@@ -3,7 +3,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Router from 'next/router';
 
-import {login} from '../api';
+import {
+    login,
+    clearErrors
+} from '../api';
 
 export function Login(props) {
     return (
@@ -82,6 +85,10 @@ class LoginForm extends React.Component {
             email : '',
             password : ''
         };
+    }
+
+    componentDidMount() {
+        clearErrors();
     }
 
     tryLogin(event) {

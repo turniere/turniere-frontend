@@ -10,17 +10,12 @@ import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
 import {
     getRequest,
-    getState,
-    verifyCredentials
+    getState
 } from '../js/api';
 
 import '../static/everypage.css';
 
 export default class ListPage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
   
     render() {
         return (
