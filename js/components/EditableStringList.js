@@ -1,11 +1,17 @@
 import React from 'react';
 import { 
     Alert,
-    Button, 
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    CardText,
     Input, 
     InputGroup, 
     InputGroupAddon 
 } from 'reactstrap';
+
+import '../../static/css/editablestringlist.css';
 
 export default class EditableStringList extends React.Component {
     constructor(props) {
@@ -54,7 +60,7 @@ export default class EditableStringList extends React.Component {
                 return (
                     <div className="bg-light p-3 text-secondary font-italic">
                         <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                        <GroupView groups={this.state.groups} onGroupSwitched={this.onGroupSwitch}/>
+                        <GroupView groups={this.state.groups} removeTeam={this.remove} onGroupSwitched={this.onGroupSwitch}/>
                     </div>
                 );
             } else {
@@ -95,12 +101,14 @@ class GroupView extends React.Component {
         return (
             <div>
                 {this.props.groups.map((group, groupindex) => (
-                    <div className="group-container" key={groupindex}>
-                        Group {groupindex + 1}
-                        {group.map((team, teamindex) => (
-                            <div className="team" key={teamindex}>{team}</div>
-                        ))}
-                    </div>
+                    <Card className="group-card" key={groupindex}>
+                        <CardBody>
+                            <CardTitle>Group {groupindex + 1}</CardTitle>
+                            {group.map((team, teamindex) => (
+                                <Item text={team} key={team} removeItem={this.props.removeTeam}/>
+                            ))}
+                        </CardBody>
+                    </Card>
                 ))}
             </div>
         );
@@ -159,7 +167,7 @@ class Item extends React.Component {
 
     render() {
         return (
-            <Alert className="d-inline-block m-2" color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
+            <Alert className="team-item m-2" color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
                 {this.props.text}
             </Alert>
         );

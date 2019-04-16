@@ -1,0 +1,15 @@
+
+.group-card {
+    margin-top: 15px;
+    margin-right: 15px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.team-item {
+    display: inline-block;
+}
+
+.group-card .team-item {
+    display: block;
+}
