@@ -5,7 +5,6 @@ import { Container }          from 'reactstrap';
 import { TurniereNavigation } from '../js/components/Navigation';
 import { BigImage }           from '../js/components/BigImage';
 import { Footer }             from '../js/components/Footer';
-import { verifyCredentials }  from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -495,10 +494,6 @@ function PrivacyText(){
 
 
 export default class PrivacyPage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render() {
         return (

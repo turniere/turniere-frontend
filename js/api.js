@@ -49,6 +49,8 @@ const actiontypes_tournamentinfo = {
     'REQUEST_TOURNAMENT'           : 'REQUEST_TOURNAMENT',
     'REQUEST_TOURNAMENT_SUCCESS'   : 'REQUEST_TOURNAMENT_SUCCESS',
 
+    'CREATE_TOURNAMENT'            : 'CREATE_TOURNAMENT',
+
     'MODIFY_TOURNAMENT'            : 'MODIFY_TOURNAMENT',
     'MODIFY_TOURNAMENT_SUCCESS'    : 'MODIFY_TOURNAMENT_SUCCESS',
     'MODIFY_TOURNAMENT_ERROR'      : 'MODIFY_TOURNAMENT_ERROR',
@@ -260,6 +262,14 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
 
 const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => {
     switch(action.type) {
+    case actiontypes_tournamentinfo.CREATE_TOURNAMENT:
+        postRequest(action.state, '/tournaments', action.parameters.tournament).then((resp) => {
+            storeOptionalToken(resp);
+            action.parameters.successCallback();
+        }).catch(() => {
+            action.parameters.errorCallback();
+        });
+        return Object.assign({}, state, {});
     case actiontypes_tournamentinfo.REQUEST_TOURNAMENT:
         getRequest(action.state, '/tournaments/' + action.parameters.code).then((resp) => {
             __store.dispatch({
@@ -302,7 +312,6 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
     case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_ERROR:
 
         return Object.assign({}, state, {});
-        
     case actiontypes_tournamentinfo.REHYDRATE:
 
         return Object.assign({}, state, {});
@@ -378,6 +387,18 @@ export function logout() {
     });
 }
 
+export function createTournament(data, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actiontypes_tournamentinfo.CREATE_TOURNAMENT,
+        parameters: {
+            tournament: data,
+            successCallback: successCallback,
+            errorCallback: errorCallback
+        },
+        state: __store.getState()
+    });
+}
+
 export function requestTournament(code, successCallback, errorCallback) {
     __store.dispatch({
         type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT,
@@ -423,7 +444,3 @@ function rehydrateApplicationState() {
         });
     }
 }
-
-
-
-
