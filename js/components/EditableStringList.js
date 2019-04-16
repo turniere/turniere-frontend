@@ -13,6 +13,7 @@ import {
 import '../../static/css/editablestringlist.css';
 
 export default class EditableStringList extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -22,6 +23,7 @@ export default class EditableStringList extends React.Component {
         };
         this.add = this.add.bind(this);
         this.remove = this.remove.bind(this);
+        this.onGroupSwitch = this.onGroupSwitch.bind(this);
     }
 
     add(text) {
@@ -125,6 +127,10 @@ export default class EditableStringList extends React.Component {
         this.props.onGroupsChange(this.state.groups);
     }
 
+    onGroupSwitch(src, dest) {
+        console.log('Switched src (' + JSON.stringify(src) + ') to dest (' + JSON.stringify(dest) + ')' );
+    }
+
     render() {
         if(this.props.groupSize !== this.state.groupSize) {
             this.resizeGroups(this.props.groupSize);
@@ -179,14 +185,47 @@ class GroupView extends React.Component {
                     <Card className="group-card" key={groupindex}>
                         <CardBody>
                             <CardTitle>Group {groupindex + 1}</CardTitle>
-                            {group.map((team) => (
-                                <Item text={team} key={team} removeItem={this.props.removeTeam}/>
+                            {group.map((team, teamindex) => (
+                                <div key={team} draggable droppable="droppable"
+                                      onDragStart={(e) => this.onDragStart(e, groupindex,teamindex)}
+                                      onDragOver={(e) => this.onDragOver(e)}
+                                      onDrop={(e) => this.onDrop(e, groupindex, teamindex)}>
+
+                                    <Item text={team} removeItem={this.props.removeTeam}/>
+
+                                </div>
                             ))}
                         </CardBody>
                     </Card>
                 ))}
             </div>
         );
+    }
+
+    onDragStart(e, group, team) {
+        e.dataTransfer.setData(
+            'text/plain',
+            JSON.stringify({
+                group: group,
+                team: team
+            })
+        );
+    }
+
+    onDragOver(e) {
+        e.preventDefault();
+    }
+
+    onDrop(e, group, team) {
+        e.preventDefault();
+
+        let src = JSON.parse(e.dataTransfer.getData('text'));
+        let dest = {
+            group: group,
+            team: team
+        };
+
+        this.props.onGroupSwitched(src, dest);
     }
 }
 
