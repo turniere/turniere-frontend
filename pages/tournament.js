@@ -56,7 +56,7 @@ class PrivateTournamentPage extends React.Component {
                 </Container>
                 <div className='stages pt-5'>
                     {playoffStages.map(stage =>
-                        <Stage isSignedIn={isSignedIn} isOwner={username == ownerUsername} level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
+                        <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername} level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
                 </div>
             </div>
         );
@@ -368,12 +368,12 @@ function convertMatch(apiMatch) {
         state: apiMatch.state
     };
 
-    if(apiMatch.match_scores.length == 2) {
+    if(apiMatch.match_scores.length === 2) {
         result.team1 = apiMatch.match_scores[0].team.name;
         result.scoreTeam1 = apiMatch.match_scores[0].points;
         result.team2 = apiMatch.match_scores[1].team.name;
         result.scoreTeam2 = apiMatch.match_scores[1].points;
-    } else if(apiMatch.match_scores.length == 1) {
+    } else if(apiMatch.match_scores.length === 1) {
         result.team1 = apiMatch.match_scores[0].team.name;
         result.scoreTeam1 = apiMatch.match_scores[0].points;
         result.team2 = 'TBD';
@@ -424,7 +424,7 @@ class Main extends React.Component {
 
         const { status, tournament } = this.state;
 
-        if (status == 200) {
+        if (status === 200) {
             return (
                 <div>
                     <Head>
