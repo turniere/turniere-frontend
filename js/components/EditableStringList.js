@@ -5,7 +5,6 @@ import {
     Card,
     CardBody,
     CardTitle,
-    CardText,
     Input, 
     InputGroup, 
     InputGroupAddon 
@@ -49,9 +48,54 @@ export default class EditableStringList extends React.Component {
     }
 
     remove(text) {
-        let tmp = this.state.teams.filter(item => item !== text);
-        this.setState({teams: tmp});
-        this.props.onTeamsChange(tmp);
+        if(this.removeTeamFromGroup(text) === false) {
+            return false;
+        }
+
+        this.setState({
+            teams: this.state.teams,
+            groups: this.state.groups
+        });
+
+        this.props.onTeamsChange(this.state.teams);
+        this.props.onGroupsChange(this.state.groups);
+    }
+
+    removeTeamFromGroup(text) {
+        this.state.teams = this.state.teams.filter(item => item !== text);
+
+        let teamIndex = this.findTeam(text);
+        if(teamIndex === null) {
+            return false;
+        }
+        
+        // Move every first team to the next group
+        this.state.groups[teamIndex.group].splice(teamIndex.team, 1);
+        for(var group = teamIndex.group; group < this.state.groups.length - 1; group++) {
+            let currentGroup = this.state.groups[group];
+            currentGroup[currentGroup.length] = this.state.groups[group + 1].splice(0, 1)[0];
+        }
+
+        // delete the last group in case it is empty
+        if(this.state.groups[this.state.groups.length - 1].length === 0) {
+            this.state.groups.splice(this.state.groups.length - 1, 1);
+        }
+
+        return true;
+    }
+
+    findTeam(text) {
+        for(var group = 0; group < this.state.groups.length; group++) {
+            for(var team = 0; team < this.state.groups[group].length; team++) {
+                if(this.state.groups[group][team] === text) {
+                    return {
+                        group: group,
+                        team: team
+                    };
+                }
+            }
+        }
+        return null;
     }
 
     render() {
@@ -104,7 +148,7 @@ class GroupView extends React.Component {
                     <Card className="group-card" key={groupindex}>
                         <CardBody>
                             <CardTitle>Group {groupindex + 1}</CardTitle>
-                            {group.map((team, teamindex) => (
+                            {group.map((team) => (
                                 <Item text={team} key={team} removeItem={this.props.removeTeam}/>
                             ))}
                         </CardBody>
