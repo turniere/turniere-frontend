@@ -363,7 +363,7 @@ function convertGroup(apiGroup) {
 }
 
 function convertMatch(apiMatch) {
-    var result = {
+    let result = {
         id: apiMatch.id,
         state: apiMatch.state
     };
