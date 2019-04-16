@@ -15,8 +15,8 @@ import {
 
 import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
-import { register }           from '../js/api';
 import {
+    register,
     verifyCredentials,
     clearErrors
 }  from '../js/api';
@@ -24,10 +24,6 @@ import {
 import '../static/everypage.css';
 
 export default class RegisterPage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render() {
         return (

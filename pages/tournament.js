@@ -26,8 +26,7 @@ import { TurniereNavigation } from '../js/components/Navigation';
 import { BigImage }           from '../js/components/BigImage';
 import {
     getRequest,
-    getState,
-    verifyCredentials
+    getState
 } from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -95,12 +94,14 @@ function getLevelName(levelNumber) {
 }
 
 function Stage(props) {
+    const { isSignedIn, isOwner } = props;
+
     return (<div>
         <Container className='py-5'>
             <h1 className='custom-font'>{props.level}</h1>
             <Row>
                 {props.matches.map((match => (
-                    <Col className='minw-25' key={match.id}><Match match={match}/></Col>
+                    <Col className='minw-25' key={match.id}><Match match={match} isSignedIn={isSignedIn} isOwner={isOwner}/></Col>
                 )))}
             </Row>
         </Container>
@@ -345,7 +346,7 @@ function convertTournament(apiTournament) {
         code: apiTournament.code,
         description: apiTournament.description,
         name: apiTournament.name,
-        public: apiTournament.public,
+        isPublic: apiTournament.public,
         ownerUsername: apiTournament.owner_username,
         groupStage: groupStage,
         playoffStages: playoffStages
@@ -362,14 +363,29 @@ function convertGroup(apiGroup) {
 }
 
 function convertMatch(apiMatch) {
-    return {
+    var result = {
         id: apiMatch.id,
-        state: apiMatch.state,
-        team1: apiMatch.match_scores[0].team.name,
-        team2: apiMatch.match_scores[1].team.name,
-        scoreTeam1: apiMatch.match_scores[0].points,
-        scoreTeam2: apiMatch.match_scores[1].points
+        state: apiMatch.state
     };
+
+    if(apiMatch.match_scores.length == 2) {
+        result.team1 = apiMatch.match_scores[0].team.name;
+        result.scoreTeam1 = apiMatch.match_scores[0].points;
+        result.team2 = apiMatch.match_scores[1].team.name;
+        result.scoreTeam2 = apiMatch.match_scores[1].points;
+    } else if(apiMatch.match_scores.length == 1) {
+        result.team1 = apiMatch.match_scores[0].team.name;
+        result.scoreTeam1 = apiMatch.match_scores[0].points;
+        result.team2 = 'TBD';
+        result.scoreTeam2 = 0;
+    } else {
+        result.team1 = 'TBD';
+        result.scoreTeam1 = 0;
+        result.team2 = 'TBD';
+        result.scoreTeam2 = 0;
+    }
+
+    return result;
 }
 
 class Main extends React.Component {
@@ -387,8 +403,6 @@ class Main extends React.Component {
     }
 
     componentDidMount() {
-        verifyCredentials();
-
         const code = this.props.query.code;
 
         getRequest(getState(), '/tournaments/' + code)

@@ -5,7 +5,6 @@ import { Container }          from 'reactstrap';
 import { TurniereNavigation } from '../js/components/Navigation';
 import { BigImage }           from '../js/components/BigImage';
 import { Footer }             from '../js/components/Footer';
-import { verifyCredentials }  from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../static/everypage.css';
@@ -75,10 +74,6 @@ function ImprintText(){
 
 
 export default class ImprintPage extends React.Component {
-
-    componentDidMount() {
-        verifyCredentials();
-    }
 
     render() {
         return (
