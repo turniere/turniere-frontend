@@ -69,17 +69,11 @@ class RegisterErrorList extends React.Component {
         const { error, errorMessages } = this.props;
         if(error) {
             return (
-                <ul>
+                <ul className='text-danger mt-3'>
                     { errorMessages.map((message, index) => 
                         <li key={index}>
-                            <style jsx>{`
-                                li {
-                                    color:red;
-                                }
-                            `}</style>
                             {message}
                         </li>
-
                     ) }
                 </ul>
             );
