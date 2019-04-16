@@ -128,7 +128,18 @@ export default class EditableStringList extends React.Component {
     }
 
     onGroupSwitch(src, dest) {
-        console.log('Switched src (' + JSON.stringify(src) + ') to dest (' + JSON.stringify(dest) + ')' );
+        const groupCopy = this.state.groups.slice();
+
+        const srcTeam = groupCopy[src.group][src.team];
+        const destTeam = groupCopy[dest.group][dest.team];
+
+        groupCopy[src.group].splice(src.team, 1, destTeam);
+        groupCopy[dest.group].splice(dest.team, 1, srcTeam);
+
+        this.setState({
+            groups: groupCopy
+        });
+        this.props.onGroupsChange(this.state.groups);
     }
 
     render() {
@@ -187,9 +198,9 @@ class GroupView extends React.Component {
                             <CardTitle>Group {groupindex + 1}</CardTitle>
                             {group.map((team, teamindex) => (
                                 <div key={team} draggable droppable="droppable"
-                                      onDragStart={(e) => this.onDragStart(e, groupindex,teamindex)}
-                                      onDragOver={(e) => this.onDragOver(e)}
-                                      onDrop={(e) => this.onDrop(e, groupindex, teamindex)}>
+                                    onDragStart={(e) => this.onDragStart(e, groupindex,teamindex)}
+                                    onDragOver={(e) => this.onDragOver(e)}
+                                    onDrop={(e) => this.onDrop(e, groupindex, teamindex)}>
 
                                     <Item text={team} removeItem={this.props.removeTeam}/>
 
