@@ -105,10 +105,17 @@ class CreateTournamentForm extends React.Component {
         super(props);
         this.state = { 
             groupPhaseEnabled: false,
+
+            groupSize: 4,
+            groupAdvance: 1,
+
             teams: []
         };
         this.handleGroupPhaseEnabledInput = this.handleGroupPhaseEnabledInput.bind(this);
         this.teamListUpdate = this.teamListUpdate.bind(this);
+
+        this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
+        this.handleGroupAdvanceInput = this.handleGroupAdvanceInput.bind(this);
     }
 
     render() {
@@ -133,12 +140,14 @@ class CreateTournamentForm extends React.Component {
                     <GroupphaseFader pose={this.state.groupPhaseEnabled? 'visible' : 'hidden'} className="groupphasefader">
                         <FormGroup>
                             <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                            <Input type="number" name="teams-per-group" size="255"/>
+                            <Input type="number" name="teams-per-group" min="3"
+                                value={this.state.groupSize} onChange={this.handleGroupSizeInput}/>
                         </FormGroup>
                         <FormGroup>
                             <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
                                 weiterkommen?</Label>
-                            <Input type="number" name="teams-group-to-playoff" size="255"/>
+                            <Input type="number" name="teams-group-to-playoff" min="1" max={this.state.groupSize - 1}
+                                value={this.state.groupAdvance} onChange={this.handleGroupAdvanceInput}/>
                         </FormGroup>
                     </GroupphaseFader>
                 </Form>
@@ -152,6 +161,22 @@ class CreateTournamentForm extends React.Component {
 
     teamListUpdate(list) {
         this.setState({teams: list});
+    }
+
+    handleGroupSizeInput(input) {
+        let newSize = input.target.value;
+        if(newSize <= this.state.groupAdvance) {
+            this.setState({
+                groupSize: newSize,
+                groupAdvance: newSize - 1
+            });
+        } else {
+            this.setState({ groupSize: newSize });
+        }
+    }
+
+    handleGroupAdvanceInput(input) {
+        this.setState({ groupAdvance: input.target.value });
     }
 
     handleGroupPhaseEnabledInput(input) {
