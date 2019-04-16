@@ -16,6 +16,7 @@ export default class EditableStringList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            groupSize: props.groupSize,
             teams: props.teams,
             groups: props.groups
         };
@@ -30,7 +31,7 @@ export default class EditableStringList extends React.Component {
         this.state.teams.push(text);
         
         var lastGroup = this.state.groups[this.state.groups.length - 1];
-        if(lastGroup === undefined || lastGroup.length >= this.props.groupSize) {
+        if(lastGroup === undefined || lastGroup.length >= this.state.groupSize) {
             this.state.groups[this.state.groups.length] = [];
         }
         lastGroup = this.state.groups[this.state.groups.length - 1];
@@ -98,7 +99,37 @@ export default class EditableStringList extends React.Component {
         return null;
     }
 
+    resizeGroups(newSize) {
+        let oldGroups = this.state.groups;
+        var rearrangedGroups = [];
+
+        for(var oldGroupIndex = 0; oldGroupIndex < oldGroups.length; oldGroupIndex++) {
+            for(var oldTeamIndex = 0; oldTeamIndex < oldGroups[oldGroupIndex].length; oldTeamIndex++) {
+                let index = oldGroupIndex * this.state.groupSize + oldTeamIndex;
+
+                let newGroupIndex = Math.floor(index / newSize);
+                let newTeamIndex = index % newSize;
+
+                if(newTeamIndex === 0) {
+                    rearrangedGroups[newGroupIndex] = [];
+                }
+
+                rearrangedGroups[newGroupIndex][newTeamIndex] = oldGroups[oldGroupIndex][oldTeamIndex];
+            }
+        }
+
+        this.setState({
+            groupSize: newSize,
+            groups: rearrangedGroups
+        });
+        this.props.onGroupsChange(this.state.groups);
+    }
+
     render() {
+        if(this.props.groupSize !== this.state.groupSize) {
+            this.resizeGroups(this.props.groupSize);
+        }
+
         if(this.props.groupPhaseEnabled) {
             if ((typeof this.state.teams !== 'undefined') && this.state.teams.length > 0) {
                 return (
