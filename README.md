@@ -15,7 +15,7 @@ $ git clone https://github.com/turniere/turniere-frontend.git
 Afterwards you'll have to install the used libraries using following command:
 
 ```
-yarn install
+$ yarn install
 ```
 
 Afterwards you may simply run the developer version of the project:

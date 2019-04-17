@@ -226,9 +226,9 @@ class CreateTournamentForm extends React.Component {
     }
 
     createTeamArray(teamnames) {
-        var result = [];
+        let result = [];
 
-        for(var i = 0; i < teamnames.length; i++) {
+        for(let i = 0; i < teamnames.length; i++) {
             result[i] = { 'name': teamnames[i] };
         }
 
