@@ -40,11 +40,7 @@ export class TurniereNavigation extends React.Component {
                 <Betabadge/>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={!this.state.collapsed} navbar>
-                    <Nav navbar className="mr-auto">
-                        <Navlink target="/create" text="Turnier erstellen"/>
-                        <Navlink target="/list" text="Öffentliche Turniere"/>
-                        <Navlink target="/faq" text="FAQ"/>
-                    </Nav>
+                    <NavLinks/>
                     <LoginLogoutButtons/>
                 </Collapse>
             </Navbar>
@@ -58,6 +54,18 @@ function Navlink(props) {
             <NavLink href={props.target}>{props.text}</NavLink>
         </NavItem>
     );
+}
+
+class SmartNavLinks extends React.Component {
+
+    render() {
+        return (<Nav navbar className="mr-auto">
+            <Navlink target="/create" text="Turnier erstellen"/>
+            <Navlink target="/list" text="Öffentliche Turniere"/>
+            {this.props.isSignedIn && <Navlink target="/private" text="Private Turniere"/>}
+            <Navlink target="/faq" text="FAQ"/>
+        </Nav>);
+    }
 }
 
 function Betabadge() {
@@ -87,12 +95,15 @@ class InvisibleLoginLogoutButtons extends React.Component {
     }
 }
 
-const mapStateToLoginLogoutButtonProperties = (state) => {
+const mapStateToUserinfo = (state) => {
     const { isSignedIn, username } = state.userinfo;
     return { isSignedIn, username };
 };
 
 const LoginLogoutButtons = connect(
-    mapStateToLoginLogoutButtonProperties
+    mapStateToUserinfo
 )(InvisibleLoginLogoutButtons);
 
+const NavLinks = connect(
+    mapStateToUserinfo
+)(SmartNavLinks);
