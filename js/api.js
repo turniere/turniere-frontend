@@ -340,6 +340,7 @@ const default_applicationstate = {
 };
 
 var __store;
+var applicationHydrated = false;
 
 export function initializeStore(initialState = default_applicationstate) {
     __store = createStore(
@@ -348,7 +349,9 @@ export function initializeStore(initialState = default_applicationstate) {
         composeWithDevTools(applyMiddleware(thunkMiddleware))
     );
     __store.subscribe(() => {
-        localStorage.setItem('reduxState', JSON.stringify(__store.getState()));
+        if(applicationHydrated) {
+            localStorage.setItem('reduxState', JSON.stringify(__store.getState()));
+        }
     });
     return __store;
 }
@@ -449,11 +452,12 @@ function rehydrateApplicationState() {
     if(persistedState) {
         __store.dispatch({
             type : actiontypes_userinfo.REHYDRATE,
-            parameters : Object.assign({}, persistedState.userinfo, {})
+            parameters : Object.assign({}, persistedState.userinfo)
         });
         __store.dispatch({
             type : actiontypes_tournamentinfo.REHYDRATE,
-            parameters : Object.assign({}, persistedState.tournamentinfo, {})
+            parameters : Object.assign({}, persistedState.tournamentinfo)
         });
+        applicationHydrated = true;
     }
 }
