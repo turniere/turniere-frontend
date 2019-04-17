@@ -21,8 +21,6 @@ const actiontypes_userinfo = {
     'LOGIN_RESULT_SUCCESS'         : 'LOGIN_RESULT_SUCCESS',
     'LOGIN_RESULT_ERROR'           : 'LOGIN_RESULT_ERROR',
  
-    'CLEAR_ERRORS'                 : 'CLEAR_ERRORS',
-
     'LOGOUT'                       : 'LOGOUT',
 
     'VERIFY_CREDENTIALS'           : 'VERIFY_CREDENTIALS',
@@ -223,11 +221,6 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             error : true,
             errorMessages : action.parameters.errorMessages
         });
-    case actiontypes_userinfo.CLEAR_ERRORS:
-        return Object.assign({}, state, {
-            error : false,
-            errorMessages : []
-        });
     case actiontypes_userinfo.LOGOUT:
         deleteRequest(action.state, '/users/sign_out').then(() => {
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
@@ -365,12 +358,6 @@ export function verifyCredentials() {
             state: __store.getState()
         });
     }
-}
-
-export function clearErrors() {
-    __store.dispatch({
-        type: actiontypes_userinfo.CLEAR_ERRORS
-    });
 }
 
 export function register(username, email, password) {

@@ -15,10 +15,7 @@ import {
 
 import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
-import {
-    register,
-    clearErrors
-}  from '../js/api';
+import { register }           from '../js/api';
 
 import '../static/everypage.css';
 
@@ -42,10 +39,6 @@ export default class RegisterPage extends React.Component {
 }
 
 class Register extends React.Component {
-
-    componentDidMount() {
-        clearErrors();
-    }
 
     render() {
         return (
