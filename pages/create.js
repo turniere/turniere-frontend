@@ -2,6 +2,7 @@ import Head                       from 'next/head';
 import React                      from 'react';
 import { notify }                 from 'react-notify-toast';
 import { connect }                from 'react-redux';
+import posed                      from 'react-pose';
 
 import {
     Button,
@@ -9,7 +10,6 @@ import {
     CardBody,
     Container,
     CustomInput,
-    Fade,
     Form,
     FormGroup,
     Input,
@@ -25,7 +25,7 @@ import { createTournament }       from '../js/api';
 
 import '../static/everypage.css';
 
-class PrivateCreatePage extends React.Component {
+class CreatePage extends React.Component {
 
     render() {
         const { isSignedIn } = this.props;
@@ -66,11 +66,9 @@ function mapStateToCreatePageProperties(state) {
     return { isSignedIn };
 }
 
-const CreatePage = connect(
+export default connect(
     mapStateToCreatePageProperties
-)(PrivateCreatePage);
-
-export default CreatePage;
+)(CreatePage);
 
 function CreateTournamentCard() {
     return (
@@ -85,23 +83,41 @@ function CreateTournamentCard() {
     );
 }
 
+const GroupphaseFader = posed.div({
+    visible: {
+        opacity: 1,
+        height: 150
+    },
+    hidden: {
+        opacity: 0,
+        height: 0
+    }
+});
+
 class CreateTournamentForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            fadeIn: false,
+            groupPhaseEnabled: false,
 
             name: '',
             description: '',
             public: false,
-            teams: []
+              
+            groupSize: 4,
+            groupAdvance: 1,
+            teams: [],
+            groups: []
         };
-        this.toggle = this.toggle.bind(this);
+        this.handleGroupPhaseEnabledInput = this.handleGroupPhaseEnabledInput.bind(this);
         this.teamListUpdate = this.teamListUpdate.bind(this);
+        this.groupListUpdate = this.groupListUpdate.bind(this);
         this.create = this.create.bind(this);
         this.handleNameInput = this.handleNameInput.bind(this);
         this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
         this.handlePublicInput = this.handlePublicInput.bind(this);
+        this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
+        this.handleGroupAdvanceInput = this.handleGroupAdvanceInput.bind(this);
 
         this.create = this.create.bind(this);
     }
@@ -122,24 +138,35 @@ class CreateTournamentForm extends React.Component {
                         <CustomInput type="checkbox" id="public"
                             label="Turnier öffentlich anzeigen (schreibgeschützt)" checked={this.state.public} onChange={this.handlePublicInput}/>
                         <CustomInput type="checkbox" id="mix-teams" label="Teams mischen"/>
-                        <CustomInput type="checkbox" id="group-phase" label="Gruppenphase" onClick={this.toggle}/>
+                        <CustomInput type="checkbox" id="group-phase" label="Gruppenphase"
+                            checked={this.state.groupPhaseEnabled} onChange={this.handleGroupPhaseEnabledInput}/>
                     </FormGroup>
-                    <Fade in={this.state.fadeIn} tag="div" className="mt-3" baseClass="d-none"
-                        baseClassActive="d-block">
+                    <GroupphaseFader pose={this.state.groupPhaseEnabled? 'visible' : 'hidden'} className="groupphasefader">
                         <FormGroup>
                             <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                            <Input type="number" name="teams-per-group" size="255"/>
+                            <Input type="number" name="teams-per-group" min="3"
+                                value={this.state.groupSize} onChange={this.handleGroupSizeInput}/>
                         </FormGroup>
                         <FormGroup>
                             <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
                                 weiterkommen?</Label>
-                            <Input type="number" name="teams-group-to-playoff" size="255"/>
+                            <Input type="number" name="teams-group-to-playoff" min="1" max={this.state.groupSize - 1}
+                                value={this.state.groupAdvance} onChange={this.handleGroupAdvanceInput}/>
                         </FormGroup>
-                    </Fade>
+                    </GroupphaseFader>
                 </Form>
                 <h3 className="custom-font mt-4">Teams</h3>
-                <EditableStringList addButtonText="hinzufügen" placeholder="Keine Teams hinzugefügt!" entries={[]}
-                    onChange={this.teamListUpdate} inputPlaceholder="Teamname"/>
+                <EditableStringList 
+                    addButtonText="hinzufügen"
+                    teamPlaceholder="Keine Teams hinzugefügt!"
+                    groupPlaceHolder="Keine Gruppen verfügbar!"
+                    teams={[]}
+                    groups={[]}
+                    groupPhaseEnabled={this.state.groupPhaseEnabled}
+                    groupSize={this.state.groupSize}
+                    onTeamsChange={this.teamListUpdate}
+                    onGroupsChange={this.groupListUpdate}
+                    inputPlaceholder="Teamname"/>
                 <Button color="success" size="lg" className="w-100 shadow-sm mt-4" onClick={this.create}>Turnier erstellen</Button>
             </div>
         );
@@ -149,10 +176,28 @@ class CreateTournamentForm extends React.Component {
         this.setState({teams: list});
     }
 
-    toggle() {
-        this.setState({
-            fadeIn: !this.state.fadeIn
-        });
+    groupListUpdate(list) {
+        this.setState({groups: list});
+    }
+
+    handleGroupSizeInput(input) {
+        let newSize = input.target.value;
+        if(newSize <= this.state.groupAdvance) {
+            this.setState({
+                groupSize: newSize,
+                groupAdvance: newSize - 1
+            });
+        } else {
+            this.setState({ groupSize: newSize });
+        }
+    }
+
+    handleGroupAdvanceInput(input) {
+        this.setState({ groupAdvance: input.target.value });
+    }
+
+    handleGroupPhaseEnabledInput(input) {
+        this.setState({ groupPhaseEnabled: input.target.checked });
     }
 
     handleNameInput(input) {
