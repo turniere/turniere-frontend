@@ -21,9 +21,9 @@ import {
 }  from '../js/api';
 
 import '../static/everypage.css';
+import '../static/css/errormessages.css';
 
 export default class RegisterPage extends React.Component {
-
     render() {
         return (
             <div className="main generic-fullpage-bg">
@@ -42,7 +42,6 @@ export default class RegisterPage extends React.Component {
 }
 
 class Register extends React.Component {
-
     componentDidMount() {
         clearErrors();
     }
@@ -69,11 +68,9 @@ class RegisterErrorList extends React.Component {
         const { error, errorMessages } = this.props;
         if(error) {
             return (
-                <ul className='text-danger mt-3'>
+                <ul className="mt-3 error-box">
                     { errorMessages.map((message, index) => 
-                        <li key={index}>
-                            {message}
-                        </li>
+                        <li key={index}>{message}</li>
                     ) }
                 </ul>
             );
@@ -93,7 +90,6 @@ const VisibleRegisterErrorList = connect(
 )(RegisterErrorList);
 
 class RegisterForm extends React.Component {
-
     constructor(props) {
         super(props);
 
