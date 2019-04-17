@@ -250,7 +250,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
         });
         return Object.assign({}, state, {});
     case actiontypes_userinfo.REHYDRATE:
-        return Object.assign({}, state, action.parameters);
+        return Object.assign({}, state, action.parameters, { error: false, errorMessages: [] });
     case actiontypes_userinfo.CLEAR:
         return Object.assign({}, state, {
             isSignedIn : false,
