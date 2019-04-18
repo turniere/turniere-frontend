@@ -188,7 +188,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             __store.dispatch({
                 type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
                 parameters : {
-                    username : resp.data.data.username,
+                    username : resp.data.username,
                 }
             });
             storeOptionalToken(resp);
