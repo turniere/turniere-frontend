@@ -20,8 +20,8 @@ import {
     clearErrors
 }  from '../js/api';
 
-import '../static/everypage.css';
 import '../static/css/errormessages.css';
+import '../static/everypage.css';
 
 export default class RegisterPage extends React.Component {
     render() {
