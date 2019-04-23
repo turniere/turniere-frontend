@@ -38,7 +38,7 @@ const actiontypes_userinfo = {
 
 const defaultstate_userinfo = {
     isSignedIn : false,
-    wasGreeted : false,
+    wasGreeted : true,
     username : null,
     error : false,
     errorMessages : [],
@@ -261,6 +261,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     case actiontypes_userinfo.CLEAR:
         return Object.assign({}, state, {
             isSignedIn : false,
+            wasGreeted : false,
             username : null,
             error : false,
             errorMessages : [],
