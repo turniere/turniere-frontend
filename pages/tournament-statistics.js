@@ -1,6 +1,72 @@
 import Head                   from 'next/head';
 import React                  from 'react';
 import { connect }            from 'react-redux';
+import {
+    Card,
+    CardBody,
+    Container,
+    Table
+} from 'reactstrap';
+
+import { TurniereNavigation } from '../js/components/Navigation';
+import { BigImage } from '../js/components/BigImage';
+import { Footer } from '../js/components/Footer';
+
+
+class TeamRow extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <tr>
+                <td className="w-100">{this.findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
+                <td>{ this.props.teamToShow.winlossdifferential }</td>
+                <td>{ this.props.teamToShow.pointDifferential }</td>
+            </tr>
+        );
+    }
+
+
+    findTeam(teams, id) {
+        for(let i = 0; i < teams.length; i++) {
+            if(teams[i].id === id) {
+                return teams[i];
+            }
+        }
+        return null;
+    }
+}
+
+class StatisticsComponent extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <Card className="shadow">
+                <CardBody>
+                    <h1 className="custom-font">Turnier-Statistiken für {this.props.data.tournament.name}</h1>
+                    <Table className="table-striped mt-3">
+                        <thead>
+                            <th>Team Name</th>
+                            <th>Match Differenz</th>
+                            <th>Punkt Differenz</th>
+                        </thead>
+                        <tbody>
+                            { this.props.data.groupPhasePerformances.map((team, index) => (
+                                <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
+                            )) }
+                        </tbody>
+                    </Table>
+                </CardBody>
+            </Card>
+        );
+    }
+}
 
 class StatisticsTournamentPage extends React.Component {
 
@@ -165,18 +231,28 @@ class StatisticsTournamentPage extends React.Component {
                     team: 0x1247 // Guangzhou Charge
                 }
             ],
-            playoffPerformances: [
-            ]
-
+            mostDominantTeam: {
+                id: 0x1234,
+                pointsMade: 94,
+                pointsReceived: 3
+            },
+            leastDominantTeam: {
+                id: 0x1240,
+                pointsMade: 2,
+                pointsReceived: 103
+            }
         };
 
         return (
             <div>
                 <Head>
-                    <title>Turnie.re - Turnieranzeige (Statistiken)</title>
+                    <title>{tournamentStatistics.tournament.name}: turnie.re</title>
                 </Head>
-                <p>Turnieranzeige (Statistiken)</p>
-                <p>Code: {this.props.query.code}</p>
+                <TurniereNavigation/>
+                <Container  className="py-5">
+                    <StatisticsComponent data={tournamentStatistics}/>
+                </Container>
+                <Footer/>
             </div>
         );
     }
