@@ -217,7 +217,8 @@ class CreateTournamentForm extends React.Component {
             'name': this.state.name,
             'description': this.state.description,
             'public': this.state.public,
-            'teams': this.createTeamArray(this.state.teams)
+            'group_stage': this.state.groupPhaseEnabled,
+            'teams': this.createTeamArray(this.state.groupPhaseEnabled, this.state.groups, this.state.teams)
         }, () => {
             notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
         }, () => {
@@ -225,11 +226,22 @@ class CreateTournamentForm extends React.Component {
         });
     }
 
-    createTeamArray(teamnames) {
+    createTeamArray(/* boolean */ groupphase, /* String[][] */ groups, /* String[] */ teams) {
         let result = [];
 
-        for(let i = 0; i < teamnames.length; i++) {
-            result[i] = { 'name': teamnames[i] };
+        if(groupphase) {
+            for(let groupNumber = 0; groupNumber < groups.length; groupNumber++) {
+                for(let groupMember = 0; groupMember < groups[groupNumber].length; groupMember++) {
+                    result[result.length] = {
+                        'name': groups[groupNumber][groupMember],
+                        'group': groupNumber
+                    };
+                }
+            }
+        } else {
+            for(let i = 0; i < teams.length; i++) {
+                result[i] = { 'name': teams[i] };
+            }
         }
 
         return result;
