@@ -11,6 +11,7 @@ import {
 import { TurniereNavigation } from '../js/components/Navigation';
 import { BigImage } from '../js/components/BigImage';
 import { Footer } from '../js/components/Footer';
+import { Order, sort } from '../js/utils/sort';
 
 
 class TeamRow extends React.Component {
@@ -22,8 +23,8 @@ class TeamRow extends React.Component {
         return (
             <tr>
                 <td className="w-100">{this.findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
-                <td>{ this.props.teamToShow.winlossdifferential }</td>
-                <td>{ this.props.teamToShow.pointDifferential }</td>
+                <td className="text-center">{ this.props.teamToShow.winlossdifferential }</td>
+                <td className="text-center">{ this.props.teamToShow.pointDifferential }</td>
             </tr>
         );
     }
@@ -46,18 +47,29 @@ class StatisticsComponent extends React.Component {
     }
 
     render() {
+        let performances = this.props.data.groupPhasePerformances;
+
+        /**
+         * comparison(p1, p2) < 0 => p1 < p2
+         * comparison(p1, p2) = 0 => p1 = p2
+         * comparison(p1, p2) > 0 => p1 > p2
+         */
+        let sortedPerformances = sort(performances, (p1, p2) => {
+            return (p2.winlossdifferential - p1.winlossdifferential) * 100 + (p2.pointDifferential - p1.pointDifferential);
+        }, Order.descending);
+
         return (
             <Card className="shadow">
                 <CardBody>
                     <h1 className="custom-font">Turnier-Statistiken für {this.props.data.tournament.name}</h1>
                     <Table className="table-striped mt-3">
-                        <thead>
-                            <th>Team Name</th>
-                            <th>Match Differenz</th>
-                            <th>Punkt Differenz</th>
-                        </thead>
                         <tbody>
-                            { this.props.data.groupPhasePerformances.map((team, index) => (
+                            <tr>
+                                <th>Team Name</th>
+                                <th className="text-center">Match Differenz</th>
+                                <th className="text-center">Punkt Differenz</th>
+                            </tr>
+                            { sortedPerformances.map((team, index) => (
                                 <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
                             )) }
                         </tbody>
@@ -73,29 +85,6 @@ class StatisticsTournamentPage extends React.Component {
     static async getInitialProps({query}) {
         return {query};
     }
-
-/*
-                    team: 0x1234 // New York Excelsior
-                    team: 0x1235 // Los Angeles Gladiators
-                    team: 0x1236 // San Francisco Shock
-                    team: 0x1237 // Vancouver Titans
-                    team: 0x1238 // London Spitfire
-                    team: 0x1239 //Dallas Fuel
-                    team: 0x123a // Chengdu Hunters
-                    team: 0x123b // Boston Uprising
-                    team: 0x123c // Paris Eternal
-                    team: 0x123d // Philadelphia Fusion
-                    team: 0x123e // Hangzhou Spark
-                    team: 0x123f // Houston Outlaws
-                    team: 0x1240 // Shanghai Dragons
-                    team: 0x1241 // Los Angeles Valiant
-                    team: 0x1242 // Seoul Dynasty
-                    team: 0x1243 // Atlanta Reign
-                    team: 0x1244 // Toronto Defiant
-                    team: 0x1245 // Florida Mayhem
-                    team: 0x1246 // Washington Justice
-                    team: 0x1247 // Guangzhou Charge
-*/
 
     render() {
         let tournamentStatistics = {
@@ -244,7 +233,7 @@ class StatisticsTournamentPage extends React.Component {
         };
 
         return (
-            <div>
+            <div className="main">
                 <Head>
                     <title>{tournamentStatistics.tournament.name}: turnie.re</title>
                 </Head>
