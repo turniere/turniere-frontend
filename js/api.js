@@ -189,6 +189,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
                 type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
                 parameters : {
                     username : resp.data.username,
+                    successCallback: action.parameters.successCallback
                 }
             });
             storeOptionalToken(resp);
@@ -212,6 +213,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
         });
         return Object.assign({}, state, {});
     case actiontypes_userinfo.LOGIN_RESULT_SUCCESS:
+        action.parameters.successCallback(action.parameters.username);
         return Object.assign({}, state, {
             isSignedIn : true,
             error : false,
@@ -230,6 +232,7 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
         });
     case actiontypes_userinfo.LOGOUT:
         deleteRequest(action.state, '/users/sign_out').then(() => {
+            action.parameters.successCallback();
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
         }).catch(() => {
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
@@ -385,20 +388,24 @@ export function register(username, email, password) {
     });
 }
 
-export function login(email, password) {
+export function login(email, password, successCallback) {
     __store.dispatch({
         type: actiontypes_userinfo.LOGIN,
         parameters: {
             email: email,
-            password: password
+            password: password,
+            successCallback: successCallback
         },
         state: __store.getState()
     });
 }
 
-export function logout() {
+export function logout(successCallback) {
     __store.dispatch({
         type : actiontypes_userinfo.LOGOUT,
+        parameters: {
+            successCallback: successCallback
+        },
         state: __store.getState()
     });
 }

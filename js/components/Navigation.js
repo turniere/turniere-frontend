@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import React       from 'react';
 
 import { logout }  from '../api';
+import {notify} from 'react-notify-toast';
 
 export class TurniereNavigation extends React.Component {
 
@@ -66,6 +67,10 @@ function Betabadge() {
 
 class InvisibleLoginLogoutButtons extends React.Component {
 
+    logout(){
+        logout(() => notify.show('Du bist jetzt abgemeldet.', 'success', 2500));
+    }
+
     render() {
         const { isSignedIn, username } = this.props;
 
@@ -73,7 +78,7 @@ class InvisibleLoginLogoutButtons extends React.Component {
             return (
                 <ButtonGroup className="nav-item">
                     <Button outline color="success"  href="/profile" className="navbar-btn my-2 my-sm-0 px-5">{ username }</Button>
-                    <Button outline color="success" onClick={logout.bind(this)} className="navbar-btn my-2 my-sm-0 px-5">Logout</Button>
+                    <Button outline color="success" onClick={this.logout.bind(this)} className="navbar-btn my-2 my-sm-0 px-5">Logout</Button>
                 </ButtonGroup>
             );
         } else {
