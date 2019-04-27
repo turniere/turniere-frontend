@@ -13,8 +13,7 @@ import {
 import { connect } from 'react-redux';
 import React       from 'react';
 
-import {greet, logout} from '../api';
-import {notify} from "react-notify-toast";
+import { logout }  from '../api';
 
 export class TurniereNavigation extends React.Component {
 
@@ -68,12 +67,7 @@ function Betabadge() {
 class InvisibleLoginLogoutButtons extends React.Component {
 
     render() {
-        const {isSignedIn, username, wasGreeted} = this.props;
-
-        if (isSignedIn && !wasGreeted) {
-            notify.show('Willkommen, ' + username + '!', 'success', 3000);
-            greet();
-        }
+        const { isSignedIn, username } = this.props;
 
         if(isSignedIn) {
             return (
@@ -94,8 +88,8 @@ class InvisibleLoginLogoutButtons extends React.Component {
 }
 
 const mapStateToLoginLogoutButtonProperties = (state) => {
-    const {isSignedIn, username, wasGreeted} = state.userinfo;
-    return {isSignedIn, username, wasGreeted};
+    const { isSignedIn, username } = state.userinfo;
+    return { isSignedIn, username };
 };
 
 const LoginLogoutButtons = connect(

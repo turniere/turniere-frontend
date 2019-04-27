@@ -20,8 +20,7 @@ const actiontypes_userinfo = {
     'LOGIN'                        : 'LOGIN',
     'LOGIN_RESULT_SUCCESS'         : 'LOGIN_RESULT_SUCCESS',
     'LOGIN_RESULT_ERROR'           : 'LOGIN_RESULT_ERROR',
-    'GREET'                        : 'GREET',
-
+ 
     'CLEAR_ERRORS'                 : 'CLEAR_ERRORS',
 
     'LOGOUT'                       : 'LOGOUT',
@@ -38,7 +37,6 @@ const actiontypes_userinfo = {
 
 const defaultstate_userinfo = {
     isSignedIn : false,
-    wasGreeted : false,
     username : null,
     error : false,
     errorMessages : [],
@@ -216,7 +214,6 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     case actiontypes_userinfo.LOGIN_RESULT_SUCCESS:
         return Object.assign({}, state, {
             isSignedIn : true,
-            wasGreeted : false,
             error : false,
             errorMessages : [],
             username : action.parameters.username,
@@ -238,10 +235,6 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             __store.dispatch({ type : actiontypes_userinfo.CLEAR });
         });
         return Object.assign({}, state, {});
-    case actiontypes_userinfo.GREET:
-        return Object.assign({}, state, {
-            wasGreeted : true,
-        });
     case actiontypes_userinfo.STORE_AUTH_HEADERS:
         return Object.assign({}, state, {
             accesstoken : action.parameters.accesstoken,
@@ -399,14 +392,6 @@ export function login(email, password) {
             email: email,
             password: password
         },
-        state: __store.getState()
-    });
-}
-
-export function greet() {
-    __store.dispatch({
-        type: actiontypes_userinfo.GREET,
-        parameters: {},
         state: __store.getState()
     });
 }
