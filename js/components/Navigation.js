@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import React       from 'react';
 
 import {greet, logout} from '../api';
-import {notify} from 'react-notify-toast';
+import {notify} from "react-notify-toast";
 
 export class TurniereNavigation extends React.Component {
 
@@ -70,12 +70,12 @@ class InvisibleLoginLogoutButtons extends React.Component {
     render() {
         const {isSignedIn, username, wasGreeted} = this.props;
 
-        if(isSignedIn) {
-            if (!wasGreeted) {
-                notify.show('Willkommen, ' + username + '!', 'success', 2500);
-                greet();
-            }
+        if (isSignedIn && !wasGreeted) {
+            notify.show('Willkommen, ' + username + '!', 'success', 3000);
+            greet();
+        }
 
+        if(isSignedIn) {
             return (
                 <ButtonGroup className="nav-item">
                     <Button outline color="success"  href="/profile" className="navbar-btn my-2 my-sm-0 px-5">{ username }</Button>
@@ -83,11 +83,6 @@ class InvisibleLoginLogoutButtons extends React.Component {
                 </ButtonGroup>
             );
         } else {
-            if (!wasGreeted) {
-                notify.show('Du bist jetzt abgemeldet!', 'success', 2500);
-                greet();
-            }
-
             return (
                 <ButtonGroup className="nav-item">
                     <Button outline color="success" href="/login" className="navbar-btn my-2 my-sm-0 px-5">Login</Button>
