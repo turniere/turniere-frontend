@@ -279,7 +279,7 @@ class EditTeamNamesForm extends React.Component {
     }
 
     handleNameInput(index, input) {
-        var team = this.state.teams.slice();
+        let team = this.state.teams.slice();
 
         team[index].name = input.target.value;
 

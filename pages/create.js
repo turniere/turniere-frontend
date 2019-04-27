@@ -217,7 +217,8 @@ class CreateTournamentForm extends React.Component {
             'name': this.state.name,
             'description': this.state.description,
             'public': this.state.public,
-            'teams': this.createTeamArray(this.state.teams)
+            'group_stage': this.state.groupPhaseEnabled,
+            'teams': createTeamArray(this.state.groupPhaseEnabled, this.state.groups, this.state.teams)
         }, () => {
             notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
         }, () => {
@@ -225,13 +226,41 @@ class CreateTournamentForm extends React.Component {
         });
     }
 
-    createTeamArray(teamnames) {
-        var result = [];
+}
 
-        for(var i = 0; i < teamnames.length; i++) {
-            result[i] = { 'name': teamnames[i] };
+/**
+ * This method creates an array of team objects that conform to the currently
+ * api specs available at https://apidoc.turnie.re/
+ *
+ * @param {boolean} groupphase Whether a group phase is to be created
+ * @param {string[][]} groups The teams split into the groups that are
+ *     to be used in the group phase of the tournament. Please note that
+ *     according to the api every team can only occur once (not enforced
+ *     by this method) and that every team from {@param teams} will have
+ *     to be in one of the groups (also not enforced by this method, but
+ *     might lead to inconsistencies)
+ * @param {string[]} teams An array containing all names of the teams
+ *     that are to be created for the tournament
+ * @return {Object[]} an array of teams that can be directly sent to the
+ *     backend
+ */
+function createTeamArray(groupphase, groups, teams) {
+    let result = [];
+
+    if(groupphase) {
+        for(let groupNumber = 0; groupNumber < groups.length; groupNumber++) {
+            for(let groupMember = 0; groupMember < groups[groupNumber].length; groupMember++) {
+                result[result.length] = {
+                    'name': groups[groupNumber][groupMember],
+                    'group': groupNumber
+                };
+            }
         }
-
-        return result;
+    } else {
+        for(let i = 0; i < teams.length; i++) {
+            result[i] = { 'name': teams[i] };
+        }
     }
+
+    return result;
 }

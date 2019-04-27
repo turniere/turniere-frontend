@@ -8,6 +8,8 @@ import {
     clearErrors
 } from '../api';
 
+import '../../static/css/errormessages.css';
+
 export function Login(props) {
     return (
         <Container className="py-5">
@@ -31,14 +33,9 @@ class LoginErrorList extends React.Component {
         const { error, errorMessages } = this.props;
         if(error) {
             return (
-                <ul>
+                <ul className='mt-3 error-box'>
                     { errorMessages.map((message, index) => 
                         <li key={index}>
-                            <style jsx>{`
-                                li {
-                                    color:red;
-                                }
-                            `}</style>
                             {message}
                         </li>
 
