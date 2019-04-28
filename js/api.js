@@ -274,27 +274,6 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
             expiry : null,
             uid : null
         });
-    case actiontypes_userinfo.GET_TOURNAMENT_LIST:
-        getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
-            __store.dispatch({
-                type: actiontypes_tournamentinfo.GET_TOURNAMENT_LIST_SUCCESS,
-                parameters: resp
-            });
-            storeOptionalToken(resp);
-            action.parameters.successCallback();
-        }).catch((error) => {
-            __store.dispatch({
-                type: actiontypes_tournamentinfo.GET_TOURNAMENT_LIST_ERROR,
-                parameters: {error: error}
-            });
-            storeOptionalToken(error.response);
-            action.parameters.errorCallback();
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_userinfo.GET_TOURNAMENT_LIST_ERROR:
-        return Object.assign({}, state, {});
-    case actiontypes_userinfo.GET_TOURNAMENT_LIST_SUCCESS:
-        return Object.assign({}, state, {...action.parameters});
     default: return state;
     }
 };

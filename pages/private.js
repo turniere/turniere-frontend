@@ -85,23 +85,6 @@ class PrivateTournamentsListCard extends React.Component {
                     error
                 });
             });
-        /*
-        getRequest(getState(), '/tournaments?type=private')
-            .then(
-                response => {
-                    this.setState({
-                        isLoaded: true,
-                        items: response.data
-                    });
-                },
-                error => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            );
-         */
     }
 
     render() {
