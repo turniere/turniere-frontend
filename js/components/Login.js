@@ -9,6 +9,7 @@ import {
 } from '../api';
 
 import '../../static/css/errormessages.css';
+import {notify} from 'react-notify-toast';
 
 export function Login(props) {
     return (
@@ -90,7 +91,7 @@ class LoginForm extends React.Component {
 
     tryLogin(event) {
         event.preventDefault();
-        login(this.state.email, this.state.password);
+        login(this.state.email, this.state.password, (username) => notify.show('Willkommen, ' + username + '!', 'success', 2500));
     }
 
     render() {
