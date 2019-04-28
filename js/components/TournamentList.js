@@ -12,15 +12,15 @@ export default class TournamentList extends React.Component {
 
     componentDidMount() {
         requestTournamentList(this.props.type, tournaments => {
-                this.setState({
-                    tournaments: tournaments
-                });
-            },
-            error => {
-                this.setState({
-                    error
-                });
+            this.setState({
+                tournaments: tournaments
             });
+        },
+        error => {
+            this.setState({
+                error
+            });
+        });
     }
 
     render() {

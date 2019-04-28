@@ -345,29 +345,29 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
 
 const reducer_tournamentlist = (state = defaultstate_tournamentlist, action) => {
     switch (action.type) {
-        case actiontypes_tournamentlist.FETCH:
-            getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
-                __store.dispatch({
-                    type: actiontypes_tournamentlist.FETCH_SUCCESS,
-                    parameters: resp.data
-                });
-                storeOptionalToken(resp);
-                action.parameters.successCallback(resp.data);
-            }).catch((error) => {
-                __store.dispatch({
-                    type: actiontypes_tournamentlist.FETCH_ERROR,
-                    parameters: {error: error}
-                });
-                storeOptionalToken(error.response);
-                action.parameters.errorCallback();
+    case actiontypes_tournamentlist.FETCH:
+        getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
+            __store.dispatch({
+                type: actiontypes_tournamentlist.FETCH_SUCCESS,
+                parameters: resp.data
             });
-            return state;
-        case actiontypes_tournamentlist.FETCH_SUCCESS:
-            return Object.assign({}, state, {tournaments: action.parameters});
-        case actiontypes_tournamentlist.FETCH_ERROR:
-            return state;
-        default:
-            return state;
+            storeOptionalToken(resp);
+            action.parameters.successCallback(resp.data);
+        }).catch((error) => {
+            __store.dispatch({
+                type: actiontypes_tournamentlist.FETCH_ERROR,
+                parameters: {error: error}
+            });
+            storeOptionalToken(error.response);
+            action.parameters.errorCallback();
+        });
+        return state;
+    case actiontypes_tournamentlist.FETCH_SUCCESS:
+        return Object.assign({}, state, {tournaments: action.parameters});
+    case actiontypes_tournamentlist.FETCH_ERROR:
+        return state;
+    default:
+        return state;
     }
 };
 
