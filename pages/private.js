@@ -8,9 +8,9 @@ import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 import {Option, UserRestrictor} from '../js/components/UserRestrictor';
 import {Login} from '../js/components/Login';
-import {requestTournamentList} from '../js/api';
 
 import '../static/everypage.css';
+import TournamentList from '../js/components/TournamentList';
 
 class PrivateTournamentsPage extends React.Component {
 
@@ -25,9 +25,7 @@ class PrivateTournamentsPage extends React.Component {
                             <title>Private Turniere: turnie.re</title>
                         </Head>
                         <TurniereNavigation/>
-                        <div>
-                            <PrivateTournamentsListCard/>
-                        </div>
+                        <PrivateTournamentsPageContent/>
                         <Footer/>
                     </div>
                 </Option>
@@ -49,65 +47,37 @@ class PrivateTournamentsPage extends React.Component {
     }
 }
 
-function mapStateToCreatePageProperties(state) {
+function mapStateToProperties(state) {
     const {isSignedIn} = state.userinfo;
     return {isSignedIn};
 }
 
-const CreatePage = connect(
-    mapStateToCreatePageProperties,
+const PrivateTournamentListPage = connect(
+    mapStateToProperties,
 )(PrivateTournamentsPage);
 
-export default CreatePage;
+export default PrivateTournamentListPage;
 
-
-
-class PrivateTournamentsListCard extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            error: null,
-            isLoaded: false,
-            items: []
-        };
-    }
-
-    componentDidMount() {
-        requestTournamentList('private', response => {
-                this.setState({
-                    isLoaded: true,
-                    items: response.data
-                });
-            },
-            error => {
-                this.setState({
-                    isLoaded: true,
-                    error
-                });
-            });
-    }
-
-    render() {
-        return (
-            <Container className="py-5">
-                <Card className="shadow">
-                    <CardBody>
-                        <h1 className="custom-font">Private Turniere</h1>
-                        {this.state.items.map(item => (
-                            //The code should be item.code but the api just supports it this way by now
-                            <TournamentListEntry name={item.name} code={item.id} key={item.id}/>
-                        ))}
-                    </CardBody>
-                </Card>
-            </Container>
-        );
-    }
+function PrivateTournamentsPageContent() {
+    return (<div>
+        <Container className="pt-5">
+            <PrivateTournamentsCard/>
+        </Container>
+        <Container className="pb-5 pt-3">
+            <a href='/list' className="btn btn-success shadow">zu den öffentlichen Turnieren</a>
+        </Container>
+    </div>);
 }
 
-function TournamentListEntry(props) {
-    return (
-        <a className="w-100 d-inline-block mt-2 text-left btn btn-outline-primary" href={ '/t/' + props.code }>
-            {props.name}
-        </a>
-    );
+class PrivateTournamentsCard extends React.Component {
+    render() {
+        return (
+            <Card className="shadow">
+                <CardBody>
+                    <h1 className="custom-font">Private Turniere</h1>
+                    <TournamentList type='private'/>
+                </CardBody>
+            </Card>
+        );
+    }
 }

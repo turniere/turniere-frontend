@@ -346,10 +346,10 @@ const reducer_tournamentlist = (state = defaultstate_tournamentlist, action) => 
             getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
                 __store.dispatch({
                     type: actiontypes_tournamentlist.FETCH_SUCCESS,
-                    parameters: resp
+                    parameters: resp.data
                 });
                 storeOptionalToken(resp);
-                action.parameters.successCallback();
+                action.parameters.successCallback(resp.data);
             }).catch((error) => {
                 __store.dispatch({
                     type: actiontypes_tournamentlist.FETCH_ERROR,
@@ -360,7 +360,7 @@ const reducer_tournamentlist = (state = defaultstate_tournamentlist, action) => 
             });
             return state;
         case actiontypes_tournamentlist.FETCH_SUCCESS:
-            return Object.assign({}, state, {...action.parameters});
+            return Object.assign({}, state, {tournaments: action.parameters});
         case actiontypes_tournamentlist.FETCH_ERROR:
             return state;
         default:
@@ -485,11 +485,11 @@ export function getState() {
     return __store.getState();
 }
 
-export function requestTournamentList(myType, successCallback, errorCallback) {
+export function requestTournamentList(type, successCallback, errorCallback) {
     __store.dispatch({
         type: actiontypes_tournamentlist.FETCH,
         parameters: {
-            type: myType,
+            type: type,
             successCallback: successCallback,
             errorCallback: errorCallback
         },
