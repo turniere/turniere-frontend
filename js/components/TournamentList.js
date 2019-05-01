@@ -5,7 +5,6 @@ export default class TournamentList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: null,
             tournaments: []
         };
     }
@@ -15,12 +14,7 @@ export default class TournamentList extends React.Component {
             this.setState({
                 tournaments: tournaments
             });
-        },
-        error => {
-            this.setState({
-                error
-            });
-        });
+        }, () => {});
     }
 
     render() {

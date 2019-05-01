@@ -75,7 +75,6 @@ const defaultstate_tournamentinfo = {
 const actiontypes_tournamentlist = {
     'FETCH': 'FETCH',
     'FETCH_SUCCESS': 'FETCH_SUCCESS',
-    'FETCH_ERROR': 'FETCH_ERROR',
     'REHYDRATE': 'REHYDRATE'
 };
 
@@ -354,18 +353,14 @@ const reducer_tournamentlist = (state = defaultstate_tournamentlist, action) => 
             storeOptionalToken(resp);
             action.parameters.successCallback(resp.data);
         }).catch((error) => {
-            __store.dispatch({
-                type: actiontypes_tournamentlist.FETCH_ERROR,
-                parameters: {error: error}
-            });
-            storeOptionalToken(error.response);
+            if(error.response) {
+                storeOptionalToken(error.response);
+            }
             action.parameters.errorCallback();
         });
         return state;
     case actiontypes_tournamentlist.FETCH_SUCCESS:
         return Object.assign({}, state, {tournaments: action.parameters});
-    case actiontypes_tournamentlist.FETCH_ERROR:
-        return state;
     default:
         return state;
     }
