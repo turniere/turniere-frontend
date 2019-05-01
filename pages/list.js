@@ -1,22 +1,16 @@
-import Head                   from 'next/head';
-import React                  from 'react';
-import {
-    Card,
-    CardBody,
-    Container
-} from 'reactstrap';
+import Head from 'next/head';
+import React from 'react';
+import {Card, CardBody, Container} from 'reactstrap';
 
-import { TurniereNavigation } from '../js/components/Navigation';
-import { Footer }             from '../js/components/Footer';
-import {
-    getRequest,
-    getState
-} from '../js/api';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {Footer} from '../js/components/Footer';
 
 import '../static/everypage.css';
+import TournamentList from '../js/components/TournamentList';
+import {connect} from 'react-redux';
 
-export default class ListPage extends React.Component {
-  
+export default class PublicTournamentsPage extends React.Component {
+
     render() {
         return (
             <div className="main generic-fullpage-bg">
@@ -25,7 +19,7 @@ export default class ListPage extends React.Component {
                 </Head>
                 <TurniereNavigation/>
                 <div>
-                    <TournamentList/>
+                    <PublicTournamentPageContent/>
                 </div>
                 <Footer/>
             </div>
@@ -33,55 +27,38 @@ export default class ListPage extends React.Component {
     }
 }
 
-class TournamentList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            error: null,
-            isLoaded: false,
-            items: []
-        };
-    }
+function mapStateToProperties(state) {
+    const {isSignedIn} = state.userinfo;
+    return {isSignedIn};
+}
 
-    componentDidMount() {
-        getRequest(getState(), '/tournaments?type=public')
-            .then(
-                response => {
-                    this.setState({
-                        isLoaded: true,
-                        items: response.data
-                    });
-                },
-                error => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            );
-    }
+const PublicTournamentPageContent = connect(
+    mapStateToProperties,
+)(PublicTournaments);
 
-    render() {
-        return (
-            <Container className="py-5">
-                <Card className="shadow">
-                    <CardBody>
-                        <h1 className="custom-font">Öffentliche Turniere</h1>
-                        {this.state.items.map(item => (
-                            //The code should be item.code but the api just supports it this way by now
-                            <TournamentListEntry name={item.name} code={item.id} key={item.id}/>
-                        ))}
-                    </CardBody>
-                </Card>
+function PublicTournaments(props) {
+    if (props.isSignedIn) {
+        return (<div>
+            <Container className='pt-5'>
+                <PublicTournamentsCard/>
             </Container>
-        );
+            <Container className="pb-5 pt-3">
+                <a href='/private' className="btn btn-success shadow">zu den privaten Turnieren</a>
+            </Container>
+        </div>);
+
+    } else {
+        return (<Container className='py-5'>
+            <PublicTournamentsCard/>
+        </Container>);
     }
 }
 
-function TournamentListEntry(props) {
-    return (
-        <a className="w-100 d-inline-block mt-2 text-left btn btn-outline-primary" href={ '/t/' + props.code }>
-            {props.name}
-        </a>
-    );
+function PublicTournamentsCard() {
+    return (<Card className="shadow">
+        <CardBody>
+            <h1 className="custom-font">Öffentliche Turniere</h1>
+            <TournamentList type='public'/>
+        </CardBody>
+    </Card>);
 }

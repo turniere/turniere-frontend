@@ -32,7 +32,7 @@ const actiontypes_userinfo = {
     'STORE_AUTH_HEADERS'           : 'STORE_AUTH_HEADERS',
 
     'REHYDRATE'                    : 'USERINFO_REHYDRATE',
-    'CLEAR'                        : 'USERINFO_CLEAR',
+    'CLEAR'                        : 'USERINFO_CLEAR'
 };
 
 const defaultstate_userinfo = {
@@ -70,6 +70,16 @@ const defaultstate_tournamentinfo = {
     isPublic : '',
     stages: [],
     teams : []
+};
+
+const actiontypes_tournamentlist = {
+    'FETCH': 'FETCH',
+    'FETCH_SUCCESS': 'FETCH_SUCCESS',
+    'REHYDRATE': 'REHYDRATE'
+};
+
+const defaultstate_tournamentlist = {
+    tournaments: []
 };
 
 export function postRequest(state, url, data) {
@@ -332,14 +342,40 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
     }
 };
 
+const reducer_tournamentlist = (state = defaultstate_tournamentlist, action) => {
+    switch (action.type) {
+    case actiontypes_tournamentlist.FETCH:
+        getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
+            __store.dispatch({
+                type: actiontypes_tournamentlist.FETCH_SUCCESS,
+                parameters: resp.data
+            });
+            storeOptionalToken(resp);
+            action.parameters.successCallback(resp.data);
+        }).catch((error) => {
+            if(error.response) {
+                storeOptionalToken(error.response);
+            }
+            action.parameters.errorCallback();
+        });
+        return state;
+    case actiontypes_tournamentlist.FETCH_SUCCESS:
+        return Object.assign({}, state, {tournaments: action.parameters});
+    default:
+        return state;
+    }
+};
+
 const reducers = {
     userinfo: reducer_userinfo,
-    tournamentinfo: reducer_tournamentinfo
+    tournamentinfo: reducer_tournamentinfo,
+    tournamentlist: reducer_tournamentlist
 };
 
 const default_applicationstate = {
     userinfo : defaultstate_userinfo,
-    tournamentinfo: defaultstate_tournamentinfo
+    tournamentinfo: defaultstate_tournamentinfo,
+    tournamentlist: defaultstate_tournamentlist
 };
 
 var __store;
@@ -451,6 +487,18 @@ export function getState() {
     return __store.getState();
 }
 
+export function requestTournamentList(type, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actiontypes_tournamentlist.FETCH,
+        parameters: {
+            type: type,
+            successCallback: successCallback,
+            errorCallback: errorCallback
+        },
+        state: __store.getState()
+    });
+}
+
 function rehydrateApplicationState() {
     const persistedState = localStorage.getItem('reduxState') ?
         JSON.parse(localStorage.getItem('reduxState')) :
@@ -464,6 +512,10 @@ function rehydrateApplicationState() {
         __store.dispatch({
             type : actiontypes_tournamentinfo.REHYDRATE,
             parameters : Object.assign({}, persistedState.tournamentinfo)
+        });
+        __store.dispatch({
+            type : actiontypes_tournamentlist.REHYDRATE,
+            parameters : Object.assign({}, persistedState.tournamentlist)
         });
         applicationHydrated = true;
     }
