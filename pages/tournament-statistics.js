@@ -5,6 +5,8 @@ import {
     Card,
     CardBody,
     Container,
+    ListGroup,
+    ListGroupItem,
     Table
 } from 'reactstrap';
 
@@ -90,7 +92,7 @@ class StatisticsTournamentPage extends React.Component {
         let tournamentStatistics = {
             tournament: {
                 code: 'abcd1234',
-                description: '',
+                description: 'The Overwatch League Season 2 Stage 2',
                 id: 0xa1,
                 name: 'Overwatch League Season 2019 Stage 1',
                 owner_username: 'Blizzard Entertainment Inc.', 
@@ -233,14 +235,20 @@ class StatisticsTournamentPage extends React.Component {
         };
 
         return (
-            <div className="main">
+            <div>
                 <Head>
                     <title>{tournamentStatistics.tournament.name}: turnie.re</title>
                 </Head>
                 <TurniereNavigation/>
-                <Container  className="py-5">
-                    <StatisticsComponent data={tournamentStatistics}/>
-                </Container>
+                <BigImage text={tournamentStatistics.tournament.name}/>
+                <div className='pb-5'>
+                    <TournamentInformationView tournament={tournamentStatistics.tournament}/>
+                    <div className='stages pt-5'>
+                        <Container className="py-5">
+                            <StatisticsComponent data={tournamentStatistics}/>
+                        </Container>
+                    </div>
+                </div>
                 <Footer/>
             </div>
         );
@@ -248,3 +256,33 @@ class StatisticsTournamentPage extends React.Component {
 }
 
 export default connect()(StatisticsTournamentPage);
+
+class PrivateTournamentInformationView extends React.Component {
+
+    render() {
+        const { tournament, isSignedIn, username } = this.props;
+
+        return (
+            <Container>
+                <p>{tournament.description}</p>
+                <ListGroup>
+                    <ListGroupItem>
+                        {tournament.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
+                    </ListGroupItem>
+                    <ListGroupItem>Turnier-Code: <b>{tournament.code}</b></ListGroupItem>
+                    <ListGroupItem>von <b>{tournament.owner_username}</b></ListGroupItem>
+                </ListGroup>
+            </Container>
+        );
+    }
+}
+
+function mapStateToPrivateTournamentInformationViewProps(state) {
+    const { isSignedIn, username } = state.userinfo;
+    return { isSignedIn, username };
+}
+
+const TournamentInformationView = connect(
+    mapStateToPrivateTournamentInformationViewProps
+)(PrivateTournamentInformationView);
+
