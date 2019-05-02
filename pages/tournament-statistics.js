@@ -92,7 +92,7 @@ class StatisticsTournamentPage extends React.Component {
         let tournamentStatistics = {
             tournament: {
                 code: 'abcd1234',
-                description: 'The Overwatch League Season 2 Stage 2',
+                description: 'The Overwatch League Season 2 Stage 1',
                 id: 0xa1,
                 name: 'Overwatch League Season 2019 Stage 1',
                 owner_username: 'Blizzard Entertainment Inc.', 
@@ -264,6 +264,7 @@ class PrivateTournamentInformationView extends React.Component {
 
         return (
             <Container>
+                <TournamentButton id={tournament.id} ownerName={tournament.owner_username} isSignedIn={isSignedIn} username={username}/>
                 <p>{tournament.description}</p>
                 <ListGroup>
                     <ListGroupItem>
@@ -286,3 +287,9 @@ const TournamentInformationView = connect(
     mapStateToPrivateTournamentInformationViewProps
 )(PrivateTournamentInformationView);
 
+class TournamentButton extends React.Component {
+    render() {
+        const { id } = this.props;
+        return <a href={'/t/' + id} className='btn btn-outline-secondary'>Zum Turnier</a>;
+    }
+}
