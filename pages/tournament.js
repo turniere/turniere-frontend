@@ -24,7 +24,7 @@ class PrivateTournamentPage extends React.Component {
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
             <Container>
-                <EditButton id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
+                <ButtonsBadge id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
                 <p>{description}</p>
                 <ListGroup>
                     <ListGroupItem>
@@ -50,6 +50,16 @@ function mapStateToTournamentPageProperties(state) {
 
 const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTournamentPage);
 
+function ButtonsBadge(props) {
+    const { id, ownerName, isSignedIn, username } = props;
+    return (
+        <div>
+            <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
+            <StatisticsButton id={id}/>
+        </div>
+    );
+}
+
 function EditButton(props) {
     const {id, ownerName, isSignedIn, username} = props;
 
@@ -58,6 +68,11 @@ function EditButton(props) {
     } else {
         return null;
     }
+}
+
+function StatisticsButton(props) {
+    const { id } = props;
+    return <a href={'/t/' + id + '/statistics'} className='btn btn-outline-secondary'>Statistiken zum Turnier</a>;
 }
 
 function getLevelName(levelNumber) {
