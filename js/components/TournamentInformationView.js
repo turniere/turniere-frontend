@@ -6,7 +6,8 @@ import {
     Col,
     Container,
     ListGroup,
-    ListGroupItem
+    ListGroupItem,
+    Row
 } from 'reactstrap';
 
 
@@ -17,22 +18,27 @@ class PrivateTournamentInformationView extends React.Component {
 
         return (
             <Container>
-                
-                <ButtonsBadge 
-                    id={tournament.id}
-                    ownerName={tournament.owner_username}
-                    isSignedIn={isSignedIn}
-                    username={username}
-                    currentpage={currentpage}/>
-
-                <p>{tournament.description}</p>
-                <ListGroup>
-                    <ListGroupItem>
-                        {tournament.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
-                    </ListGroupItem>
-                    <ListGroupItem>Turnier-Code: <b>{tournament.code}</b></ListGroupItem>
-                    <ListGroupItem>von <b>{tournament.owner_username}</b></ListGroupItem>
-                </ListGroup>
+                <Row>
+                    <Col xs="6">
+                        <ButtonsBadge 
+                            id={tournament.id}
+                            ownerName={tournament.owner_username}
+                            isSignedIn={isSignedIn}
+                            username={username}
+                            currentpage={currentpage}
+                            className="pb-3"/>
+                        <p>{tournament.description}</p>
+                    </Col>
+                    <Col xs="6">
+                        <ListGroup>
+                            <ListGroupItem>
+                                {tournament.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
+                            </ListGroupItem>
+                            <ListGroupItem>Turnier-Code: <b>{tournament.code}</b></ListGroupItem>
+                            <ListGroupItem>von <b>{tournament.owner_username}</b></ListGroupItem>
+                        </ListGroup>
+                    </Col>
+                </Row>
             </Container>
         );
     }
@@ -53,21 +59,21 @@ function ButtonsBadge(props) {
     switch(currentpage) {
         case 'statistics':
             return (
-                <ButtonGroup>
+                <ButtonGroup className={props.className}>
                     <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
                     <TournamentButton id={id}/>
                 </ButtonGroup>
             );
         case 'tournament':
             return (
-                <ButtonGroup>
+                <ButtonGroup className={props.className}>
                     <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
                     <StatisticsButton id={id}/>
                 </ButtonGroup>
             );
         case 'edit':
             return (
-                <ButtonGroup>
+                <ButtonGroup className={props.className}>
                     <StatisticsButton id={id}/>
                     <TournamentButton id={id}/>
                 </ButtonGroup>
@@ -78,7 +84,7 @@ function ButtonsBadge(props) {
 
 function TournamentButton(props) {
     const { id } = props;
-    return <Button href={'/t/' + id} color='secondary'>Zum Turnier</Button>;
+    return <Button href={'/t/' + id} color='success'>Zum Turnier</Button>;
 }
 
 function EditButton(props) {
@@ -86,7 +92,7 @@ function EditButton(props) {
 
     if(isSignedIn && ownerName === username) {
         return (
-            <Button href={'/t/' + id + '/edit'} color='secondary'>Turnier bearbeiten</Button>
+            <Button href={'/t/' + id + '/edit'} color='success'>Turnier bearbeiten</Button>
         );
     } else {
         return null;
@@ -95,22 +101,6 @@ function EditButton(props) {
 
 function StatisticsButton(props) {
     const { id } = props;
-    return <Button href={'/t/' + id + '/statistics'} color='secondary'>Statistiken zum Turnier</Button>;
+    return <Button href={'/t/' + id + '/statistics'} color='success'>Statistiken zum Turnier</Button>;
 }
 
-
-
-/*
-                <Container>
-                    <ButtonsBadge id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
-                    <p>{description}</p>
-                    <ListGroup>
-                        <ListGroupItem>
-                            {isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
-                        </ListGroupItem>
-                        <ListGroupItem>Turnier-Code: <b>{code}</b></ListGroupItem>
-                        <ListGroupItem>von <b>{ownerUsername}</b></ListGroupItem>
-                    </ListGroup>
-                </Container>
-
-*/
