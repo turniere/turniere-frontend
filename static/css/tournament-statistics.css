@@ -2,3 +2,15 @@
 .table-final-btn {
     width: 100%;
 }
+
+.wins {
+    color: #64c100;
+}
+
+.losses {
+    color: #f21a1e;
+}
+
+.table-no-margin{
+    margin: 0;
+}

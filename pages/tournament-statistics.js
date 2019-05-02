@@ -5,10 +5,13 @@ import {
     Button,
     Card,
     CardBody,
+    CardTitle,
+    Col,
     Collapse,
     Container,
     ListGroup,
     ListGroupItem,
+    Row,
     Table
 } from 'reactstrap';
 
@@ -28,7 +31,7 @@ class TeamRow extends React.Component {
         return (
             <tr>
                 <td>{ this.props.teamToShow.rank }</td>
-                <td className="w-100">{this.findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
+                <td className="w-100">{findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
                 <td className="text-center">{ this.props.teamToShow.winlossdifferential }</td>
                 <td className="text-center">{ this.props.teamToShow.pointDifferential }</td>
             </tr>
@@ -36,17 +39,41 @@ class TeamRow extends React.Component {
     }
 
 
-    findTeam(teams, id) {
-        for(let i = 0; i < teams.length; i++) {
-            if(teams[i].id === id) {
-                return teams[i];
-            }
+}
+
+function findTeam(teams, id) {
+    for(let i = 0; i < teams.length; i++) {
+        if(teams[i].id === id) {
+            return teams[i];
         }
-        return null;
+    }
+    return null;
+}
+
+
+class DominanceShower extends React.Component {
+
+    render() {
+        return (
+            <Card className="shadow">
+                <CardBody>
+                    <CardTitle>{this.props.title}</CardTitle>
+                    <Table borderless className="table-no-margin">
+                        <tr>
+                            <th colspan="2">{findTeam(this.props.teams, this.props.stats.id).name}</th>
+                        </tr>
+                        <tr>
+                            <td className="wins">{this.props.stats.pointsMade}</td>
+                            <td className="losses text-right">{this.props.stats.pointsReceived}</td>
+                        </tr>
+                    </Table>
+                </CardBody>
+            </Card>
+        );
     }
 }
 
-class StatisticsComponent extends React.Component {
+class StandingsTable extends React.Component {
 
     constructor(props) {
         super(props);
@@ -71,7 +98,7 @@ class StatisticsComponent extends React.Component {
             <Card className="shadow">
                 <CardBody>
                     <h1 className="custom-font">Aktuelle Rangliste</h1>
-                    <Table className="table-striped mt-3">
+                    <Table striped className="mt-3 table-no-margin">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -118,9 +145,9 @@ class TableButton extends React.Component {
         const { isFullTableShown } = this.props;
 
         if(isFullTableShown) {
-            return <Button className="table-final-btn" onClick={this.props.onToggle}>Show only first 3 entries</Button>;
+            return <Button className="table-final-btn" onClick={this.props.onToggle}>Zeige nur die 3 besten Teams</Button>;
         } else {
-            return <Button className="table-final-btn" onClick={this.props.onToggle}>Show all entries</Button>;
+            return <Button className="table-final-btn" onClick={this.props.onToggle}>Zeige alle Teams</Button>;
         }
     }
 }
@@ -307,7 +334,17 @@ class StatisticsTournamentPage extends React.Component {
                 <div className='pb-5'>
                     <TournamentInformationView tournament={tournamentStatistics.tournament}/>
                     <Container className="py-5">
-                        <StatisticsComponent data={tournamentStatistics}/>
+                        <Row>
+                            <Col xs="6">
+                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.mostDominantTeam} title="Stärkstes Team"/>
+                            </Col>
+                            <Col xs="6">
+                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.leastDominantTeam} title="Schwächstes Team"/>
+                            </Col>
+                        </Row>
+                    </Container>
+                    <Container className="pb-5">
+                        <StandingsTable data={tournamentStatistics}/>
                     </Container>
                 </div>
                 <Footer/>
