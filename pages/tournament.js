@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
@@ -8,41 +7,9 @@ import {ErrorPageComponent} from '../js/components/ErrorComponents';
 import {Footer} from '../js/components/Footer';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {BigImage} from '../js/components/BigImage';
+import {TournamentInformationView} from '../js/components/TournamentInformationView';
 import {getState} from '../js/api';
 import {getRequest} from '../js/redux/backendApi';
-=======
-import Head                   from 'next/head';
-import React                  from 'react';
-import { connect }            from 'react-redux';
-import {
-    Button,
-    ButtonGroup,
-    Card,
-    CardBody,
-    Col,
-    Container,
-    Input,
-    InputGroup,
-    InputGroupAddon,
-    ListGroup,
-    ListGroupItem,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
-    Row,
-    Table
-} from 'reactstrap';
-
-import { ErrorPageComponent } from '../js/components/ErrorComponents';
-import { Footer }             from '../js/components/Footer';
-import { TurniereNavigation } from '../js/components/Navigation';
-import { BigImage }           from '../js/components/BigImage';
-import {
-    getRequest,
-    getState
-} from '../js/api';
->>>>>>> Properly style the buttons on the tournament and its statistics
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -57,17 +24,7 @@ class PrivateTournamentPage extends React.Component {
 
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
-            <Container>
-                <ButtonsBadge id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
-                <p>{description}</p>
-                <ListGroup>
-                    <ListGroupItem>
-                        {isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
-                    </ListGroupItem>
-                    <ListGroupItem>Turnier-Code: <b>{code}</b></ListGroupItem>
-                    <ListGroupItem>von <b>{ownerUsername}</b></ListGroupItem>
-                </ListGroup>
-            </Container>
+            <TournamentInformationView tournament={this.props.tournament} currentpage='tournament'/>
             <div className='stages pt-5'>
                 {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername}
                     level={getLevelName(stage.level)} matches={stage.matches}
@@ -83,31 +40,6 @@ function mapStateToTournamentPageProperties(state) {
 }
 
 const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTournamentPage);
-
-function ButtonsBadge(props) {
-    const { id, ownerName, isSignedIn, username } = props;
-    return (
-        <ButtonGroup>
-            <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
-            <StatisticsButton id={id}/>
-        </ButtonGroup>
-    );
-}
-
-function EditButton(props) {
-    const {id, ownerName, isSignedIn, username} = props;
-
-    if(isSignedIn && ownerName === username) {
-        return (<Button href={'/t/' + id + '/edit'} outline color='secondary'>Turnier bearbeiten</Button>);
-    } else {
-        return null;
-    }
-}
-
-function StatisticsButton(props) {
-    const { id } = props;
-    return <Button href={'/t/' + id + '/statistics'} outline color='secondary'>Statistiken zum Turnier</Button>;
-}
 
 function getLevelName(levelNumber) {
     const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
@@ -153,7 +85,7 @@ function convertTournament(apiTournament) {
         description: apiTournament.description,
         name: apiTournament.name,
         isPublic: apiTournament.public,
-        ownerUsername: apiTournament.owner_username,
+        owner_username: apiTournament.owner_username,
         groupStage: groupStage,
         playoffStages: playoffStages
     };

@@ -16,6 +16,7 @@ import {
 } from 'reactstrap';
 
 import { TurniereNavigation } from '../js/components/Navigation';
+import { TournamentInformationView } from '../js/components/TournamentInformationView';
 import { BigImage } from '../js/components/BigImage';
 import { Footer } from '../js/components/Footer';
 import { Order, sort } from '../js/utils/sort';
@@ -332,7 +333,7 @@ class StatisticsTournamentPage extends React.Component {
                 <TurniereNavigation/>
                 <BigImage text={tournamentStatistics.tournament.name}/>
                 <div className='pb-5'>
-                    <TournamentInformationView tournament={tournamentStatistics.tournament}/>
+                    <TournamentInformationView tournament={tournamentStatistics.tournament} currentpage='statistics'/>
                     <Container className="py-5">
                         <Row>
                             <Col xs="6">
@@ -354,40 +355,3 @@ class StatisticsTournamentPage extends React.Component {
 }
 
 export default connect()(StatisticsTournamentPage);
-
-class PrivateTournamentInformationView extends React.Component {
-
-    render() {
-        const { tournament, isSignedIn, username } = this.props;
-
-        return (
-            <Container>
-                <TournamentButton id={tournament.id} ownerName={tournament.owner_username} isSignedIn={isSignedIn} username={username}/>
-                <p>{tournament.description}</p>
-                <ListGroup>
-                    <ListGroupItem>
-                        {tournament.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
-                    </ListGroupItem>
-                    <ListGroupItem>Turnier-Code: <b>{tournament.code}</b></ListGroupItem>
-                    <ListGroupItem>von <b>{tournament.owner_username}</b></ListGroupItem>
-                </ListGroup>
-            </Container>
-        );
-    }
-}
-
-function mapStateToPrivateTournamentInformationViewProps(state) {
-    const { isSignedIn, username } = state.userinfo;
-    return { isSignedIn, username };
-}
-
-const TournamentInformationView = connect(
-    mapStateToPrivateTournamentInformationViewProps
-)(PrivateTournamentInformationView);
-
-class TournamentButton extends React.Component {
-    render() {
-        const { id } = this.props;
-        return <Button href={'/t/' + id} outline color='secondary'>Zum Turnier</Button>;
-    }
-}
