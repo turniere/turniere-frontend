@@ -244,11 +244,9 @@ class StatisticsTournamentPage extends React.Component {
                 <BigImage text={tournamentStatistics.tournament.name}/>
                 <div className='pb-5'>
                     <TournamentInformationView tournament={tournamentStatistics.tournament}/>
-                    <div className='stages pt-5'>
-                        <Container className="py-5">
-                            <StatisticsComponent data={tournamentStatistics}/>
-                        </Container>
-                    </div>
+                    <Container className="py-5">
+                        <StatisticsComponent data={tournamentStatistics}/>
+                    </Container>
                 </div>
                 <Footer/>
             </div>
