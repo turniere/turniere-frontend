@@ -56,17 +56,23 @@ class DominanceShower extends React.Component {
 
     render() {
         return (
-            <Card className="shadow">
+            <Card className="shadow-sm">
                 <CardBody>
                     <CardTitle>{this.props.title}</CardTitle>
                     <Table borderless className="table-no-margin">
-                        <tr>
-                            <th colspan="2">{findTeam(this.props.teams, this.props.stats.id).name}</th>
-                        </tr>
-                        <tr>
-                            <td className="wins">{this.props.stats.pointsMade}</td>
-                            <td className="losses text-right">{this.props.stats.pointsReceived}</td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <th colSpan="2" className="h3 text-center">{findTeam(this.props.teams, this.props.stats.id).name}</th>
+                            </tr>
+                            <tr>
+                                <td className="h4 text-success pb-0">{this.props.stats.pointsMade}</td>
+                                <td className="h4 text-danger text-right pb-0">{this.props.stats.pointsReceived}</td>
+                            </tr>
+                            <tr>
+                                <td className="smaller pt-0">Punkte erzielt</td>
+                                <td className="text-right smaller pt-0">Punkte kassiert</td>
+                            </tr>
+                        </tbody>
                     </Table>
                 </CardBody>
             </Card>
@@ -96,7 +102,7 @@ class StandingsTable extends React.Component {
         let sortedPerformances = sort(performances, (p1, p2) => p1.rank - p2.rank, Order.descending);
 
         return (
-            <Card className="shadow">
+            <Card className="shadow-sm">
                 <CardBody>
                     <h1 className="custom-font">Aktuelle Rangliste</h1>
                     <Table striped className="mt-3 table-no-margin">
@@ -120,7 +126,7 @@ class StandingsTable extends React.Component {
                         </Collapse>
                         <tfoot>
                             <tr>
-                                <td colspan='4'>
+                                <td colSpan='4'>
                                     <TableButton isFullTableShown={this.state.showFullTable} onToggle={this.toggleShowFullTable}/>
                                 </td>
                             </tr>
