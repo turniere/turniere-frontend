@@ -2,6 +2,7 @@ import Head                   from 'next/head';
 import React                  from 'react';
 import { connect }            from 'react-redux';
 import {
+    Button,
     Card,
     CardBody,
     Container,
@@ -290,6 +291,6 @@ const TournamentInformationView = connect(
 class TournamentButton extends React.Component {
     render() {
         const { id } = this.props;
-        return <a href={'/t/' + id} className='btn btn-outline-secondary'>Zum Turnier</a>;
+        return <Button href={'/t/' + id} outline color='secondary'>Zum Turnier</Button>;
     }
 }

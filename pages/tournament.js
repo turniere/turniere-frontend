@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
@@ -9,6 +10,39 @@ import {TurniereNavigation} from '../js/components/Navigation';
 import {BigImage} from '../js/components/BigImage';
 import {getState} from '../js/api';
 import {getRequest} from '../js/redux/backendApi';
+=======
+import Head                   from 'next/head';
+import React                  from 'react';
+import { connect }            from 'react-redux';
+import {
+    Button,
+    ButtonGroup,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    Input,
+    InputGroup,
+    InputGroupAddon,
+    ListGroup,
+    ListGroupItem,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Row,
+    Table
+} from 'reactstrap';
+
+import { ErrorPageComponent } from '../js/components/ErrorComponents';
+import { Footer }             from '../js/components/Footer';
+import { TurniereNavigation } from '../js/components/Navigation';
+import { BigImage }           from '../js/components/BigImage';
+import {
+    getRequest,
+    getState
+} from '../js/api';
+>>>>>>> Properly style the buttons on the tournament and its statistics
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -53,18 +87,18 @@ const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTourna
 function ButtonsBadge(props) {
     const { id, ownerName, isSignedIn, username } = props;
     return (
-        <div>
+        <ButtonGroup>
             <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
             <StatisticsButton id={id}/>
-        </div>
+        </ButtonGroup>
     );
 }
 
 function EditButton(props) {
     const {id, ownerName, isSignedIn, username} = props;
 
-    if (isSignedIn && ownerName === username) {
-        return (<a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>);
+    if(isSignedIn && ownerName === username) {
+        return (<Button href={'/t/' + id + '/edit'} outline color='secondary'>Turnier bearbeiten</Button>);
     } else {
         return null;
     }
@@ -72,7 +106,7 @@ function EditButton(props) {
 
 function StatisticsButton(props) {
     const { id } = props;
-    return <a href={'/t/' + id + '/statistics'} className='btn btn-outline-secondary'>Statistiken zum Turnier</a>;
+    return <Button href={'/t/' + id + '/statistics'} outline color='secondary'>Statistiken zum Turnier</Button>;
 }
 
 function getLevelName(levelNumber) {
