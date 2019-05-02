@@ -25,6 +25,7 @@ class TeamRow extends React.Component {
     render() {
         return (
             <tr>
+                <td>{ this.props.teamToShow.rank }</td>
                 <td className="w-100">{this.findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
                 <td className="text-center">{ this.props.teamToShow.winlossdifferential }</td>
                 <td className="text-center">{ this.props.teamToShow.pointDifferential }</td>
@@ -64,10 +65,11 @@ class StatisticsComponent extends React.Component {
         return (
             <Card className="shadow">
                 <CardBody>
-                    <h1 className="custom-font">Turnier-Statistiken für {this.props.data.tournament.name}</h1>
+                    <h1 className="custom-font">Aktuelle Rangliste</h1>
                     <Table className="table-striped mt-3">
                         <tbody>
                             <tr>
+                                <th>#</th>
                                 <th>Team Name</th>
                                 <th className="text-center">Match Differenz</th>
                                 <th className="text-center">Punkt Differenz</th>
@@ -125,101 +127,121 @@ class StatisticsTournamentPage extends React.Component {
                 {
                     winlossdifferential: 7,
                     pointDifferential: 16,
+                    rank: 2,
                     team: 0x1234 // New York Excelsior
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: 1,
+                    rank: 10,
                     team: 0x1235 // Los Angeles Gladiators
                 },
                 {
                     winlossdifferential: 1,
                     pointDifferential: 5,
+                    rank: 6,
                     team: 0x1236 // San Francisco Shock
                 },
                 {
                     winlossdifferential: 7,
                     pointDifferential: 18,
+                    rank: 1,
                     team: 0x1237 // Vancouver Titans
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: -4,
+                    rank: 13,
                     team: 0x1238 // London Spitfire
                 },
                 {
                     winlossdifferential: 1,
                     pointDifferential: 0,
+                    rank: 9,
                     team: 0x1239 //Dallas Fuel
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: -8,
+                    rank: 16,
                     team: 0x123a // Chengdu Hunters
                 },
                 {
                     winlossdifferential: 1,
                     pointDifferential: 3,
+                    rank: 8,
                     team: 0x123b // Boston Uprising
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: -8,
+                    rank: 17,
                     team: 0x123c // Paris Eternal
                 },
                 {
                     winlossdifferential: 3,
                     pointDifferential: 5,
+                    rank: 3,
                     team: 0x123d // Philadelphia Fusion
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: -4,
+                    rank: 14,
                     team: 0x123e // Hangzhou Spark
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: -3,
+                    rank: 12,
                     team: 0x123f // Houston Outlaws
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: -4,
+                    rank: 15,
                     team: 0x1240 // Shanghai Dragons
                 },
                 {
                     winlossdifferential: -7,
                     pointDifferential: -9,
+                    rank: 20,
                     team: 0x1241 // Los Angeles Valiant
                 },
                 {
                     winlossdifferential: 1,
                     pointDifferential: 5,
+                    rank: 7,
                     team: 0x1242 // Seoul Dynasty
                 },
                 {
                     winlossdifferential: 1,
                     pointDifferential: 6,
+                    rank: 5,
                     team: 0x1243 // Atlanta Reign
                 },
                 {
                     winlossdifferential: 3,
                     pointDifferential: 5,
+                    rank: 4,
                     team: 0x1244 // Toronto Defiant
                 },
                 {
                     winlossdifferential: -5,
                     pointDifferential: -12,
+                    rank: 19,
                     team: 0x1245 // Florida Mayhem
                 },
                 {
                     winlossdifferential: -5,
                     pointDifferential: -11,
+                    rank: 18,
                     team: 0x1246 // Washington Justice
                 },
                 {
                     winlossdifferential: -1,
                     pointDifferential: -1,
+                    rank: 11,
                     team: 0x1247 // Guangzhou Charge
                 }
             ],
