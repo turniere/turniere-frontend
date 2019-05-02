@@ -58,9 +58,7 @@ class StatisticsComponent extends React.Component {
          * comparison(p1, p2) = 0 => p1 = p2
          * comparison(p1, p2) > 0 => p1 > p2
          */
-        let sortedPerformances = sort(performances, (p1, p2) => {
-            return (p2.winlossdifferential - p1.winlossdifferential) * 100 + (p2.pointDifferential - p1.pointDifferential);
-        }, Order.descending);
+        let sortedPerformances = sort(performances, (p1, p2) => p1.rank - p2.rank, Order.descending);
 
         return (
             <Card className="shadow">
