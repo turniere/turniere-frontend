@@ -5,6 +5,9 @@ import Router from 'next/router';
 
 import { login } from '../api';
 
+import '../../static/css/errormessages.css';
+import {notify} from 'react-notify-toast';
+
 export function Login(props) {
     return (
         <Container className="py-5">
@@ -28,7 +31,7 @@ class LoginErrorList extends React.Component {
         const { error, errorMessages } = this.props;
         if(error) {
             return (
-                <ul className='text-danger mt-3'>
+                <ul className='mt-3 error-box'>
                     { errorMessages.map((message, index) => 
                         <li key={index}>
                             {message}
@@ -81,7 +84,7 @@ class LoginForm extends React.Component {
 
     tryLogin(event) {
         event.preventDefault();
-        login(this.state.email, this.state.password);
+        login(this.state.email, this.state.password, (username) => notify.show('Willkommen, ' + username + '!', 'success', 2500));
     }
 
     render() {

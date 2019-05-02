@@ -17,10 +17,10 @@ import { TurniereNavigation } from '../js/components/Navigation';
 import { Footer }             from '../js/components/Footer';
 import { register }           from '../js/api';
 
+import '../static/css/errormessages.css';
 import '../static/everypage.css';
 
 export default class RegisterPage extends React.Component {
-
     render() {
         return (
             <div className="main generic-fullpage-bg">
@@ -62,11 +62,9 @@ class RegisterErrorList extends React.Component {
         const { error, errorMessages } = this.props;
         if(error) {
             return (
-                <ul className='text-danger mt-3'>
+                <ul className="mt-3 error-box">
                     { errorMessages.map((message, index) => 
-                        <li key={index}>
-                            {message}
-                        </li>
+                        <li key={index}>{message}</li>
                     ) }
                 </ul>
             );
@@ -86,7 +84,6 @@ const VisibleRegisterErrorList = connect(
 )(RegisterErrorList);
 
 class RegisterForm extends React.Component {
-
     constructor(props) {
         super(props);
 
