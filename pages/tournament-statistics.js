@@ -16,6 +16,7 @@ import { BigImage } from '../js/components/BigImage';
 import { Footer } from '../js/components/Footer';
 import { Order, sort } from '../js/utils/sort';
 
+import '../static/css/tournament-statistics.css';
 
 class TeamRow extends React.Component {
     constructor(props) {
@@ -48,6 +49,11 @@ class StatisticsComponent extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            showFullTable: false
+        };
+        this.toggleShowFullTable = this.toggleShowFullTable.bind(this);
     }
 
     render() {
@@ -72,14 +78,40 @@ class StatisticsComponent extends React.Component {
                                 <th className="text-center">Match Differenz</th>
                                 <th className="text-center">Punkt Differenz</th>
                             </tr>
-                            { sortedPerformances.map((team, index) => (
+                            { map(sortedPerformances, (team, index) => (
                                 <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
-                            )) }
+                            ), 0, (this.state.showFullTable)? undefined : 3) }
+                            <tr>
+                                <td colspan='4'>
+                                    <TableButton isFullTableShown={this.state.showFullTable} onToggle={this.toggleShowFullTable}/>
+                                </td>
+                            </tr>
                         </tbody>
                     </Table>
                 </CardBody>
             </Card>
         );
+    }
+
+    toggleShowFullTable() {
+        this.setState({ showFullTable: !this.state.showFullTable });
+    }
+}
+
+function map(arr, func, start, end) {
+    return arr.slice(start, end).map(func);
+}
+
+class TableButton extends React.Component {
+
+    render() {
+        const { isFullTableShown } = this.props;
+
+        if(isFullTableShown) {
+            return <Button className="table-final-btn" onClick={this.props.onToggle}>Show only first 3 entries</Button>;
+        } else {
+            return <Button className="table-final-btn" onClick={this.props.onToggle}>Show all entries</Button>;
+        }
     }
 }
 
