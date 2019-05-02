@@ -5,6 +5,7 @@ import {
     Button,
     Card,
     CardBody,
+    Collapse,
     Container,
     ListGroup,
     ListGroupItem,
@@ -71,22 +72,31 @@ class StatisticsComponent extends React.Component {
                 <CardBody>
                     <h1 className="custom-font">Aktuelle Rangliste</h1>
                     <Table className="table-striped mt-3">
-                        <tbody>
+                        <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Team Name</th>
                                 <th className="text-center">Match Differenz</th>
                                 <th className="text-center">Punkt Differenz</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             { map(sortedPerformances, (team, index) => (
                                 <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
-                            ), 0, (this.state.showFullTable)? undefined : 3) }
+                            ), 0, 3) }
+                        </tbody>
+                        <Collapse isOpen={ this.state.showFullTable } tag="tbody">
+                            { map(sortedPerformances, (team, index) => (
+                                <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
+                            ), 3) }
+                        </Collapse>
+                        <tfoot>
                             <tr>
                                 <td colspan='4'>
                                     <TableButton isFullTableShown={this.state.showFullTable} onToggle={this.toggleShowFullTable}/>
                                 </td>
                             </tr>
-                        </tbody>
+                        </tfoot>
                     </Table>
                 </CardBody>
             </Card>
