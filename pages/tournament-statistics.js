@@ -23,27 +23,6 @@ import { findTeam } from '../js/utils/findTeam';
 import { rangedmap } from '../js/utils/rangedmap';
 import { Order, sort } from '../js/utils/sort';
 
-import '../static/css/tournament-statistics.css';
-
-class TeamRow extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <tr>
-                <td>{ this.props.teamToShow.rank }</td>
-                <td className="w-100">{findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
-                <td className="text-center">{ this.props.teamToShow.winlossdifferential }</td>
-                <td className="text-center">{ this.props.teamToShow.pointDifferential }</td>
-            </tr>
-        );
-    }
-
-
-}
-
 class DominanceShower extends React.Component {
 
     render() {
@@ -51,7 +30,7 @@ class DominanceShower extends React.Component {
             <Card className="shadow-sm">
                 <CardBody>
                     <CardTitle>{this.props.title}</CardTitle>
-                    <Table borderless className="table-no-margin">
+                    <Table borderless className="m-0">
                         <tbody>
                             <tr>
                                 <th colSpan="2" className="h3 text-center">{findTeam(this.props.teams, this.props.stats.id).name}</th>
@@ -97,7 +76,7 @@ class StandingsTable extends React.Component {
             <Card className="shadow-sm">
                 <CardBody>
                     <h1 className="custom-font">Aktuelle Rangliste</h1>
-                    <Table striped className="mt-3 table-no-margin">
+                    <Table striped className="mt-3 mb-0">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -134,6 +113,21 @@ class StandingsTable extends React.Component {
     }
 }
 
+class TeamRow extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <tr>
+                <td>{ this.props.teamToShow.rank }</td>
+                <td className="w-100">{findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
+                <td className="text-center">{ this.props.teamToShow.winlossdifferential }</td>
+                <td className="text-center">{ this.props.teamToShow.pointDifferential }</td>
+            </tr>
+        );
+    }
 }
 
 class TableButton extends React.Component {
@@ -142,9 +136,9 @@ class TableButton extends React.Component {
         const { isFullTableShown } = this.props;
 
         if(isFullTableShown) {
-            return <Button className="table-final-btn" onClick={this.props.onToggle}>Zeige nur die 3 besten Teams</Button>;
+            return <Button className="w-100" onClick={this.props.onToggle}>Zeige nur die 3 besten Teams</Button>;
         } else {
-            return <Button className="table-final-btn" onClick={this.props.onToggle}>Zeige alle Teams</Button>;
+            return <Button className="w-100" onClick={this.props.onToggle}>Zeige alle Teams</Button>;
         }
     }
 }
