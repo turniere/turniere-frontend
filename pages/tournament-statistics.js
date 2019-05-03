@@ -19,6 +19,7 @@ import { TurniereNavigation } from '../js/components/Navigation';
 import { TournamentInformationView } from '../js/components/TournamentInformationView';
 import { BigImage } from '../js/components/BigImage';
 import { Footer } from '../js/components/Footer';
+import { rangedmap } from '../js/utils/rangedmap';
 import { Order, sort } from '../js/utils/sort';
 
 import '../static/css/tournament-statistics.css';
@@ -115,12 +116,12 @@ class StandingsTable extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            { map(sortedPerformances, (team, index) => (
+                            { rangedmap(sortedPerformances, (team, index) => (
                                 <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
                             ), 0, 3) }
                         </tbody>
                         <Collapse isOpen={ this.state.showFullTable } tag="tbody">
-                            { map(sortedPerformances, (team, index) => (
+                            { rangedmap(sortedPerformances, (team, index) => (
                                 <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
                             ), 3) }
                         </Collapse>
@@ -142,8 +143,6 @@ class StandingsTable extends React.Component {
     }
 }
 
-function map(arr, func, start, end) {
-    return arr.slice(start, end).map(func);
 }
 
 class TableButton extends React.Component {
