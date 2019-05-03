@@ -19,6 +19,7 @@ import { TurniereNavigation } from '../js/components/Navigation';
 import { TournamentInformationView } from '../js/components/TournamentInformationView';
 import { BigImage } from '../js/components/BigImage';
 import { Footer } from '../js/components/Footer';
+import { findTeam } from '../js/utils/findTeam';
 import { rangedmap } from '../js/utils/rangedmap';
 import { Order, sort } from '../js/utils/sort';
 
@@ -42,16 +43,6 @@ class TeamRow extends React.Component {
 
 
 }
-
-function findTeam(teams, id) {
-    for(let i = 0; i < teams.length; i++) {
-        if(teams[i].id === id) {
-            return teams[i];
-        }
-    }
-    return null;
-}
-
 
 class DominanceShower extends React.Component {
 
