@@ -36,7 +36,7 @@ export class StandingsTable extends React.Component {
             <Card className="shadow-sm">
                 <CardBody>
                     <h1 className="custom-font">Aktuelle Rangliste</h1>
-                    <Table striped className="mt-3 mb-0">
+                    <Table className="mt-3 mb-0">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -47,12 +47,12 @@ export class StandingsTable extends React.Component {
                         </thead>
                         <tbody>
                             { rangedmap(sortedPerformances, (team, index) => (
-                                <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
+                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teams={this.props.data.teams} teamToShow={team}/>
                             ), 0, 3) }
                         </tbody>
                         <Collapse isOpen={ this.state.showFullTable } tag="tbody">
                             { rangedmap(sortedPerformances, (team, index) => (
-                                <TeamRow key={index} teams={this.props.data.teams} teamToShow={team}/>
+                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teams={this.props.data.teams} teamToShow={team}/>
                             ), 3) }
                         </Collapse>
                         <tfoot>
@@ -80,7 +80,7 @@ class TeamRow extends React.Component {
 
     render() {
         return (
-            <tr>
+            <tr className={this.props.className}>
                 <td>{ this.props.teamToShow.rank }</td>
                 <td className="w-100">{findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
                 <td className="text-center">{ this.props.teamToShow.winlossdifferential }</td>
