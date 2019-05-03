@@ -2,49 +2,17 @@ import Head                   from 'next/head';
 import React                  from 'react';
 import { connect }            from 'react-redux';
 import {
-    Card,
-    CardBody,
-    CardTitle,
     Col,
     Container,
-    Row,
-    Table
+    Row
 } from 'reactstrap';
 
 import { TurniereNavigation } from '../js/components/Navigation';
 import { TournamentInformationView } from '../js/components/TournamentInformationView';
 import { BigImage } from '../js/components/BigImage';
 import { StandingsTable } from '../js/components/StandingsTable';
+import { DominanceShower } from '../js/components/DominanceShower';
 import { Footer } from '../js/components/Footer';
-import { findTeam } from '../js/utils/findTeam';
-
-class DominanceShower extends React.Component {
-
-    render() {
-        return (
-            <Card className="shadow-sm">
-                <CardBody>
-                    <CardTitle>{this.props.title}</CardTitle>
-                    <Table borderless className="m-0">
-                        <tbody>
-                            <tr>
-                                <th colSpan="2" className="h3 text-center">{findTeam(this.props.teams, this.props.stats.id).name}</th>
-                            </tr>
-                            <tr>
-                                <td className="h4 text-success pb-0">{this.props.stats.pointsMade}</td>
-                                <td className="h4 text-danger text-right pb-0">{this.props.stats.pointsReceived}</td>
-                            </tr>
-                            <tr>
-                                <td className="smaller pt-0">Punkte erzielt</td>
-                                <td className="text-right smaller pt-0">Punkte kassiert</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </CardBody>
-            </Card>
-        );
-    }
-}
 
 class StatisticsTournamentPage extends React.Component {
 
