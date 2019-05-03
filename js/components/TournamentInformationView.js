@@ -57,28 +57,28 @@ function ButtonsBadge(props) {
     const { id, ownerName, isSignedIn, username, currentpage } = props;
     
     switch(currentpage) {
-        case 'statistics':
-            return (
-                <ButtonGroup className={props.className}>
-                    <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
-                    <TournamentButton id={id}/>
-                </ButtonGroup>
-            );
-        case 'tournament':
-            return (
-                <ButtonGroup className={props.className}>
-                    <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
-                    <StatisticsButton id={id}/>
-                </ButtonGroup>
-            );
-        case 'edit':
-            return (
-                <ButtonGroup className={props.className}>
-                    <StatisticsButton id={id}/>
-                    <TournamentButton id={id}/>
-                </ButtonGroup>
-            );
-        default: return null;
+    case 'statistics':
+        return (
+            <ButtonGroup className={props.className}>
+                <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
+                <TournamentButton id={id}/>
+            </ButtonGroup>
+        );
+    case 'tournament':
+        return (
+            <ButtonGroup className={props.className}>
+                <EditButton id={id} ownerName={ownerName} isSignedIn={isSignedIn} username={username}/>
+                <StatisticsButton id={id}/>
+            </ButtonGroup>
+        );
+    case 'edit':
+        return (
+            <ButtonGroup className={props.className}>
+                <StatisticsButton id={id}/>
+                <TournamentButton id={id}/>
+            </ButtonGroup>
+        );
+    default: return null;
     }
 }
 

@@ -19,9 +19,9 @@ import {Match} from '../js/components/Match';
 
 class PrivateTournamentPage extends React.Component {
     render() {
-        const {id, description, isPublic, code, ownerUsername, playoffStages} = this.props.tournament;
+        const {ownerUsername, playoffStages} = this.props.tournament;
         const {isSignedIn, username} = this.props;
-
+        
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
             <TournamentInformationView tournament={this.props.tournament} currentpage='tournament'/>
