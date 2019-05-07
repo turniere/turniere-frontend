@@ -21,8 +21,8 @@ export class DominanceShower extends React.Component {
                                 <th colSpan="2" className="h3 text-center">{findTeam(this.props.teams, this.props.stats.id).name}</th>
                             </tr>
                             <tr>
-                                <td className="h4 text-success pb-0">{this.props.stats.pointsMade}</td>
-                                <td className="h4 text-danger text-right pb-0">{this.props.stats.pointsReceived}</td>
+                                <td className="h4 text-success pb-0">{this.props.stats.points_made}</td>
+                                <td className="h4 text-danger text-right pb-0">{this.props.stats.points_received}</td>
                             </tr>
                             <tr>
                                 <td className="smaller pt-0">Punkte erzielt</td>

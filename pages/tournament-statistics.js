@@ -52,118 +52,118 @@ class StatisticsTournamentPage extends React.Component {
                 { id: 0x1246, name: 'Washington Justice' },
                 { id: 0x1247, name: 'Guangzhou Charge' }
             ],
-            groupPhasePerformances: [
+            group_phase_performances: [
                 {
-                    winlossdifferential: 7,
-                    pointDifferential: 16,
+                    win_loss_differential: 7,
+                    point_differential: 16,
                     rank: 2,
                     team: 0x1234 // New York Excelsior
                 },
                 {
-                    winlossdifferential: -1,
-                    pointDifferential: 1,
+                    win_loss_differential: -1,
+                    point_differential: 1,
                     rank: 10,
                     team: 0x1235 // Los Angeles Gladiators
                 },
                 {
-                    winlossdifferential: 1,
-                    pointDifferential: 5,
+                    win_loss_differential: 1,
+                    point_differential: 5,
                     rank: 6,
                     team: 0x1236 // San Francisco Shock
                 },
                 {
-                    winlossdifferential: 7,
-                    pointDifferential: 18,
+                    win_loss_differential: 7,
+                    point_differential: 18,
                     rank: 1,
                     team: 0x1237 // Vancouver Titans
                 },
                 {
-                    winlossdifferential: -1,
-                    pointDifferential: -4,
+                    win_loss_differential: -1,
+                    point_differential: -4,
                     rank: 13,
                     team: 0x1238 // London Spitfire
                 },
                 {
-                    winlossdifferential: 1,
-                    pointDifferential: 0,
+                    win_loss_differential: 1,
+                    point_differential: 0,
                     rank: 9,
                     team: 0x1239 //Dallas Fuel
                 },
                 {
-                    winlossdifferential: -1,
-                    pointDifferential: -8,
+                    win_loss_differential: -1,
+                    point_differential: -8,
                     rank: 16,
                     team: 0x123a // Chengdu Hunters
                 },
                 {
-                    winlossdifferential: 1,
-                    pointDifferential: 3,
+                    win_loss_differential: 1,
+                    point_differential: 3,
                     rank: 8,
                     team: 0x123b // Boston Uprising
                 },
                 {
-                    winlossdifferential: -1,
-                    pointDifferential: -8,
+                    win_loss_differential: -1,
+                    point_differential: -8,
                     rank: 17,
                     team: 0x123c // Paris Eternal
                 },
                 {
-                    winlossdifferential: 3,
-                    pointDifferential: 5,
+                    win_loss_differential: 3,
+                    point_differential: 5,
                     rank: 3,
                     team: 0x123d // Philadelphia Fusion
                 },
                 {
-                    winlossdifferential: -1,
-                    pointDifferential: -4,
+                    win_loss_differential: -1,
+                    point_differential: -4,
                     rank: 14,
                     team: 0x123e // Hangzhou Spark
                 },
                 {
-                    winlossdifferential: -1,
-                    pointDifferential: -3,
+                    win_loss_differential: -1,
+                    point_differential: -3,
                     rank: 12,
                     team: 0x123f // Houston Outlaws
                 },
                 {
-                    winlossdifferential: -1,
-                    pointDifferential: -4,
+                    win_loss_differential: -1,
+                    point_differential: -4,
                     rank: 15,
                     team: 0x1240 // Shanghai Dragons
                 },
                 {
-                    winlossdifferential: -7,
-                    pointDifferential: -9,
+                    win_loss_differential: -7,
+                    point_differential: -9,
                     rank: 20,
                     team: 0x1241 // Los Angeles Valiant
                 },
                 {
-                    winlossdifferential: 1,
-                    pointDifferential: 5,
+                    win_loss_differential: 1,
+                    point_differential: 5,
                     rank: 7,
                     team: 0x1242 // Seoul Dynasty
                 },
                 {
-                    winlossdifferential: 1,
-                    pointDifferential: 6,
+                    win_loss_differential: 1,
+                    point_differential: 6,
                     rank: 5,
                     team: 0x1243 // Atlanta Reign
                 },
                 {
-                    winlossdifferential: 3,
-                    pointDifferential: 5,
+                    win_loss_differential: 3,
+                    point_differential: 5,
                     rank: 4,
                     team: 0x1244 // Toronto Defiant
                 },
                 {
-                    winlossdifferential: -5,
-                    pointDifferential: -12,
+                    win_loss_differential: -5,
+                    point_differential: -12,
                     rank: 19,
                     team: 0x1245 // Florida Mayhem
                 },
                 {
-                    winlossdifferential: -5,
-                    pointDifferential: -11,
+                    win_loss_differential: -5,
+                    point_differential: -11,
                     rank: 18,
                     team: 0x1246 // Washington Justice
                 },
@@ -174,15 +174,15 @@ class StatisticsTournamentPage extends React.Component {
                     team: 0x1247 // Guangzhou Charge
                 }
             ],
-            mostDominantTeam: {
+            most_dominant_team: {
                 id: 0x1234,
-                pointsMade: 94,
-                pointsReceived: 3
+                points_made: 94,
+                points_received: 3
             },
-            leastDominantTeam: {
+            least_dominant_team: {
                 id: 0x1240,
-                pointsMade: 2,
-                pointsReceived: 103
+                points_made: 2,
+                points_received: 103
             }
         };
 
@@ -198,10 +198,10 @@ class StatisticsTournamentPage extends React.Component {
                     <Container className="py-5">
                         <Row>
                             <Col xs="6">
-                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.mostDominantTeam} title="Stärkstes Team"/>
+                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.most_dominant_team} title="Stärkstes Team"/>
                             </Col>
                             <Col xs="6">
-                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.leastDominantTeam} title="Schwächstes Team"/>
+                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.least_dominant_team} title="Schwächstes Team"/>
                             </Col>
                         </Row>
                     </Container>

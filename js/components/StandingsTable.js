@@ -23,7 +23,7 @@ export class StandingsTable extends React.Component {
     }
 
     render() {
-        let performances = this.props.data.groupPhasePerformances;
+        let performances = this.props.data.group_phase_performances;
 
         /**
          * comparison(p1, p2) < 0 => p1 < p2
@@ -83,8 +83,8 @@ class TeamRow extends React.Component {
             <tr className={this.props.className}>
                 <td>{ this.props.teamToShow.rank }</td>
                 <td className="w-100">{findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
-                <td className="text-center">{ this.props.teamToShow.winlossdifferential }</td>
-                <td className="text-center">{ this.props.teamToShow.pointDifferential }</td>
+                <td className="text-center">{ this.props.teamToShow.win_loss_differential }</td>
+                <td className="text-center">{ this.props.teamToShow.point_differential }</td>
             </tr>
         );
     }
