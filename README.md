@@ -30,7 +30,7 @@ In production environment the server runs on port 80, otherwise on port 3000.
 ## Production Setup: Build the Docker Container
 
 ```
-$ docker build -t turniere-frontend:latest .
+$ docker build -t turniere-frontend .
 ```
 
 The built container exposes port 80.
