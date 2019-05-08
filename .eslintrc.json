@@ -16,6 +16,8 @@
         }
     },
     "rules": {
+        "arrow-parens": ["error", "as-needed"],
+        "comma-dangle": ["error", "never"],
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
         "indent": [
@@ -25,6 +27,10 @@
         "linebreak-style": [
             "error",
             "unix"
+        ],
+        "max-len": [
+            "error",
+            {"code":  120}
         ],
         "quotes": [
             "error",
