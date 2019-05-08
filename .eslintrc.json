@@ -30,6 +30,8 @@
             "error",
             "single"
         ],
+        "require-jsdoc": "off",
+        "valid-jsdoc": "off",
         "semi": [
             "error",
             "always"
