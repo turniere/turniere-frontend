@@ -8,9 +8,12 @@ import thunkMiddleware         from 'redux-thunk';
 
 import { errorMessages }       from './constants';
 
-const axios = require('axios');
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 
-const api_url = 'https://api.turnie.re';
+const api_url = publicRuntimeConfig.api_url;
+
+const axios = require('axios');
 
 const actiontypes_userinfo = {
     'REGISTER'                     : 'REGISTER',
@@ -20,7 +23,7 @@ const actiontypes_userinfo = {
     'LOGIN'                        : 'LOGIN',
     'LOGIN_RESULT_SUCCESS'         : 'LOGIN_RESULT_SUCCESS',
     'LOGIN_RESULT_ERROR'           : 'LOGIN_RESULT_ERROR',
- 
+
     'LOGOUT'                       : 'LOGOUT',
 
     'VERIFY_CREDENTIALS'           : 'VERIFY_CREDENTIALS',

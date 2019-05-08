@@ -8,7 +8,7 @@ const handle = app.getRequestHandler();
 app.prepare()
     .then(() => {
         const server = express();
-        
+
         server.get('/t/:code', (req, res) => {
             const actualPage = '/tournament';
             const queryParam = { code: req.params.code };
@@ -31,7 +31,7 @@ app.prepare()
             return handle(req, res);
         });
 
-        server.listen(3000, (err) => {
+        server.listen(dev ? 3000 : 80, (err) => {
             if (err) throw err;
         });
     })

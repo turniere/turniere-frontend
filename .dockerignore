@@ -1,0 +1,6 @@
+node_modules/**
+.next/**
+.idea/**
+README.md
+.hound.yml
+.gitignore
