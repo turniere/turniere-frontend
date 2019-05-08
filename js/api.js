@@ -10,7 +10,7 @@ import { errorMessages }       from './constants';
 
 const axios = require('axios');
 
-const api_url = 'https://api.turnie.re';
+const api_url = process.env.REACT_APP_TURNIERE_API_URL;
 
 const actiontypes_userinfo = {
     'REGISTER'                     : 'REGISTER',
