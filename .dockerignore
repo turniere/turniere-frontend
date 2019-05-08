@@ -4,3 +4,4 @@ node_modules/**
 README.md
 .hound.yml
 .gitignore
+.gitlab-ci.yml
