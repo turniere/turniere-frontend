@@ -8,9 +8,12 @@ import thunkMiddleware         from 'redux-thunk';
 
 import { errorMessages }       from './constants';
 
-const axios = require('axios');
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 
-const api_url = process.env.REACT_APP_TURNIERE_API_URL;
+const api_url = publicRuntimeConfig.api_url;
+
+const axios = require('axios');
 
 const actiontypes_userinfo = {
     'REGISTER'                     : 'REGISTER',
@@ -20,7 +23,7 @@ const actiontypes_userinfo = {
     'LOGIN'                        : 'LOGIN',
     'LOGIN_RESULT_SUCCESS'         : 'LOGIN_RESULT_SUCCESS',
     'LOGIN_RESULT_ERROR'           : 'LOGIN_RESULT_ERROR',
- 
+
     'LOGOUT'                       : 'LOGOUT',
 
     'VERIFY_CREDENTIALS'           : 'VERIFY_CREDENTIALS',
@@ -147,215 +150,215 @@ function checkForAuthenticationHeaders(response) {
 
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     switch(action.type) {
-    case actiontypes_userinfo.REGISTER:
-        postRequest(action.state, '/users', {
-            'username' : action.parameters.username,
-            'email' : action.parameters.email,
-            'password' : action.parameters.password
-        }).then((resp) => {
-            __store.dispatch({
-                type : actiontypes_userinfo.REGISTER_RESULT_SUCCESS
-            });
-            storeOptionalToken(resp);
-        }).catch((error) => {
-            if (error.response) {
+        case actiontypes_userinfo.REGISTER:
+            postRequest(action.state, '/users', {
+                'username' : action.parameters.username,
+                'email' : action.parameters.email,
+                'password' : action.parameters.password
+            }).then((resp) => {
                 __store.dispatch({
-                    'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : error.response.data.errors.full_messages
-                    }
+                    type : actiontypes_userinfo.REGISTER_RESULT_SUCCESS
                 });
-                storeOptionalToken(error.response);
-            } else {
-                __store.dispatch({
-                    'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : [
-                            errorMessages['registration_errorunknown']['en']
-                        ]
-                    }
-                });
-            }
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_userinfo.REGISTER_RESULT_SUCCESS:
-        return Object.assign({}, state, {
-            error : false,
-            errorMessages : []
-        });
-    case actiontypes_userinfo.REGISTER_RESULT_ERROR:
-        return Object.assign({}, state, {
-            error : true,
-            errorMessages : action.parameters.errorMessages
-        });
-    case actiontypes_userinfo.LOGIN:
-        postRequest(action.state, '/users/sign_in', {
-            email : action.parameters.email,
-            password : action.parameters.password
-        }).then((resp) => {
-            __store.dispatch({
-                type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
-                parameters : {
-                    username : resp.data.username,
-                    successCallback: action.parameters.successCallback
+                storeOptionalToken(resp);
+            }).catch((error) => {
+                if (error.response) {
+                    __store.dispatch({
+                        'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
+                        'parameters' : {
+                            'errorMessages' : error.response.data.errors.full_messages
+                        }
+                    });
+                    storeOptionalToken(error.response);
+                } else {
+                    __store.dispatch({
+                        'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
+                        'parameters' : {
+                            'errorMessages' : [
+                                errorMessages['registration_errorunknown']['en']
+                            ]
+                        }
+                    });
                 }
             });
-            storeOptionalToken(resp);
-        }).catch((error) => {
-            if(error.response) {
+            return Object.assign({}, state, {});
+        case actiontypes_userinfo.REGISTER_RESULT_SUCCESS:
+            return Object.assign({}, state, {
+                error : false,
+                errorMessages : []
+            });
+        case actiontypes_userinfo.REGISTER_RESULT_ERROR:
+            return Object.assign({}, state, {
+                error : true,
+                errorMessages : action.parameters.errorMessages
+            });
+        case actiontypes_userinfo.LOGIN:
+            postRequest(action.state, '/users/sign_in', {
+                email : action.parameters.email,
+                password : action.parameters.password
+            }).then((resp) => {
                 __store.dispatch({
-                    'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : error.response.data.errors
+                    type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
+                    parameters : {
+                        username : resp.data.username,
+                        successCallback: action.parameters.successCallback
                     }
                 });
-                storeOptionalToken(error.response);
-            } else {
-                __store.dispatch({
-                    'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : [ errorMessages['login_errorunknown']['en'] ]
-                    }
-                });
-            }
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_userinfo.LOGIN_RESULT_SUCCESS:
-        action.parameters.successCallback(action.parameters.username);
-        return Object.assign({}, state, {
-            isSignedIn : true,
-            error : false,
-            errorMessages : [],
-            username : action.parameters.username,
-        });
-    case actiontypes_userinfo.LOGIN_RESULT_ERROR:
-        return Object.assign({}, state, {
-            error : true,
-            errorMessages : action.parameters.errorMessages
-        });
-    case actiontypes_userinfo.LOGOUT:
-        deleteRequest(action.state, '/users/sign_out').then(() => {
-            action.parameters.successCallback();
-            __store.dispatch({ type : actiontypes_userinfo.CLEAR });
-        }).catch(() => {
-            __store.dispatch({ type : actiontypes_userinfo.CLEAR });
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_userinfo.STORE_AUTH_HEADERS:
-        return Object.assign({}, state, {
-            accesstoken : action.parameters.accesstoken,
-            client : action.parameters.client,
-            expiry : action.parameters.expiry,
-            uid : action.parameters.uid
-        });
-    case actiontypes_userinfo.VERIFY_CREDENTIALS:
-        getRequest(action.state, '/users/validate_token').then((resp) => {
-            storeOptionalToken(resp);
-        }).catch(() => {
-            __store.dispatch({ type: actiontypes_userinfo.CLEAR });
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_userinfo.REHYDRATE:
-        return Object.assign({}, state, action.parameters, { error: false, errorMessages: [] });
-    case actiontypes_userinfo.CLEAR:
-        return Object.assign({}, state, {
-            isSignedIn : false,
-            username : null,
-            error : false,
-            errorMessages : [],
+                storeOptionalToken(resp);
+            }).catch((error) => {
+                if(error.response) {
+                    __store.dispatch({
+                        'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
+                        'parameters' : {
+                            'errorMessages' : error.response.data.errors
+                        }
+                    });
+                    storeOptionalToken(error.response);
+                } else {
+                    __store.dispatch({
+                        'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
+                        'parameters' : {
+                            'errorMessages' : [ errorMessages['login_errorunknown']['en'] ]
+                        }
+                    });
+                }
+            });
+            return Object.assign({}, state, {});
+        case actiontypes_userinfo.LOGIN_RESULT_SUCCESS:
+            action.parameters.successCallback(action.parameters.username);
+            return Object.assign({}, state, {
+                isSignedIn : true,
+                error : false,
+                errorMessages : [],
+                username : action.parameters.username,
+            });
+        case actiontypes_userinfo.LOGIN_RESULT_ERROR:
+            return Object.assign({}, state, {
+                error : true,
+                errorMessages : action.parameters.errorMessages
+            });
+        case actiontypes_userinfo.LOGOUT:
+            deleteRequest(action.state, '/users/sign_out').then(() => {
+                action.parameters.successCallback();
+                __store.dispatch({ type : actiontypes_userinfo.CLEAR });
+            }).catch(() => {
+                __store.dispatch({ type : actiontypes_userinfo.CLEAR });
+            });
+            return Object.assign({}, state, {});
+        case actiontypes_userinfo.STORE_AUTH_HEADERS:
+            return Object.assign({}, state, {
+                accesstoken : action.parameters.accesstoken,
+                client : action.parameters.client,
+                expiry : action.parameters.expiry,
+                uid : action.parameters.uid
+            });
+        case actiontypes_userinfo.VERIFY_CREDENTIALS:
+            getRequest(action.state, '/users/validate_token').then((resp) => {
+                storeOptionalToken(resp);
+            }).catch(() => {
+                __store.dispatch({ type: actiontypes_userinfo.CLEAR });
+            });
+            return Object.assign({}, state, {});
+        case actiontypes_userinfo.REHYDRATE:
+            return Object.assign({}, state, action.parameters, { error: false, errorMessages: [] });
+        case actiontypes_userinfo.CLEAR:
+            return Object.assign({}, state, {
+                isSignedIn : false,
+                username : null,
+                error : false,
+                errorMessages : [],
 
-            accesstoken : null,
-            client : null,
-            expiry : null,
-            uid : null
-        });
-    default: return state;
+                accesstoken : null,
+                client : null,
+                expiry : null,
+                uid : null
+            });
+        default: return state;
     }
 };
 
 const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => {
     switch(action.type) {
-    case actiontypes_tournamentinfo.CREATE_TOURNAMENT:
-        postRequest(action.state, '/tournaments', action.parameters.tournament).then((resp) => {
-            storeOptionalToken(resp);
-            action.parameters.successCallback();
-        }).catch(() => {
-            action.parameters.errorCallback();
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_tournamentinfo.REQUEST_TOURNAMENT:
-        getRequest(action.state, '/tournaments/' + action.parameters.code).then((resp) => {
-            __store.dispatch({
-                type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS,
-                parameters: resp.data
+        case actiontypes_tournamentinfo.CREATE_TOURNAMENT:
+            postRequest(action.state, '/tournaments', action.parameters.tournament).then((resp) => {
+                storeOptionalToken(resp);
+                action.parameters.successCallback();
+            }).catch(() => {
+                action.parameters.errorCallback();
             });
-            storeOptionalToken(resp);
-            action.parameters.successCallback();
-        }).catch(() => {
-            action.parameters.errorCallback();
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS:
-        return Object.assign({}, state, {
-            code : action.parameters.code,
-            description : action.parameters.description,
-            id : action.parameters.id,
-            name : action.parameters.name,
-            ownerUsername : action.parameters.owner_username,
-            isPublic : action.parameters.public,
-            stages: action.parameters.stages,
-            teams : action.parameters.teams
-        });
-    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT:
-        patchRequest(action.state, '/teams/' + action.parameters.teamid, {
-            name: action.parameters.name
-        }).then((resp) => {
-            storeOptionalToken(resp);
-            action.parameters.onSuccess();
-        }).catch((error) => {
-            if(error.response) {
-                storeOptionalToken(error.response);
-            }
-            action.parameters.onError();
-        });
-        return Object.assign({}, state, {});
-    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_SUCCESS:
+            return Object.assign({}, state, {});
+        case actiontypes_tournamentinfo.REQUEST_TOURNAMENT:
+            getRequest(action.state, '/tournaments/' + action.parameters.code).then((resp) => {
+                __store.dispatch({
+                    type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS,
+                    parameters: resp.data
+                });
+                storeOptionalToken(resp);
+                action.parameters.successCallback();
+            }).catch(() => {
+                action.parameters.errorCallback();
+            });
+            return Object.assign({}, state, {});
+        case actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS:
+            return Object.assign({}, state, {
+                code : action.parameters.code,
+                description : action.parameters.description,
+                id : action.parameters.id,
+                name : action.parameters.name,
+                ownerUsername : action.parameters.owner_username,
+                isPublic : action.parameters.public,
+                stages: action.parameters.stages,
+                teams : action.parameters.teams
+            });
+        case actiontypes_tournamentinfo.MODIFY_TOURNAMENT:
+            patchRequest(action.state, '/teams/' + action.parameters.teamid, {
+                name: action.parameters.name
+            }).then((resp) => {
+                storeOptionalToken(resp);
+                action.parameters.onSuccess();
+            }).catch((error) => {
+                if(error.response) {
+                    storeOptionalToken(error.response);
+                }
+                action.parameters.onError();
+            });
+            return Object.assign({}, state, {});
+        case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_SUCCESS:
 
-        return Object.assign({}, state, {});
-    case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_ERROR:
+            return Object.assign({}, state, {});
+        case actiontypes_tournamentinfo.MODIFY_TOURNAMENT_ERROR:
 
-        return Object.assign({}, state, {});
-    case actiontypes_tournamentinfo.REHYDRATE:
+            return Object.assign({}, state, {});
+        case actiontypes_tournamentinfo.REHYDRATE:
 
-        return Object.assign({}, state, {});
-    case actiontypes_tournamentinfo.CLEAR:
+            return Object.assign({}, state, {});
+        case actiontypes_tournamentinfo.CLEAR:
 
-        return Object.assign({}, state, {});
-    default: return state;
+            return Object.assign({}, state, {});
+        default: return state;
     }
 };
 
 const reducer_tournamentlist = (state = defaultstate_tournamentlist, action) => {
     switch (action.type) {
-    case actiontypes_tournamentlist.FETCH:
-        getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
-            __store.dispatch({
-                type: actiontypes_tournamentlist.FETCH_SUCCESS,
-                parameters: resp.data
+        case actiontypes_tournamentlist.FETCH:
+            getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
+                __store.dispatch({
+                    type: actiontypes_tournamentlist.FETCH_SUCCESS,
+                    parameters: resp.data
+                });
+                storeOptionalToken(resp);
+                action.parameters.successCallback(resp.data);
+            }).catch((error) => {
+                if(error.response) {
+                    storeOptionalToken(error.response);
+                }
+                action.parameters.errorCallback();
             });
-            storeOptionalToken(resp);
-            action.parameters.successCallback(resp.data);
-        }).catch((error) => {
-            if(error.response) {
-                storeOptionalToken(error.response);
-            }
-            action.parameters.errorCallback();
-        });
-        return state;
-    case actiontypes_tournamentlist.FETCH_SUCCESS:
-        return Object.assign({}, state, {tournaments: action.parameters});
-    default:
-        return state;
+            return state;
+        case actiontypes_tournamentlist.FETCH_SUCCESS:
+            return Object.assign({}, state, {tournaments: action.parameters});
+        default:
+            return state;
     }
 };
 
