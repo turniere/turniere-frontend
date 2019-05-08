@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * This component works just like a switch statement, although the conditions of the first items
  * are checked first, and the first component with a condition that is true will be shown.
- * 
+ *
  * For single conditions and options any kind of component can be taken, while the Option-component
  * is dedicated for this job. The only important thing is that this component has to have a condition property.
  *
@@ -13,7 +13,7 @@ import React from 'react';
  *
  * function SomeRestrictedContent(props) {
  *     const { isSignedIn } = props;
- *     
+ *
  *     return (
  *         <UserRestrictor>
  *             <Option condition={isSignedIn}>
@@ -30,14 +30,13 @@ import React from 'react';
  * since it would always be taken otherwise (the options' conditions are checked from top to bottom)
  */
 export class UserRestrictor extends React.Component {
-
     render() {
-        const { children } = this.props;
+        const {children} = this.props;
 
-        for(var i in children) {
-            var c = children[i];
-            
-            if(c.props.condition) {
+        for (const i in children) {
+            const c = children[i];
+
+            if (c.props.condition) {
                 return c;
             }
         }

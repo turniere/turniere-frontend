@@ -1,14 +1,13 @@
-import Head                   from 'next/head';
-import React                  from 'react';
+import Head from 'next/head';
+import React from 'react';
 
-import { TurniereNavigation } from '../js/components/Navigation';
-import { Footer }             from '../js/components/Footer';
-import { Login }              from '../js/components/Login';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {Footer} from '../js/components/Footer';
+import {Login} from '../js/components/Login';
 
 import '../static/everypage.css';
 
 export default class LoginPage extends React.Component {
-
     render() {
         return (
             <div className="main generic-fullpage-bg">

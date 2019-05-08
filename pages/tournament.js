@@ -1,6 +1,6 @@
-import Head                   from 'next/head';
-import React                  from 'react';
-import { connect }            from 'react-redux';
+import Head from 'next/head';
+import React from 'react';
+import {connect} from 'react-redux';
 import {
     Button,
     Card,
@@ -20,10 +20,10 @@ import {
     Table
 } from 'reactstrap';
 
-import { ErrorPageComponent } from '../js/components/ErrorComponents';
-import { Footer }             from '../js/components/Footer';
-import { TurniereNavigation } from '../js/components/Navigation';
-import { BigImage }           from '../js/components/BigImage';
+import {ErrorPageComponent} from '../js/components/ErrorComponents';
+import {Footer} from '../js/components/Footer';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {BigImage} from '../js/components/BigImage';
 import {
     getRequest,
     getState
@@ -35,11 +35,10 @@ import '../static/everypage.css';
 import '../static/css/tournament.css';
 
 class PrivateTournamentPage extends React.Component {
-
     render() {
-        const { id, description, isPublic, code, ownerUsername, playoffStages } = this.props.tournament;
-        const { isSignedIn, username } = this.props;
-        
+        const {id, description, isPublic, code, ownerUsername, playoffStages} = this.props.tournament;
+        const {isSignedIn, username} = this.props;
+
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (
             <div className='pb-5'>
@@ -64,8 +63,8 @@ class PrivateTournamentPage extends React.Component {
 }
 
 function mapStateToTournamentPageProperties(state) {
-    const { isSignedIn, username } = state.userinfo;
-    return { isSignedIn, username };
+    const {isSignedIn, username} = state.userinfo;
+    return {isSignedIn, username};
 }
 
 const TournamentPage = connect(
@@ -73,9 +72,9 @@ const TournamentPage = connect(
 )(PrivateTournamentPage);
 
 function EditButton(props) {
-    const { id, ownerName, isSignedIn, username } = props;
+    const {id, ownerName, isSignedIn, username} = props;
 
-    if(isSignedIn && ownerName === username) {
+    if (isSignedIn && ownerName === username) {
         return (
             <a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
         );
@@ -86,15 +85,15 @@ function EditButton(props) {
 
 function getLevelName(levelNumber) {
     const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
-    if(levelNumber < names.length){
+    if (levelNumber < names.length) {
         return names[levelNumber];
-    }else {
+    } else {
         return Math.pow(2, levelNumber) + 'tel-Finale';
     }
 }
 
 function Stage(props) {
-    const { isSignedIn, isOwner } = props;
+    const {isSignedIn, isOwner} = props;
 
     return (<div>
         <Container className='py-5'>
@@ -118,16 +117,16 @@ class Match extends React.Component {
     }
 
     toggleModal() {
-        const { isSignedIn, isOwner } = this.props;
+        const {isSignedIn, isOwner} = this.props;
 
-        if(isSignedIn && isOwner) {
+        if (isSignedIn && isOwner) {
             this.setState({modal: !this.state.modal});
         }
     }
 
     render() {
-        let cardClass, smallMessage, borderClass;
-        //possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
+        let cardClass; let smallMessage; let borderClass;
+        // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
         switch (this.props.match.state) {
         case 'in_progress':
             cardClass = 'table-warning';
@@ -178,7 +177,7 @@ class Match extends React.Component {
 function MatchModal(props) {
     let title;
     let actionButton = '';
-    //possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
+    // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
     switch (props.match.state) {
     case 'in_progress':
         title = 'Spiel läuft';
@@ -220,8 +219,8 @@ function MatchModal(props) {
 }
 
 function MatchTable(props) {
-    let team1Class, team2Class;
-    //possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
+    let team1Class; let team2Class;
+    // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
     switch (props.match.state) {
     case 'in_progress':
         break;
@@ -243,7 +242,7 @@ function MatchTable(props) {
     case 'undecided':
         break;
     }
-    if(props.match.state === 'single_team'){
+    if (props.match.state === 'single_team') {
         return (
             <Table className='mb-0'>
                 <tbody>
@@ -304,15 +303,15 @@ class ScoreInput extends React.Component {
         this.decreaseScore = this.decreaseScore.bind(this);
     }
 
-    updateScore(event){
+    updateScore(event) {
         this.setState({score: event.target.value});
     }
 
-    increaseScore(){
+    increaseScore() {
         this.setState({score: Number(this.state.score) + 1});
     }
 
-    decreaseScore(){
+    decreaseScore() {
         this.setState({score: Number(this.state.score) - 1});
     }
 
@@ -327,13 +326,13 @@ class ScoreInput extends React.Component {
 
 function convertTournament(apiTournament) {
     let groupStage = null;
-    let playoffStages = [];
-    for (let stage of apiTournament.stages) {
-        if(stage.groups.length > 0){
-            //group stage
+    const playoffStages = [];
+    for (const stage of apiTournament.stages) {
+        if (stage.groups.length > 0) {
+            // group stage
             groupStage = {groups: stage.groups.map(group => convertGroup(group))};
-        }else{
-            //playoff stage
+        } else {
+            // playoff stage
             playoffStages.push({
                 id: stage.id,
                 level: stage.level,
@@ -363,17 +362,17 @@ function convertGroup(apiGroup) {
 }
 
 function convertMatch(apiMatch) {
-    let result = {
+    const result = {
         id: apiMatch.id,
         state: apiMatch.state
     };
 
-    if(apiMatch.match_scores.length === 2) {
+    if (apiMatch.match_scores.length === 2) {
         result.team1 = apiMatch.match_scores[0].team.name;
         result.scoreTeam1 = apiMatch.match_scores[0].points;
         result.team2 = apiMatch.match_scores[1].team.name;
         result.scoreTeam2 = apiMatch.match_scores[1].points;
-    } else if(apiMatch.match_scores.length === 1) {
+    } else if (apiMatch.match_scores.length === 1) {
         result.team1 = apiMatch.match_scores[0].team.name;
         result.scoreTeam1 = apiMatch.match_scores[0].points;
         result.team2 = 'TBD';
@@ -389,7 +388,6 @@ function convertMatch(apiMatch) {
 }
 
 class Main extends React.Component {
-
     static async getInitialProps({query}) {
         return {query};
     }
@@ -398,7 +396,7 @@ class Main extends React.Component {
         super(props);
 
         this.state = {
-            tournament : null
+            tournament: null
         };
     }
 
@@ -407,13 +405,13 @@ class Main extends React.Component {
 
         getRequest(getState(), '/tournaments/' + code)
             .then(response => {
-                this.setState({ status : response.status, tournament : convertTournament(response.data)});
+                this.setState({status: response.status, tournament: convertTournament(response.data)});
             })
-            .catch((err) => {
-                if(err.response) {
-                    this.setState({ status : err.response.status });
+            .catch(err => {
+                if (err.response) {
+                    this.setState({status: err.response.status});
                 } else {
-                    this.setState({ status : -1 });
+                    this.setState({status: -1});
                 }
             });
     }
@@ -422,7 +420,7 @@ class Main extends React.Component {
     render() {
         const tournamentName = this.state.tournament === null ? 'Turnier' : this.state.tournament.name;
 
-        const { status, tournament } = this.state;
+        const {status, tournament} = this.state;
 
         if (status === 200) {
             return (

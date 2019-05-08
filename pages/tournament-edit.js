@@ -1,7 +1,7 @@
-import Head                       from 'next/head';
-import React                      from 'react';
-import { connect }                from 'react-redux';
-import { notify }                 from 'react-notify-toast';
+import Head from 'next/head';
+import React from 'react';
+import {connect} from 'react-redux';
+import {notify} from 'react-notify-toast';
 import {
     Container,
     Button,
@@ -10,14 +10,14 @@ import {
     Table
 } from 'reactstrap';
 
-import { requestTournament }      from '../js/api';
-import { TurniereNavigation }     from '../js/components/Navigation';
-import { BigImage }               from '../js/components/BigImage';
-import { UserRestrictor, Option } from '../js/components/UserRestrictor';
-import { Footer }                 from '../js/components/Footer';
-import { Login }                  from '../js/components/Login';
-import { ErrorPageComponent }     from '../js/components/ErrorComponents';
-import { updateTeamName }         from '../js/api';
+import {requestTournament} from '../js/api';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {BigImage} from '../js/components/BigImage';
+import {UserRestrictor, Option} from '../js/components/UserRestrictor';
+import {Footer} from '../js/components/Footer';
+import {Login} from '../js/components/Login';
+import {ErrorPageComponent} from '../js/components/ErrorComponents';
+import {updateTeamName} from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -25,7 +25,6 @@ import '../static/everypage.css';
 import '../static/css/index.css';
 
 class EditTournamentPage extends React.Component {
-
     static async getInitialProps({query}) {
         return {query};
     }
@@ -40,19 +39,19 @@ class EditTournamentPage extends React.Component {
 
     componentDidMount() {
         requestTournament(this.props.query.code, () => {
-            this.setState({ validCode: true });
+            this.setState({validCode: true});
 
-            if(this._edittournamentcontent != null) {
+            if (this._edittournamentcontent != null) {
                 this._edittournamentcontent.notifyOfContentUpdate();
             }
         }, () => {
-            this.setState({ validCode: false });
+            this.setState({validCode: false});
         });
     }
 
     render() {
-        const { validCode } = this.state;
-        const { tournamentname, ownerUsername, isSignedIn, username } = this.props;
+        const {validCode} = this.state;
+        const {tournamentname, ownerUsername, isSignedIn, username} = this.props;
 
         return (
             <UserRestrictor>
@@ -64,7 +63,9 @@ class EditTournamentPage extends React.Component {
                         <TurniereNavigation/>
 
                         <BigImage text={ tournamentname }/>
-                        <EditTournamentContent ref={(edittournamentcontent) => { this._edittournamentcontent = edittournamentcontent; }}/>
+                        <EditTournamentContent ref={edittournamentcontent => {
+                            this._edittournamentcontent = edittournamentcontent;
+                        }}/>
                         <Footer/>
                     </div>
                 </Option>
@@ -82,7 +83,7 @@ class EditTournamentPage extends React.Component {
                             <Login hint="Sie müssen angemeldet sein, um ein Turnier zu bearbeiten."/>
                         </div>
                         <Footer/>
-                    </div>                      
+                    </div>
                 </Option>
                 <Option condition={true}>
                     <ErrorPageComponent statusCode={ 404 }/>
@@ -93,9 +94,9 @@ class EditTournamentPage extends React.Component {
 }
 
 function mapStateToTournamentInfo(state) {
-    const { tournamentname, ownerUsername } = state.tournamentinfo;
-    const { isSignedIn, username } = state.userinfo;
-    return { tournamentname, ownerUsername, isSignedIn, username };
+    const {tournamentname, ownerUsername} = state.tournamentinfo;
+    const {isSignedIn, username} = state.userinfo;
+    return {tournamentname, ownerUsername, isSignedIn, username};
 }
 
 export default connect(
@@ -103,13 +104,16 @@ export default connect(
 )(EditTournamentPage);
 
 class EditTournamentContent extends React.Component {
-
     render() {
         return (
             <div className='mb-5'>
                 <ReturnToTournamentButton/>
-                <EditTournamentPropertiesField ref={(field) => { this._edittournamentpropertiesfield = field; }}/>
-                <EditTeamField ref={(field) => { this._editteamfield = field; }}/>
+                <EditTournamentPropertiesField ref={field => {
+                    this._edittournamentpropertiesfield = field;
+                }}/>
+                <EditTeamField ref={field => {
+                    this._editteamfield = field;
+                }}/>
             </div>
         );
     }
@@ -129,13 +133,14 @@ function ReturnToTournamentButton() {
 }
 
 class EditTournamentPropertiesField extends React.Component {
-
     render() {
         return (
             <Card className="container">
                 <CardBody>
                     <h2>Turnier-Eigenschaften ändern</h2>
-                    <VisibleEditTournamentForm ref={(form) => { this._visibleedittournamentform = form; }}/>
+                    <VisibleEditTournamentForm ref={form => {
+                        this._visibleedittournamentform = form;
+                    }}/>
                 </CardBody>
             </Card>
         );
@@ -147,19 +152,18 @@ class EditTournamentPropertiesField extends React.Component {
 }
 
 class EditTournamentForm extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
-            name : '',
-            description : '',
-            isPublic : false
+            name: '',
+            description: '',
+            isPublic: false
         };
     }
 
     render() {
-        const { name, description, isPublic } = this.state;
+        const {name, description, isPublic} = this.state;
 
         return (
             <div>
@@ -185,12 +189,12 @@ class EditTournamentForm extends React.Component {
     }
 
     notifyOfContentUpdate() {
-        const { name, description, isPublic } = this.props;
-        
+        const {name, description, isPublic} = this.props;
+
         this.setState({
-            name : name? name : '',
-            description : description? description : '',
-            isPublic : isPublic
+            name: name? name : '',
+            description: description? description : '',
+            isPublic: isPublic
         });
     }
 
@@ -199,36 +203,37 @@ class EditTournamentForm extends React.Component {
     }
 
     handleNameInput(input) {
-        this.setState({ name : input.target.value });
+        this.setState({name: input.target.value});
     }
 
     handleDescriptionInput(input) {
-        this.setState({ description : input.target.value });
+        this.setState({description: input.target.value});
     }
 
     handlePublicInput(input) {
-        this.setState({ public : input.target.value });
+        this.setState({public: input.target.value});
     }
 }
 
 function mapStateToTournamentFormProps(state) {
-    const { name, description, isPublic } = state.tournamentinfo;
-    return { name, description, isPublic };
+    const {name, description, isPublic} = state.tournamentinfo;
+    return {name, description, isPublic};
 }
 
 const VisibleEditTournamentForm = connect(
     mapStateToTournamentFormProps,
-    null, null, { withRef : true}
+    null, null, {withRef: true}
 )(EditTournamentForm);
 
 class EditTeamField extends React.Component {
-
     render() {
         return (
             <Card className="container my-4">
                 <CardBody>
                     <h2>Team-Namen ändern</h2>
-                    <VisibleEditTeamNamesForm ref={(form) => { this._visibleeditteamnamesform = form; }}/>
+                    <VisibleEditTeamNamesForm ref={form => {
+                        this._visibleeditteamnamesform = form;
+                    }}/>
                 </CardBody>
             </Card>
         );
@@ -240,24 +245,23 @@ class EditTeamField extends React.Component {
 }
 
 class EditTeamNamesForm extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
-            teams : []
+            teams: []
         };
     }
 
     render() {
-        const { teams } = this.state;
+        const {teams} = this.state;
 
         return (
             <div>
                 <Table className="table-striped mt-3">
                     <tbody>
                         {
-                            teams.map((team, index) => 
+                            teams.map((team, index) =>
                                 <tr key={index}>
                                     <td><Button outline size="sm" className="changeTeamnameButton" id={ 'editteam-button-team_' + team.id } onClick={ this.handleClick.bind(this, index) }>Ändern</Button></td>
                                     <td className="w-100"><input className="form-control" type="text" id={ 'editteam-textfield-team_' + team.id } value={ team.name } placeholder={ team.name } onChange={ this.handleNameInput.bind(this, index) } /></td>
@@ -271,20 +275,20 @@ class EditTeamNamesForm extends React.Component {
     }
 
     notifyOfContentUpdate() {
-        const { teams } = this.props;
-        
+        const {teams} = this.props;
+
         this.setState({
-            teams : teams
+            teams: teams
         });
     }
 
     handleNameInput(index, input) {
-        let team = this.state.teams.slice();
+        const team = this.state.teams.slice();
 
         team[index].name = input.target.value;
 
         this.setState({
-            teams : team
+            teams: team
         });
     }
 
@@ -298,12 +302,12 @@ class EditTeamNamesForm extends React.Component {
 }
 
 function mapStateToTeamFormProps(state) {
-    const { teams } = state.tournamentinfo;
-    return { teams };
+    const {teams} = state.tournamentinfo;
+    return {teams};
 }
 
 const VisibleEditTeamNamesForm = connect(
     mapStateToTeamFormProps,
-    null, null, { withRef : true }
+    null, null, {withRef: true}
 )(EditTeamNamesForm);
 

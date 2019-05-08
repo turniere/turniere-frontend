@@ -23,7 +23,7 @@ export default class TournamentList extends React.Component {
                 Turniere vorhanden</p>;
         } else {
             return this.state.tournaments.map(item => (
-                //The code should be item.code but the api just supports it this way by now
+                // The code should be item.code but the api just supports it this way by now
                 <TournamentListEntry name={item.name} code={item.id} key={item.id}/>
             ));
         }

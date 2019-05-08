@@ -10,14 +10,13 @@ import {
     NavItem,
     NavLink
 } from 'reactstrap';
-import { connect } from 'react-redux';
-import React       from 'react';
+import {connect} from 'react-redux';
+import React from 'react';
 
-import { logout }  from '../api';
+import {logout} from '../api';
 import {notify} from 'react-notify-toast';
 
 export class TurniereNavigation extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -58,7 +57,6 @@ function Navlink(props) {
 }
 
 class SmartNavLinks extends React.Component {
-
     render() {
         return (<Nav navbar className="mr-auto">
             <Navlink target="/create" text="Turnier erstellen"/>
@@ -74,18 +72,17 @@ function Betabadge() {
 }
 
 class InvisibleLoginLogoutButtons extends React.Component {
-
-    logout(){
+    logout() {
         logout(() => notify.show('Du bist jetzt abgemeldet.', 'success', 2500));
     }
 
     render() {
-        const { isSignedIn, username } = this.props;
+        const {isSignedIn, username} = this.props;
 
-        if(isSignedIn) {
+        if (isSignedIn) {
             return (
                 <ButtonGroup className="nav-item">
-                    <Button outline color="success"  href="/profile" className="navbar-btn my-2 my-sm-0 px-5">{ username }</Button>
+                    <Button outline color="success" href="/profile" className="navbar-btn my-2 my-sm-0 px-5">{ username }</Button>
                     <Button outline color="success" onClick={this.logout.bind(this)} className="navbar-btn my-2 my-sm-0 px-5">Logout</Button>
                 </ButtonGroup>
             );
@@ -100,9 +97,9 @@ class InvisibleLoginLogoutButtons extends React.Component {
     }
 }
 
-const mapStateToUserinfo = (state) => {
-    const { isSignedIn, username } = state.userinfo;
-    return { isSignedIn, username };
+const mapStateToUserinfo = state => {
+    const {isSignedIn, username} = state.userinfo;
+    return {isSignedIn, username};
 };
 
 const LoginLogoutButtons = connect(

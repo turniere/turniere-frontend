@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {Card, CardBody, Container,} from 'reactstrap';
+import {Card, CardBody, Container} from 'reactstrap';
 
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
@@ -13,7 +13,6 @@ import '../static/everypage.css';
 import TournamentList from '../js/components/TournamentList';
 
 class PrivateTournamentsPage extends React.Component {
-
     render() {
         const {isSignedIn} = this.props;
 

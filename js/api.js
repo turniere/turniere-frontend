@@ -3,74 +3,74 @@ import {
     applyMiddleware,
     combineReducers
 } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunkMiddleware         from 'redux-thunk';
+import {composeWithDevTools} from 'redux-devtools-extension';
+import thunkMiddleware from 'redux-thunk';
 
-import { errorMessages }       from './constants';
+import {errorMessages} from './constants';
 
 import getConfig from 'next/config';
-const { publicRuntimeConfig } = getConfig();
+const {publicRuntimeConfig} = getConfig();
 
 const api_url = publicRuntimeConfig.api_url;
 
 const axios = require('axios');
 
 const actiontypes_userinfo = {
-    'REGISTER'                     : 'REGISTER',
-    'REGISTER_RESULT_SUCCESS'      : 'REGISTER_RESULT_SUCCESS',
-    'REGISTER_RESULT_ERROR'        : 'REGISTER_RESULT_ERROR',
+    'REGISTER': 'REGISTER',
+    'REGISTER_RESULT_SUCCESS': 'REGISTER_RESULT_SUCCESS',
+    'REGISTER_RESULT_ERROR': 'REGISTER_RESULT_ERROR',
 
-    'LOGIN'                        : 'LOGIN',
-    'LOGIN_RESULT_SUCCESS'         : 'LOGIN_RESULT_SUCCESS',
-    'LOGIN_RESULT_ERROR'           : 'LOGIN_RESULT_ERROR',
+    'LOGIN': 'LOGIN',
+    'LOGIN_RESULT_SUCCESS': 'LOGIN_RESULT_SUCCESS',
+    'LOGIN_RESULT_ERROR': 'LOGIN_RESULT_ERROR',
 
-    'LOGOUT'                       : 'LOGOUT',
+    'LOGOUT': 'LOGOUT',
 
-    'VERIFY_CREDENTIALS'           : 'VERIFY_CREDENTIALS',
-    'VERIFY_CREDENTIALS_SUCCESS'   : 'VERIFY_CREDENTIALS_SUCCESS',
-    'VERIFY_CREDENTIALS_ERROR'     : 'VERIFY_CREDENTIALS_ERROR',
+    'VERIFY_CREDENTIALS': 'VERIFY_CREDENTIALS',
+    'VERIFY_CREDENTIALS_SUCCESS': 'VERIFY_CREDENTIALS_SUCCESS',
+    'VERIFY_CREDENTIALS_ERROR': 'VERIFY_CREDENTIALS_ERROR',
 
-    'STORE_AUTH_HEADERS'           : 'STORE_AUTH_HEADERS',
+    'STORE_AUTH_HEADERS': 'STORE_AUTH_HEADERS',
 
-    'REHYDRATE'                    : 'USERINFO_REHYDRATE',
-    'CLEAR'                        : 'USERINFO_CLEAR'
+    'REHYDRATE': 'USERINFO_REHYDRATE',
+    'CLEAR': 'USERINFO_CLEAR'
 };
 
 const defaultstate_userinfo = {
-    isSignedIn : false,
-    username : null,
-    error : false,
-    errorMessages : [],
+    isSignedIn: false,
+    username: null,
+    error: false,
+    errorMessages: [],
 
-    accesstoken : null,
-    client : null,
-    expiry : null,
-    uid : null
+    accesstoken: null,
+    client: null,
+    expiry: null,
+    uid: null
 };
 
 const actiontypes_tournamentinfo = {
-    'REQUEST_TOURNAMENT'           : 'REQUEST_TOURNAMENT',
-    'REQUEST_TOURNAMENT_SUCCESS'   : 'REQUEST_TOURNAMENT_SUCCESS',
+    'REQUEST_TOURNAMENT': 'REQUEST_TOURNAMENT',
+    'REQUEST_TOURNAMENT_SUCCESS': 'REQUEST_TOURNAMENT_SUCCESS',
 
-    'CREATE_TOURNAMENT'            : 'CREATE_TOURNAMENT',
+    'CREATE_TOURNAMENT': 'CREATE_TOURNAMENT',
 
-    'MODIFY_TOURNAMENT'            : 'MODIFY_TOURNAMENT',
-    'MODIFY_TOURNAMENT_SUCCESS'    : 'MODIFY_TOURNAMENT_SUCCESS',
-    'MODIFY_TOURNAMENT_ERROR'      : 'MODIFY_TOURNAMENT_ERROR',
+    'MODIFY_TOURNAMENT': 'MODIFY_TOURNAMENT',
+    'MODIFY_TOURNAMENT_SUCCESS': 'MODIFY_TOURNAMENT_SUCCESS',
+    'MODIFY_TOURNAMENT_ERROR': 'MODIFY_TOURNAMENT_ERROR',
 
-    'REHYDRATE'                    : 'TOURNAMENTINFO_REHYDRATE',
-    'CLEAR'                        : 'TOURNAMENTINFO_CLEAR',
+    'REHYDRATE': 'TOURNAMENTINFO_REHYDRATE',
+    'CLEAR': 'TOURNAMENTINFO_CLEAR'
 };
 
 const defaultstate_tournamentinfo = {
-    code : '',
-    description : '',
-    id : -1,
-    name : '',
-    ownerUsername : '',
-    isPublic : '',
+    code: '',
+    description: '',
+    id: -1,
+    name: '',
+    ownerUsername: '',
+    isPublic: '',
     stages: [],
-    teams : []
+    teams: []
 };
 
 const actiontypes_tournamentlist = {
@@ -85,34 +85,34 @@ const defaultstate_tournamentlist = {
 
 export function postRequest(state, url, data) {
     return axios.post(api_url + url, data, {
-        headers : generateHeaders(state)
+        headers: generateHeaders(state)
     });
 }
 
 export function getRequest(state, url) {
     return axios.get(api_url + url, {
-        headers : generateHeaders(state)
+        headers: generateHeaders(state)
     });
 }
 
 export function deleteRequest(state, url) {
     return axios.delete(api_url + url, {
-        headers : generateHeaders(state)
+        headers: generateHeaders(state)
     });
 }
 
 export function patchRequest(state, url, data) {
     return axios.patch(api_url + url, data, {
-        headers : generateHeaders(state)
+        headers: generateHeaders(state)
     });
 }
 
 function generateHeaders(state) {
-    if(state.userinfo.isSignedIn) {
+    if (state.userinfo.isSignedIn) {
         return {
-            'access-token' : state.userinfo.accesstoken,
-            'client' : state.userinfo.client,
-            'uid' : state.userinfo.uid
+            'access-token': state.userinfo.accesstoken,
+            'client': state.userinfo.client,
+            'uid': state.userinfo.uid
         };
     } else {
         return {};
@@ -120,26 +120,26 @@ function generateHeaders(state) {
 }
 
 function storeOptionalToken(response) {
-    if(checkForAuthenticationHeaders(response)) {
+    if (checkForAuthenticationHeaders(response)) {
         __store.dispatch({
-            type : actiontypes_userinfo.STORE_AUTH_HEADERS,
-            parameters : {
-                accesstoken : response.headers['access-token'],
-                client : response.headers['client'],
-                expiry : response.headers['expiry'],
-                uid : response.headers['uid']
+            type: actiontypes_userinfo.STORE_AUTH_HEADERS,
+            parameters: {
+                accesstoken: response.headers['access-token'],
+                client: response.headers['client'],
+                expiry: response.headers['expiry'],
+                uid: response.headers['uid']
             }
         });
     }
 }
 
 function checkForAuthenticationHeaders(response) {
-    if(response.headers) {
+    if (response.headers) {
         const requiredHeaders = [
             'access-token', 'client', 'uid', 'expiry'
         ];
-        for(var i = 0; i < requiredHeaders.length; i++) {
-            if(!response.headers[requiredHeaders[i]]) {
+        for (let i = 0; i < requiredHeaders.length; i++) {
+            if (!response.headers[requiredHeaders[i]]) {
                 return false;
             }
         }
@@ -149,31 +149,31 @@ function checkForAuthenticationHeaders(response) {
 }
 
 const reducer_userinfo = (state = defaultstate_userinfo, action) => {
-    switch(action.type) {
+    switch (action.type) {
     case actiontypes_userinfo.REGISTER:
         postRequest(action.state, '/users', {
-            'username' : action.parameters.username,
-            'email' : action.parameters.email,
-            'password' : action.parameters.password
-        }).then((resp) => {
+            'username': action.parameters.username,
+            'email': action.parameters.email,
+            'password': action.parameters.password
+        }).then(resp => {
             __store.dispatch({
-                type : actiontypes_userinfo.REGISTER_RESULT_SUCCESS
+                type: actiontypes_userinfo.REGISTER_RESULT_SUCCESS
             });
             storeOptionalToken(resp);
-        }).catch((error) => {
+        }).catch(error => {
             if (error.response) {
                 __store.dispatch({
-                    'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : error.response.data.errors.full_messages
+                    'type': actiontypes_userinfo.REGISTER_RESULT_ERROR,
+                    'parameters': {
+                        'errorMessages': error.response.data.errors.full_messages
                     }
                 });
                 storeOptionalToken(error.response);
             } else {
                 __store.dispatch({
-                    'type' : actiontypes_userinfo.REGISTER_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : [
+                    'type': actiontypes_userinfo.REGISTER_RESULT_ERROR,
+                    'parameters': {
+                        'errorMessages': [
                             errorMessages['registration_errorunknown']['en']
                         ]
                     }
@@ -183,41 +183,41 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
         return Object.assign({}, state, {});
     case actiontypes_userinfo.REGISTER_RESULT_SUCCESS:
         return Object.assign({}, state, {
-            error : false,
-            errorMessages : []
+            error: false,
+            errorMessages: []
         });
     case actiontypes_userinfo.REGISTER_RESULT_ERROR:
         return Object.assign({}, state, {
-            error : true,
-            errorMessages : action.parameters.errorMessages
+            error: true,
+            errorMessages: action.parameters.errorMessages
         });
     case actiontypes_userinfo.LOGIN:
         postRequest(action.state, '/users/sign_in', {
-            email : action.parameters.email,
-            password : action.parameters.password
-        }).then((resp) => {
+            email: action.parameters.email,
+            password: action.parameters.password
+        }).then(resp => {
             __store.dispatch({
-                type : actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
-                parameters : {
-                    username : resp.data.username,
+                type: actiontypes_userinfo.LOGIN_RESULT_SUCCESS,
+                parameters: {
+                    username: resp.data.username,
                     successCallback: action.parameters.successCallback
                 }
             });
             storeOptionalToken(resp);
-        }).catch((error) => {
-            if(error.response) {
+        }).catch(error => {
+            if (error.response) {
                 __store.dispatch({
-                    'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : error.response.data.errors
+                    'type': actiontypes_userinfo.LOGIN_RESULT_ERROR,
+                    'parameters': {
+                        'errorMessages': error.response.data.errors
                     }
                 });
                 storeOptionalToken(error.response);
             } else {
                 __store.dispatch({
-                    'type' : actiontypes_userinfo.LOGIN_RESULT_ERROR,
-                    'parameters' : {
-                        'errorMessages' : [ errorMessages['login_errorunknown']['en'] ]
+                    'type': actiontypes_userinfo.LOGIN_RESULT_ERROR,
+                    'parameters': {
+                        'errorMessages': [errorMessages['login_errorunknown']['en']]
                     }
                 });
             }
@@ -226,60 +226,60 @@ const reducer_userinfo = (state = defaultstate_userinfo, action) => {
     case actiontypes_userinfo.LOGIN_RESULT_SUCCESS:
         action.parameters.successCallback(action.parameters.username);
         return Object.assign({}, state, {
-            isSignedIn : true,
-            error : false,
-            errorMessages : [],
-            username : action.parameters.username,
+            isSignedIn: true,
+            error: false,
+            errorMessages: [],
+            username: action.parameters.username
         });
     case actiontypes_userinfo.LOGIN_RESULT_ERROR:
         return Object.assign({}, state, {
-            error : true,
-            errorMessages : action.parameters.errorMessages
+            error: true,
+            errorMessages: action.parameters.errorMessages
         });
     case actiontypes_userinfo.LOGOUT:
         deleteRequest(action.state, '/users/sign_out').then(() => {
             action.parameters.successCallback();
-            __store.dispatch({ type : actiontypes_userinfo.CLEAR });
+            __store.dispatch({type: actiontypes_userinfo.CLEAR});
         }).catch(() => {
-            __store.dispatch({ type : actiontypes_userinfo.CLEAR });
+            __store.dispatch({type: actiontypes_userinfo.CLEAR});
         });
         return Object.assign({}, state, {});
     case actiontypes_userinfo.STORE_AUTH_HEADERS:
         return Object.assign({}, state, {
-            accesstoken : action.parameters.accesstoken,
-            client : action.parameters.client,
-            expiry : action.parameters.expiry,
-            uid : action.parameters.uid
+            accesstoken: action.parameters.accesstoken,
+            client: action.parameters.client,
+            expiry: action.parameters.expiry,
+            uid: action.parameters.uid
         });
     case actiontypes_userinfo.VERIFY_CREDENTIALS:
-        getRequest(action.state, '/users/validate_token').then((resp) => {
+        getRequest(action.state, '/users/validate_token').then(resp => {
             storeOptionalToken(resp);
         }).catch(() => {
-            __store.dispatch({ type: actiontypes_userinfo.CLEAR });
+            __store.dispatch({type: actiontypes_userinfo.CLEAR});
         });
         return Object.assign({}, state, {});
     case actiontypes_userinfo.REHYDRATE:
-        return Object.assign({}, state, action.parameters, { error: false, errorMessages: [] });
+        return Object.assign({}, state, action.parameters, {error: false, errorMessages: []});
     case actiontypes_userinfo.CLEAR:
         return Object.assign({}, state, {
-            isSignedIn : false,
-            username : null,
-            error : false,
-            errorMessages : [],
+            isSignedIn: false,
+            username: null,
+            error: false,
+            errorMessages: [],
 
-            accesstoken : null,
-            client : null,
-            expiry : null,
-            uid : null
+            accesstoken: null,
+            client: null,
+            expiry: null,
+            uid: null
         });
     default: return state;
     }
 };
 
 const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => {
-    switch(action.type) {
+    switch (action.type) {
     case actiontypes_tournamentinfo.CREATE_TOURNAMENT:
-        postRequest(action.state, '/tournaments', action.parameters.tournament).then((resp) => {
+        postRequest(action.state, '/tournaments', action.parameters.tournament).then(resp => {
             storeOptionalToken(resp);
             action.parameters.successCallback();
         }).catch(() => {
@@ -287,7 +287,7 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
         });
         return Object.assign({}, state, {});
     case actiontypes_tournamentinfo.REQUEST_TOURNAMENT:
-        getRequest(action.state, '/tournaments/' + action.parameters.code).then((resp) => {
+        getRequest(action.state, '/tournaments/' + action.parameters.code).then(resp => {
             __store.dispatch({
                 type: actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS,
                 parameters: resp.data
@@ -300,23 +300,23 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
         return Object.assign({}, state, {});
     case actiontypes_tournamentinfo.REQUEST_TOURNAMENT_SUCCESS:
         return Object.assign({}, state, {
-            code : action.parameters.code,
-            description : action.parameters.description,
-            id : action.parameters.id,
-            name : action.parameters.name,
-            ownerUsername : action.parameters.owner_username,
-            isPublic : action.parameters.public,
+            code: action.parameters.code,
+            description: action.parameters.description,
+            id: action.parameters.id,
+            name: action.parameters.name,
+            ownerUsername: action.parameters.owner_username,
+            isPublic: action.parameters.public,
             stages: action.parameters.stages,
-            teams : action.parameters.teams
+            teams: action.parameters.teams
         });
     case actiontypes_tournamentinfo.MODIFY_TOURNAMENT:
         patchRequest(action.state, '/teams/' + action.parameters.teamid, {
             name: action.parameters.name
-        }).then((resp) => {
+        }).then(resp => {
             storeOptionalToken(resp);
             action.parameters.onSuccess();
-        }).catch((error) => {
-            if(error.response) {
+        }).catch(error => {
+            if (error.response) {
                 storeOptionalToken(error.response);
             }
             action.parameters.onError();
@@ -341,15 +341,15 @@ const reducer_tournamentinfo = (state = defaultstate_tournamentinfo, action) => 
 const reducer_tournamentlist = (state = defaultstate_tournamentlist, action) => {
     switch (action.type) {
     case actiontypes_tournamentlist.FETCH:
-        getRequest(action.state, '/tournaments?type=' + action.parameters.type).then((resp) => {
+        getRequest(action.state, '/tournaments?type=' + action.parameters.type).then(resp => {
             __store.dispatch({
                 type: actiontypes_tournamentlist.FETCH_SUCCESS,
                 parameters: resp.data
             });
             storeOptionalToken(resp);
             action.parameters.successCallback(resp.data);
-        }).catch((error) => {
-            if(error.response) {
+        }).catch(error => {
+            if (error.response) {
                 storeOptionalToken(error.response);
             }
             action.parameters.errorCallback();
@@ -369,13 +369,13 @@ const reducers = {
 };
 
 const default_applicationstate = {
-    userinfo : defaultstate_userinfo,
+    userinfo: defaultstate_userinfo,
     tournamentinfo: defaultstate_tournamentinfo,
     tournamentlist: defaultstate_tournamentlist
 };
 
-var __store;
-var applicationHydrated = false;
+let __store;
+let applicationHydrated = false;
 
 export function initializeStore(initialState = default_applicationstate) {
     __store = createStore(
@@ -384,7 +384,7 @@ export function initializeStore(initialState = default_applicationstate) {
         composeWithDevTools(applyMiddleware(thunkMiddleware))
     );
     __store.subscribe(() => {
-        if(applicationHydrated) {
+        if (applicationHydrated) {
             localStorage.setItem('reduxState', JSON.stringify(__store.getState()));
         }
     });
@@ -394,7 +394,7 @@ export function initializeStore(initialState = default_applicationstate) {
 export function verifyCredentials() {
     rehydrateApplicationState();
 
-    if(__store.getState().userinfo.isSignedIn) {
+    if (__store.getState().userinfo.isSignedIn) {
         __store.dispatch({
             type: actiontypes_userinfo.VERIFY_CREDENTIALS,
             state: __store.getState()
@@ -428,7 +428,7 @@ export function login(email, password, successCallback) {
 
 export function logout(successCallback) {
     __store.dispatch({
-        type : actiontypes_userinfo.LOGOUT,
+        type: actiontypes_userinfo.LOGOUT,
         parameters: {
             successCallback: successCallback
         },
@@ -466,8 +466,8 @@ export function updateTeamName(team, successCB, errorCB) {
         parameters: {
             teamid: team.id,
             name: team.name,
-            onSuccess : successCB,
-            onError : errorCB
+            onSuccess: successCB,
+            onError: errorCB
         },
         state: __store.getState()
     });
@@ -494,18 +494,18 @@ function rehydrateApplicationState() {
         JSON.parse(localStorage.getItem('reduxState')) :
         undefined;
 
-    if(persistedState) {
+    if (persistedState) {
         __store.dispatch({
-            type : actiontypes_userinfo.REHYDRATE,
-            parameters : Object.assign({}, persistedState.userinfo)
+            type: actiontypes_userinfo.REHYDRATE,
+            parameters: Object.assign({}, persistedState.userinfo)
         });
         __store.dispatch({
-            type : actiontypes_tournamentinfo.REHYDRATE,
-            parameters : Object.assign({}, persistedState.tournamentinfo)
+            type: actiontypes_tournamentinfo.REHYDRATE,
+            parameters: Object.assign({}, persistedState.tournamentinfo)
         });
         __store.dispatch({
-            type : actiontypes_tournamentlist.REHYDRATE,
-            parameters : Object.assign({}, persistedState.tournamentlist)
+            type: actiontypes_tournamentlist.REHYDRATE,
+            parameters: Object.assign({}, persistedState.tournamentlist)
         });
         applicationHydrated = true;
     }

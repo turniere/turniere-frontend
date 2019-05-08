@@ -1,10 +1,10 @@
-import Head                   from 'next/head';
-import React                  from 'react';
-import { Container }          from 'reactstrap';
+import Head from 'next/head';
+import React from 'react';
+import {Container} from 'reactstrap';
 
-import { TurniereNavigation } from '../js/components/Navigation';
-import { BigImage }           from '../js/components/BigImage';
-import { Footer }             from '../js/components/Footer';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {BigImage} from '../js/components/BigImage';
+import {Footer} from '../js/components/Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../static/everypage.css';
@@ -17,7 +17,7 @@ function Main() {
     );
 }
 
-function ImprintText(){
+function ImprintText() {
     return (
         <Container>
             <h3>
@@ -74,7 +74,6 @@ function ImprintText(){
 
 
 export default class ImprintPage extends React.Component {
-
     render() {
         return (
             <div>

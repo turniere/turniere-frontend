@@ -1,6 +1,6 @@
-import Head                   from 'next/head';
-import React                  from 'react';
-import { connect }            from 'react-redux';
+import Head from 'next/head';
+import React from 'react';
+import {connect} from 'react-redux';
 import {
     Button,
     Card,
@@ -13,9 +13,9 @@ import {
     Label
 } from 'reactstrap';
 
-import { TurniereNavigation } from '../js/components/Navigation';
-import { Footer }             from '../js/components/Footer';
-import { register }           from '../js/api';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {Footer} from '../js/components/Footer';
+import {register} from '../js/api';
 
 import '../static/css/errormessages.css';
 import '../static/everypage.css';
@@ -39,7 +39,6 @@ export default class RegisterPage extends React.Component {
 }
 
 class Register extends React.Component {
-
     render() {
         return (
             <Container className="py-5">
@@ -59,11 +58,11 @@ class Register extends React.Component {
 
 class RegisterErrorList extends React.Component {
     render() {
-        const { error, errorMessages } = this.props;
-        if(error) {
+        const {error, errorMessages} = this.props;
+        if (error) {
             return (
                 <ul className="mt-3 error-box">
-                    { errorMessages.map((message, index) => 
+                    { errorMessages.map((message, index) =>
                         <li key={index}>{message}</li>
                     ) }
                 </ul>
@@ -74,9 +73,9 @@ class RegisterErrorList extends React.Component {
     }
 }
 
-const mapStateToErrorMessages = (state) => {
-    const { errorMessages, error } = state.userinfo;
-    return { errorMessages, error };
+const mapStateToErrorMessages = state => {
+    const {errorMessages, error} = state.userinfo;
+    return {errorMessages, error};
 };
 
 const VisibleRegisterErrorList = connect(
@@ -88,9 +87,9 @@ class RegisterForm extends React.Component {
         super(props);
 
         this.state = {
-            username : '',
-            email : '',
-            password : ''
+            username: '',
+            email: '',
+            password: ''
         };
     }
 
@@ -122,15 +121,15 @@ class RegisterForm extends React.Component {
     }
 
     handlePasswordInput(input) {
-        this.setState({ password : input.target.value });
+        this.setState({password: input.target.value});
     }
 
     handleEmailInput(input) {
-        this.setState({ email : input.target.value });
+        this.setState({email: input.target.value});
     }
 
     handleUsernameInput(input) {
-        this.setState({ username : input.target.value });
+        this.setState({username: input.target.value});
     }
 }
 

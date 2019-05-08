@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Router from 'next/router';
 
-import { login } from '../api';
+import {login} from '../api';
 
 import '../../static/css/errormessages.css';
 import {notify} from 'react-notify-toast';
@@ -28,11 +28,11 @@ export function Login(props) {
 
 class LoginErrorList extends React.Component {
     render() {
-        const { error, errorMessages } = this.props;
-        if(error) {
+        const {error, errorMessages} = this.props;
+        if (error) {
             return (
                 <ul className='mt-3 error-box'>
-                    { errorMessages.map((message, index) => 
+                    { errorMessages.map((message, index) =>
                         <li key={index}>
                             {message}
                         </li>
@@ -46,9 +46,9 @@ class LoginErrorList extends React.Component {
     }
 }
 
-const mapStateToErrorMessages = (state) => {
-    const { errorMessages, error } = state.userinfo;
-    return { errorMessages, error };
+const mapStateToErrorMessages = state => {
+    const {errorMessages, error} = state.userinfo;
+    return {errorMessages, error};
 };
 
 const VisibleLoginErrorList = connect(
@@ -64,7 +64,7 @@ class LoginSuccessRedirectComponent extends React.Component {
     }
 }
 
-const mapLoginState = (state) => {
+const mapLoginState = state => {
     const {isSignedIn} = state.userinfo;
     return {isSignedIn};
 };
@@ -72,19 +72,18 @@ const mapLoginState = (state) => {
 const LoginSuccessRedirect = connect(mapLoginState)(LoginSuccessRedirectComponent);
 
 class LoginForm extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
-            email : '',
-            password : ''
+            email: '',
+            password: ''
         };
     }
 
     tryLogin(event) {
         event.preventDefault();
-        login(this.state.email, this.state.password, (username) => notify.show('Willkommen, ' + username + '!', 'success', 2500));
+        login(this.state.email, this.state.password, username => notify.show('Willkommen, ' + username + '!', 'success', 2500));
     }
 
     render() {
@@ -106,16 +105,16 @@ class LoginForm extends React.Component {
     }
 
     handlePasswordInput(input) {
-        this.setState({ password : input.target.value });
+        this.setState({password: input.target.value});
     }
 
     handleEmailInput(input) {
-        this.setState({ email : input.target.value });
+        this.setState({email: input.target.value});
     }
 }
 
 function Hint(props) {
-    if(props.hint != null) {
+    if (props.hint != null) {
         return (
             <h3>{ props.hint }</h3>
         );

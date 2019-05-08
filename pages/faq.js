@@ -1,10 +1,10 @@
-import Head                    from 'next/head';
-import React                   from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import Head from 'next/head';
+import React from 'react';
+import {Col, Container, Row} from 'reactstrap';
 
-import { TurniereNavigation }  from '../js/components/Navigation';
-import { BigImage }            from '../js/components/BigImage';
-import { Footer }              from '../js/components/Footer';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {BigImage} from '../js/components/BigImage';
+import {Footer} from '../js/components/Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -222,7 +222,6 @@ function TournamentFaq() {
 }
 
 export default class FaqPage extends React.Component {
-
     render() {
         return (
             <div>

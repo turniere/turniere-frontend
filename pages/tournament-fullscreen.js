@@ -1,8 +1,7 @@
-import Head  from 'next/head';
+import Head from 'next/head';
 import React from 'react';
 
 class FullscreenTournamentPage extends React.Component {
-
     static async getInitialProps({query}) {
         return {query};
     }

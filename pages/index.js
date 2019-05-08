@@ -1,6 +1,6 @@
-import Head                   from 'next/head';
-import React                  from 'react';
-import { connect }            from 'react-redux';
+import Head from 'next/head';
+import React from 'react';
+import {connect} from 'react-redux';
 import {
     Alert,
     Button,
@@ -8,9 +8,9 @@ import {
     CardBody
 } from 'reactstrap';
 
-import { TurniereNavigation } from '../js/components/Navigation';
-import { BigImage }           from '../js/components/BigImage';
-import { Footer }             from '../js/components/Footer';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {BigImage} from '../js/components/BigImage';
+import {Footer} from '../js/components/Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -170,8 +170,7 @@ function PromotedLinkCreateTournament() {
 
 
 class Index extends React.Component {
-
-    render () {
+    render() {
         return (
             <div>
                 <Head>
