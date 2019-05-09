@@ -33,11 +33,9 @@ export class UserRestrictor extends React.Component {
     render() {
         const {children} = this.props;
 
-        for (const i in children) {
-            const c = children[i];
-
-            if (c.props.condition) {
-                return c;
+        for (const child of children) {
+            if (child.props.condition) {
+                return child;
             }
         }
 
