@@ -31,7 +31,8 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "^5.9.0",
+    "eslint": "^5.16.0",
+    "eslint-config-google": "^0.12.0",
     "eslint-plugin-react": "^7.11.1",
     "react-editable-list": "0.0.3"
   }
