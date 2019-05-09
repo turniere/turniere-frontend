@@ -16,33 +16,31 @@ class PrivateTournamentsPage extends React.Component {
     render() {
         const {isSignedIn} = this.props;
 
-        return (
-            <UserRestrictor>
-                <Option condition={isSignedIn}>
-                    <div className="main generic-fullpage-bg">
-                        <Head>
-                            <title>Private Turniere: turnie.re</title>
-                        </Head>
-                        <TurniereNavigation/>
-                        <PrivateTournamentsPageContent/>
-                        <Footer/>
+        return (<UserRestrictor>
+            <Option condition={isSignedIn}>
+                <div className="main generic-fullpage-bg">
+                    <Head>
+                        <title>Private Turniere: turnie.re</title>
+                    </Head>
+                    <TurniereNavigation/>
+                    <PrivateTournamentsPageContent/>
+                    <Footer/>
+                </div>
+            </Option>
+            <Option condition={true}>
+                <div className="main generic-fullpage-bg">
+                    <Head>
+                        <title>Anmeldung</title>
+                    </Head>
+                    <TurniereNavigation/>
+                    <div>
+                        <Login
+                            hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
                     </div>
-                </Option>
-                <Option condition={true}>
-                    <div className="main generic-fullpage-bg">
-                        <Head>
-                            <title>Anmeldung</title>
-                        </Head>
-                        <TurniereNavigation/>
-                        <div>
-                            <Login
-                                hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
-                        </div>
-                        <Footer/>
-                    </div>
-                </Option>
-            </UserRestrictor>
-        );
+                    <Footer/>
+                </div>
+            </Option>
+        </UserRestrictor>);
     }
 }
 
@@ -51,9 +49,7 @@ function mapStateToProperties(state) {
     return {isSignedIn};
 }
 
-const PrivateTournamentListPage = connect(
-    mapStateToProperties,
-)(PrivateTournamentsPage);
+const PrivateTournamentListPage = connect(mapStateToProperties)(PrivateTournamentsPage);
 
 export default PrivateTournamentListPage;
 
@@ -70,13 +66,11 @@ function PrivateTournamentsPageContent() {
 
 class PrivateTournamentsCard extends React.Component {
     render() {
-        return (
-            <Card className="shadow">
-                <CardBody>
-                    <h1 className="custom-font">Private Turniere</h1>
-                    <TournamentList type='private'/>
-                </CardBody>
-            </Card>
-        );
+        return (<Card className="shadow">
+            <CardBody>
+                <h1 className="custom-font">Private Turniere</h1>
+                <TournamentList type='private'/>
+            </CardBody>
+        </Card>);
     }
 }

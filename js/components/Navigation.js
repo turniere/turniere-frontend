@@ -1,14 +1,5 @@
 import {
-    Badge,
-    Button,
-    ButtonGroup,
-    Collapse,
-    Nav,
-    Navbar,
-    NavbarBrand,
-    NavbarToggler,
-    NavItem,
-    NavLink
+    Badge, Button, ButtonGroup, Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink
 } from 'reactstrap';
 import {connect} from 'react-redux';
 import React from 'react';
@@ -34,26 +25,22 @@ export class TurniereNavigation extends React.Component {
     }
 
     render() {
-        return (
-            <Navbar color="light" light expand="lg">
-                <NavbarBrand href="/">turnie.re</NavbarBrand>
-                <Betabadge/>
-                <NavbarToggler onClick={this.toggle} />
-                <Collapse isOpen={!this.state.collapsed} navbar>
-                    <NavLinks/>
-                    <LoginLogoutButtons/>
-                </Collapse>
-            </Navbar>
-        );
+        return (<Navbar color="light" light expand="lg">
+            <NavbarBrand href="/">turnie.re</NavbarBrand>
+            <Betabadge/>
+            <NavbarToggler onClick={this.toggle}/>
+            <Collapse isOpen={!this.state.collapsed} navbar>
+                <NavLinks/>
+                <LoginLogoutButtons/>
+            </Collapse>
+        </Navbar>);
     }
 }
 
 function Navlink(props) {
-    return (
-        <NavItem active={true}>
-            <NavLink href={props.target}>{props.text}</NavLink>
-        </NavItem>
-    );
+    return (<NavItem active={true}>
+        <NavLink href={props.target}>{props.text}</NavLink>
+    </NavItem>);
 }
 
 class SmartNavLinks extends React.Component {
@@ -80,19 +67,19 @@ class InvisibleLoginLogoutButtons extends React.Component {
         const {isSignedIn, username} = this.props;
 
         if (isSignedIn) {
-            return (
-                <ButtonGroup className="nav-item">
-                    <Button outline color="success" href="/profile" className="navbar-btn my-2 my-sm-0 px-5">{ username }</Button>
-                    <Button outline color="success" onClick={this.logout.bind(this)} className="navbar-btn my-2 my-sm-0 px-5">Logout</Button>
-                </ButtonGroup>
-            );
+            return (<ButtonGroup className="nav-item">
+                <Button outline color="success" href="/profile"
+                    className="navbar-btn my-2 my-sm-0 px-5">{username}</Button>
+                <Button outline color="success" onClick={this.logout.bind(this)}
+                    className="navbar-btn my-2 my-sm-0 px-5">Logout</Button>
+            </ButtonGroup>);
         } else {
-            return (
-                <ButtonGroup className="nav-item">
-                    <Button outline color="success" href="/login" className="navbar-btn my-2 my-sm-0 px-5">Login</Button>
-                    <Button outline color="success" href="/register" className="navbar-btn my-2 my-sm-0 px-5">Registrieren</Button>
-                </ButtonGroup>
-            );
+            return (<ButtonGroup className="nav-item">
+                <Button outline color="success" href="/login"
+                    className="navbar-btn my-2 my-sm-0 px-5">Login</Button>
+                <Button outline color="success" href="/register"
+                    className="navbar-btn my-2 my-sm-0 px-5">Registrieren</Button>
+            </ButtonGroup>);
         }
     }
 }
@@ -102,10 +89,6 @@ const mapStateToUserinfo = state => {
     return {isSignedIn, username};
 };
 
-const LoginLogoutButtons = connect(
-    mapStateToUserinfo
-)(InvisibleLoginLogoutButtons);
+const LoginLogoutButtons = connect(mapStateToUserinfo)(InvisibleLoginLogoutButtons);
 
-const NavLinks = connect(
-    mapStateToUserinfo
-)(SmartNavLinks);
+const NavLinks = connect(mapStateToUserinfo)(SmartNavLinks);

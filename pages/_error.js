@@ -14,8 +14,6 @@ export default class Error extends React.Component {
     }
 
     render() {
-        return (
-            <ErrorPageComponent statusCode={this.props.statusCode}/>
-        );
+        return (<ErrorPageComponent statusCode={this.props.statusCode}/>);
     }
 }

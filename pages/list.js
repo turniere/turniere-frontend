@@ -11,18 +11,16 @@ import {connect} from 'react-redux';
 
 export default class PublicTournamentsPage extends React.Component {
     render() {
-        return (
-            <div className="main generic-fullpage-bg">
-                <Head>
-                    <title>Öffentliche Turniere: turnie.re</title>
-                </Head>
-                <TurniereNavigation/>
-                <div>
-                    <PublicTournamentPageContent/>
-                </div>
-                <Footer/>
+        return (<div className="main generic-fullpage-bg">
+            <Head>
+                <title>Öffentliche Turniere: turnie.re</title>
+            </Head>
+            <TurniereNavigation/>
+            <div>
+                <PublicTournamentPageContent/>
             </div>
-        );
+            <Footer/>
+        </div>);
     }
 }
 
@@ -31,9 +29,7 @@ function mapStateToProperties(state) {
     return {isSignedIn};
 }
 
-const PublicTournamentPageContent = connect(
-    mapStateToProperties,
-)(PublicTournaments);
+const PublicTournamentPageContent = connect(mapStateToProperties)(PublicTournaments);
 
 function PublicTournaments(props) {
     if (props.isSignedIn) {

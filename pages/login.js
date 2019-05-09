@@ -9,17 +9,15 @@ import '../static/everypage.css';
 
 export default class LoginPage extends React.Component {
     render() {
-        return (
-            <div className="main generic-fullpage-bg">
-                <Head>
-                    <title>Login: turnie.re</title>
-                </Head>
-                <TurniereNavigation/>
-                <div>
-                    <Login/>
-                </div>
-                <Footer/>
+        return (<div className="main generic-fullpage-bg">
+            <Head>
+                <title>Login: turnie.re</title>
+            </Head>
+            <TurniereNavigation/>
+            <div>
+                <Login/>
             </div>
-        );
+            <Footer/>
+        </div>);
     }
 }

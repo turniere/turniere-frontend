@@ -25,8 +25,7 @@ import {Footer} from '../js/components/Footer';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {BigImage} from '../js/components/BigImage';
 import {
-    getRequest,
-    getState
+    getRequest, getState
 } from '../js/api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -40,25 +39,24 @@ class PrivateTournamentPage extends React.Component {
         const {isSignedIn, username} = this.props;
 
         // TODO: Change href-prop of the anchor tag to contain the tournament code
-        return (
-            <div className='pb-5'>
-                <Container>
-                    <EditButton id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
-                    <p>{description}</p>
-                    <ListGroup>
-                        <ListGroupItem>
-                            {isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
-                        </ListGroupItem>
-                        <ListGroupItem>Turnier-Code: <b>{code}</b></ListGroupItem>
-                        <ListGroupItem>von <b>{ownerUsername}</b></ListGroupItem>
-                    </ListGroup>
-                </Container>
-                <div className='stages pt-5'>
-                    {playoffStages.map(stage =>
-                        <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername} level={getLevelName(stage.level)} matches={stage.matches} key={stage.level}/>)}
-                </div>
+        return (<div className='pb-5'>
+            <Container>
+                <EditButton id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
+                <p>{description}</p>
+                <ListGroup>
+                    <ListGroupItem>
+                        {isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
+                    </ListGroupItem>
+                    <ListGroupItem>Turnier-Code: <b>{code}</b></ListGroupItem>
+                    <ListGroupItem>von <b>{ownerUsername}</b></ListGroupItem>
+                </ListGroup>
+            </Container>
+            <div className='stages pt-5'>
+                {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername}
+                    level={getLevelName(stage.level)} matches={stage.matches}
+                    key={stage.level}/>)}
             </div>
-        );
+        </div>);
     }
 }
 
@@ -67,17 +65,13 @@ function mapStateToTournamentPageProperties(state) {
     return {isSignedIn, username};
 }
 
-const TournamentPage = connect(
-    mapStateToTournamentPageProperties
-)(PrivateTournamentPage);
+const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTournamentPage);
 
 function EditButton(props) {
     const {id, ownerName, isSignedIn, username} = props;
 
     if (isSignedIn && ownerName === username) {
-        return (
-            <a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>
-        );
+        return (<a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>);
     } else {
         return null;
     }
@@ -100,8 +94,8 @@ function Stage(props) {
             <h1 className='custom-font'>{props.level}</h1>
             <Row>
                 {props.matches.map((match => (
-                    <Col className='minw-25' key={match.id}><Match match={match} isSignedIn={isSignedIn} isOwner={isOwner}/></Col>
-                )))}
+                    <Col className='minw-25' key={match.id}><Match match={match} isSignedIn={isSignedIn}
+                        isOwner={isOwner}/></Col>)))}
             </Row>
         </Container>
     </div>);
@@ -125,7 +119,9 @@ class Match extends React.Component {
     }
 
     render() {
-        let cardClass; let smallMessage; let borderClass;
+        let cardClass;
+        let smallMessage;
+        let borderClass;
         // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
         switch (this.props.match.state) {
         case 'in_progress':
@@ -160,17 +156,15 @@ class Match extends React.Component {
             smallMessage = 'Spiel beendet, unentschieden';
             break;
         }
-        return (
-            <div className='mb-3'>
-                <Card className='shadow-sm match' onClick={this.toggleModal}>
-                    <CardBody className={borderClass + ' border py-2 ' + cardClass}>
-                        <MatchTable match={this.props.match} borderColor={borderClass}/>
-                    </CardBody>
-                </Card>
-                <small className='text-muted'>{smallMessage}</small>
-                <MatchModal title='Match' isOpen={this.state.modal} toggle={this.toggleModal} match={this.props.match}/>
-            </div>
-        );
+        return (<div className='mb-3'>
+            <Card className='shadow-sm match' onClick={this.toggleModal}>
+                <CardBody className={borderClass + ' border py-2 ' + cardClass}>
+                    <MatchTable match={this.props.match} borderColor={borderClass}/>
+                </CardBody>
+            </Card>
+            <small className='text-muted'>{smallMessage}</small>
+            <MatchModal title='Match' isOpen={this.state.modal} toggle={this.toggleModal} match={this.props.match}/>
+        </div>);
     }
 }
 
@@ -203,23 +197,22 @@ function MatchModal(props) {
         title = 'Spiel beendet';
         break;
     }
-    return (
-        <Modal isOpen={props.isOpen} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>{title}</ModalHeader>
-            <ModalBody>
-                {props.match.state === 'in_progress' ? <EditableMatchTable match={props.match}/> :
-                    <MatchTable match={props.match}/>}
-            </ModalBody>
-            <ModalFooter>
-                {actionButton}
-                <Button color='secondary' onClick={props.toggle}>Abbrechen</Button>
-            </ModalFooter>
-        </Modal>
-    );
+    return (<Modal isOpen={props.isOpen} toggle={props.toggle}>
+        <ModalHeader toggle={props.toggle}>{title}</ModalHeader>
+        <ModalBody>
+            {props.match.state === 'in_progress' ? <EditableMatchTable match={props.match}/> :
+                <MatchTable match={props.match}/>}
+        </ModalBody>
+        <ModalFooter>
+            {actionButton}
+            <Button color='secondary' onClick={props.toggle}>Abbrechen</Button>
+        </ModalFooter>
+    </Modal>);
 }
 
 function MatchTable(props) {
-    let team1Class; let team2Class;
+    let team1Class;
+    let team2Class;
     // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
     switch (props.match.state) {
     case 'in_progress':
@@ -243,55 +236,49 @@ function MatchTable(props) {
         break;
     }
     if (props.match.state === 'single_team') {
-        return (
-            <Table className='mb-0'>
-                <tbody>
-                    <tr>
-                        <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
-                    </tr>
-                    <tr>
-                        <td className={props.borderColor + ' ' + team2Class}>kein Gegner</td>
-                    </tr>
-                </tbody>
-            </Table>
-        );
+        return (<Table className='mb-0'>
+            <tbody>
+                <tr>
+                    <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
+                </tr>
+                <tr>
+                    <td className={props.borderColor + ' ' + team2Class}>kein Gegner</td>
+                </tr>
+            </tbody>
+        </Table>);
     } else {
-        return (
-            <Table className='mb-0'>
-                <tbody>
-                    <tr>
-                        <th className='stage border-top-0'>{props.match.scoreTeam1}</th>
-                        <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
-                    </tr>
-                    <tr>
-                        <th className={'stage ' + props.borderColor}>{props.match.scoreTeam2}</th>
-                        <td className={props.borderColor + ' ' + team2Class}>{props.match.team2}</td>
-                    </tr>
-                </tbody>
-            </Table>
-        );
+        return (<Table className='mb-0'>
+            <tbody>
+                <tr>
+                    <th className='stage border-top-0'>{props.match.scoreTeam1}</th>
+                    <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
+                </tr>
+                <tr>
+                    <th className={'stage ' + props.borderColor}>{props.match.scoreTeam2}</th>
+                    <td className={props.borderColor + ' ' + team2Class}>{props.match.team2}</td>
+                </tr>
+            </tbody>
+        </Table>);
     }
 }
 
 function EditableMatchTable(props) {
-    return (
-        <Table className='mb-0'>
-            <tbody>
-                <tr>
-                    <td className='scoreInput border-top-0'>
-                        <ScoreInput score={props.match.scoreTeam1}/>
-                    </td>
-                    <td className='align-middle border-top-0'>{props.match.team1}</td>
-                </tr>
-                <tr>
-                    <td className='scoreInput'>
-                        <ScoreInput score={props.match.scoreTeam2}/>
-                    </td>
-                    <td className='align-middle'>{props.match.team2}</td>
-                </tr>
-            </tbody>
-        </Table>
-    );
+    return (<Table className='mb-0'>
+        <tbody>
+            <tr>
+                <td className='scoreInput border-top-0'>
+                    <ScoreInput score={props.match.scoreTeam1}/>
+                </td>
+                <td className='align-middle border-top-0'>{props.match.team1}</td>
+            </tr>
+            <tr>
+                <td className='scoreInput'>
+                    <ScoreInput score={props.match.scoreTeam2}/>
+                </td>
+                <td className='align-middle'>{props.match.team2}</td>
+            </tr>
+        </tbody>
+    </Table>);
 }
 
 class ScoreInput extends React.Component {
@@ -317,9 +304,12 @@ class ScoreInput extends React.Component {
 
     render() {
         return (<InputGroup>
-            <InputGroupAddon addonType="prepend"><Button onClick={this.decreaseScore} color='danger' outline={true}>-1</Button></InputGroupAddon>
-            <Input className='font-weight-bold' value={this.state.score} onChange={this.updateScore} type='number' step='1' placeholder='0'/>
-            <InputGroupAddon addonType="append"><Button onClick={this.increaseScore} color='success'>+1</Button></InputGroupAddon>
+            <InputGroupAddon addonType="prepend"><Button onClick={this.decreaseScore} color='danger'
+                outline={true}>-1</Button></InputGroupAddon>
+            <Input className='font-weight-bold' value={this.state.score} onChange={this.updateScore} type='number'
+                step='1' placeholder='0'/>
+            <InputGroupAddon addonType="append"><Button onClick={this.increaseScore}
+                color='success'>+1</Button></InputGroupAddon>
         </InputGroup>);
     }
 }
@@ -334,9 +324,7 @@ function convertTournament(apiTournament) {
         } else {
             // playoff stage
             playoffStages.push({
-                id: stage.id,
-                level: stage.level,
-                matches: stage.matches.map(match => convertMatch(match))
+                id: stage.id, level: stage.level, matches: stage.matches.map(match => convertMatch(match))
             });
         }
     }
@@ -363,8 +351,7 @@ function convertGroup(apiGroup) {
 
 function convertMatch(apiMatch) {
     const result = {
-        id: apiMatch.id,
-        state: apiMatch.state
+        id: apiMatch.id, state: apiMatch.state
     };
 
     if (apiMatch.match_scores.length === 2) {
@@ -423,17 +410,15 @@ class Main extends React.Component {
         const {status, tournament} = this.state;
 
         if (status === 200) {
-            return (
-                <div>
-                    <Head>
-                        <title>{tournamentName}: turnie.re</title>
-                    </Head>
-                    <TurniereNavigation/>
-                    <BigImage text={tournamentName}/>
-                    <TournamentPage tournament={tournament}/>
-                    <Footer/>
-                </div>
-            );
+            return (<div>
+                <Head>
+                    <title>{tournamentName}: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <BigImage text={tournamentName}/>
+                <TournamentPage tournament={tournament}/>
+                <Footer/>
+            </div>);
         } else {
             return <ErrorPageComponent code={status}/>;
         }
