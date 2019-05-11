@@ -24,9 +24,8 @@ import {ErrorPageComponent} from '../js/components/ErrorComponents';
 import {Footer} from '../js/components/Footer';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {BigImage} from '../js/components/BigImage';
-import {
-    getRequest, getState
-} from '../js/api';
+import {getState} from '../js/api';
+import {getRequest} from '../js/redux/backendApi';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
