@@ -46,44 +46,36 @@ export function ErrorPage(props) {
 }
 
 function ErrorMessage(props) {
-    switch (props.code) {
-    case 400:
-        return (<div className="running-text">
-            <h2>Deine Anfrage ist fehlerhaft.</h2>
-            <p>
-                Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
-            </p>
-        </div>);
-    case 403:
-        return (<div className="running-text">
-            <h2>Du bist nicht autorisiert, diese Seite aufzurufen.</h2>
-            <p>
-                Bitte stelle sicher, dass Du angemeldet bist und auf dieses Turnier oder dieses Match zugreifen darfst.
-            </p>
-            <p>
-                Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
-            </p>
-        </div>);
-    case 404:
-        return (<div className="running-text">
-            <h2>Die aufgerufene Seite wurde leider nicht gefunden.</h2>
-            <p>
-                Entweder hast Du dich vertippt, oder die gesuchte Seite gibt es nicht.
-            </p>
-            <p>
-                Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
-            </p>
-        </div>);
-    case 500:
-        return (<div className="running-text">
-            <h2>Diese Seite funktioniert nicht.</h2>
-            <p>
-                turnie.re kann Deine Anfrage im Moment nicht verarbeiten. Bitte versuche es später erneut.
-            </p>
-        </div>);
-    default:
-        return (<div>
-            <h2>Ein unbekannter Fehler ist aufgetreten.</h2>
-        </div>);
-    }
+    const errors = {};
+    errors[400] = {title: 'Deine Anfrage ist fehlerhaft.', message: '', showTryStartpage: true};
+    errors[403] = {
+        title: 'Du bist nicht autorisiert, diese Seite aufzurufen.',
+        message: 'Bitte stelle sicher, dass Du angemeldet bist und auf dieses Turnier oder dieses Match zugreifen' +
+            ' darfst.',
+        showTryStartpage: true
+    };
+    errors[404] = {
+        title: 'Die aufgerufene Seite wurde leider nicht gefunden.',
+        message: 'Entweder hast Du dich vertippt, oder die gesuchte Seite gibt es nicht.',
+        showTryStartpage: true
+    };
+    errors[500] = {
+        title: 'Diese Seite funktioniert nicht.',
+        message: 'turnie.re kann Deine Anfrage im Moment nicht verarbeiten. Bitte versuche es später erneut.',
+        showTryStartpage: false
+    };
+    errors['unknown'] = {title: 'Ein unbekannter Fehler ist aufgetreten.', message: '', showTryStartpage: true};
+    const error = errors[props.code] === undefined ? errors['unknown'] : errors[props.code];
+
+    return <ErrorText title={error.title} message={error.message} showTryStartpage={error.showTryStartpage}/>;
+}
+
+function ErrorText(props) {
+    return (<div className='running-text'>
+        {props.title && <h2>{props.title}</h2>}
+        {props.message && <p>{props.message}</p>}
+        {props.showTryStartpage && <p>
+            Wir empfehlen, die eingegebene Seite über die <a href="/">Startseite</a> zu suchen.
+        </p>}
+    </div>);
 }
