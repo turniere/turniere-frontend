@@ -9,7 +9,7 @@ import {Footer} from '../js/components/Footer';
 import {Option, UserRestrictor} from '../js/components/UserRestrictor';
 import {Login} from '../js/components/Login';
 
-import '../static/everypage.css';
+import '../static/css/everypage.css';
 import TournamentList from '../js/components/TournamentList';
 
 class PrivateTournamentsPage extends React.Component {

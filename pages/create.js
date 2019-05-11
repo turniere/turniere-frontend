@@ -15,7 +15,7 @@ import {Login} from '../js/components/Login';
 import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
 
-import '../static/everypage.css';
+import '../static/css/everypage.css';
 
 class CreatePage extends React.Component {
     render() {

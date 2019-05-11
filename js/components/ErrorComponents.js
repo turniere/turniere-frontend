@@ -7,7 +7,7 @@ import {Footer} from './Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import '../../static/everypage.css';
+import '../../static/css/everypage.css';
 import '../../static/css/error.css';
 
 export class ErrorPageComponent extends React.Component {

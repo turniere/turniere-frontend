@@ -30,7 +30,7 @@ import {
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import '../static/everypage.css';
+import '../static/css/everypage.css';
 import '../static/css/tournament.css';
 
 class PrivateTournamentPage extends React.Component {
