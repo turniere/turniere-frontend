@@ -8,80 +8,16 @@ import thunkMiddleware from 'redux-thunk';
 
 import {errorMessages} from './constants';
 
+import {actionTypesUserinfo, defaultStateUserinfo} from './redux/userInfo';
+import {actionTypesTournamentinfo, defaultStateTournamentinfo} from './redux/tournamentInfo';
+import {actionTypesTournamentlist, defaultStateTournamentlist} from './redux/tournamentList';
+
 import getConfig from 'next/config';
 const {publicRuntimeConfig} = getConfig();
 
 const apiUrl = publicRuntimeConfig.api_url;
 
 const axios = require('axios');
-
-const actionTypesUserinfo = {
-    'REGISTER': 'REGISTER',
-    'REGISTER_RESULT_SUCCESS': 'REGISTER_RESULT_SUCCESS',
-    'REGISTER_RESULT_ERROR': 'REGISTER_RESULT_ERROR',
-
-    'LOGIN': 'LOGIN',
-    'LOGIN_RESULT_SUCCESS': 'LOGIN_RESULT_SUCCESS',
-    'LOGIN_RESULT_ERROR': 'LOGIN_RESULT_ERROR',
-
-    'LOGOUT': 'LOGOUT',
-
-    'VERIFY_CREDENTIALS': 'VERIFY_CREDENTIALS',
-    'VERIFY_CREDENTIALS_SUCCESS': 'VERIFY_CREDENTIALS_SUCCESS',
-    'VERIFY_CREDENTIALS_ERROR': 'VERIFY_CREDENTIALS_ERROR',
-
-    'STORE_AUTH_HEADERS': 'STORE_AUTH_HEADERS',
-
-    'REHYDRATE': 'USERINFO_REHYDRATE',
-    'CLEAR': 'USERINFO_CLEAR'
-};
-
-const defaultStateUserinfo = {
-    isSignedIn: false,
-    username: null,
-    error: false,
-    errorMessages: [],
-
-    accesstoken: null,
-    client: null,
-    expiry: null,
-    uid: null
-};
-
-const actionTypesTournamentinfo = {
-    'REQUEST_TOURNAMENT': 'REQUEST_TOURNAMENT',
-    'REQUEST_TOURNAMENT_SUCCESS': 'REQUEST_TOURNAMENT_SUCCESS',
-
-    'CREATE_TOURNAMENT': 'CREATE_TOURNAMENT',
-
-    'MODIFY_TOURNAMENT': 'MODIFY_TOURNAMENT',
-    'MODIFY_TOURNAMENT_SUCCESS': 'MODIFY_TOURNAMENT_SUCCESS',
-    'MODIFY_TOURNAMENT_ERROR': 'MODIFY_TOURNAMENT_ERROR',
-
-    'REHYDRATE': 'TOURNAMENTINFO_REHYDRATE',
-    'CLEAR': 'TOURNAMENTINFO_CLEAR'
-};
-
-const defaultStateTournamentinfo = {
-    code: '',
-    description: '',
-    id: -1,
-    name: '',
-    ownerUsername: '',
-    isPublic: '',
-    stages: [],
-    teams: []
-};
-
-const actionTypesTournamentlist = {
-    'FETCH': 'FETCH',
-    'FETCH_SUCCESS': 'FETCH_SUCCESS',
-    'REHYDRATE': 'REHYDRATE'
-};
-
-const defaultStateTournamentlist = {
-    tournaments: []
-};
 
 export function postRequest(state, url, data) {
     return axios.post(apiUrl + url, data, {
