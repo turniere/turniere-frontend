@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ava",
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js"
@@ -12,6 +12,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "ava": {
+    "files": [
+      "test/**/*.js"
+    ],
+    "failWithoutAssertions": true
+  },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.18.0",
@@ -30,6 +36,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "ava": "^1.4.1",
     "eslint": "^5.9.0",
     "eslint-plugin-react": "^7.11.1",
     "react-editable-list": "0.0.3"
