@@ -10,20 +10,17 @@ import TournamentList from '../js/components/TournamentList';
 import {connect} from 'react-redux';
 
 export default class PublicTournamentsPage extends React.Component {
-
     render() {
-        return (
-            <div className="main generic-fullpage-bg">
-                <Head>
-                    <title>Öffentliche Turniere: turnie.re</title>
-                </Head>
-                <TurniereNavigation/>
-                <div>
-                    <PublicTournamentPageContent/>
-                </div>
-                <Footer/>
+        return (<div className="main generic-fullpage-bg">
+            <Head>
+                <title>Öffentliche Turniere: turnie.re</title>
+            </Head>
+            <TurniereNavigation/>
+            <div>
+                <PublicTournamentPageContent/>
             </div>
-        );
+            <Footer/>
+        </div>);
     }
 }
 
@@ -32,9 +29,7 @@ function mapStateToProperties(state) {
     return {isSignedIn};
 }
 
-const PublicTournamentPageContent = connect(
-    mapStateToProperties,
-)(PublicTournaments);
+const PublicTournamentPageContent = connect(mapStateToProperties)(PublicTournaments);
 
 function PublicTournaments(props) {
     if (props.isSignedIn) {
@@ -46,7 +41,6 @@ function PublicTournaments(props) {
                 <a href='/private' className="btn btn-success shadow">zu den privaten Turnieren</a>
             </Container>
         </div>);
-
     } else {
         return (<Container className='py-5'>
             <PublicTournamentsCard/>

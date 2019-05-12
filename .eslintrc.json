@@ -7,7 +7,7 @@
     "plugins": [
         "react"
     ],
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "google"],
     "parserOptions": {
         "ecmaVersion": 2018,
         "sourceType": "module",
@@ -16,6 +16,8 @@
         }
     },
     "rules": {
+        "arrow-parens": ["error", "as-needed"],
+        "comma-dangle": ["error", "never"],
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
         "indent": [
@@ -26,10 +28,16 @@
             "error",
             "unix"
         ],
+        "max-len": [
+            "error",
+            {"code":  120}
+        ],
         "quotes": [
             "error",
             "single"
         ],
+        "require-jsdoc": "off",
+        "valid-jsdoc": "off",
         "semi": [
             "error",
             "always"

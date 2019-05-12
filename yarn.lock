@@ -3255,6 +3255,11 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
+eslint-config-google@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-google/-/eslint-config-google-0.12.0.tgz#b9bcc52d0f24cf946e862fe8b09c773ad21e511b"
+  integrity sha512-SHDM3nIRCJBACjf8c/H6FvCwRmKbphESNl3gJFBNbw4KYDLCONB3ABYLXDGF+iaVP9XSTND/Q5/PuGoFkp4xbg==
+
 eslint-plugin-react@^7.11.1:
   version "7.12.4"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.12.4.tgz#b1ecf26479d61aee650da612e425c53a99f48c8c"

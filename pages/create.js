@@ -1,113 +1,90 @@
-import Head                       from 'next/head';
-import React                      from 'react';
-import { notify }                 from 'react-notify-toast';
-import { connect }                from 'react-redux';
-import posed                      from 'react-pose';
+import Head from 'next/head';
+import React from 'react';
+import {notify} from 'react-notify-toast';
+import {connect} from 'react-redux';
+import posed from 'react-pose';
 
 import {
-    Button,
-    Card,
-    CardBody,
-    Container,
-    CustomInput,
-    Form,
-    FormGroup,
-    Input,
-    Label
+    Button, Card, CardBody, Container, CustomInput, Form, FormGroup, Input, Label
 } from 'reactstrap';
 
-import { TurniereNavigation }     from '../js/components/Navigation';
-import { Footer }                 from '../js/components/Footer';
-import { UserRestrictor, Option } from '../js/components/UserRestrictor';
-import { Login }                  from '../js/components/Login';
-import EditableStringList         from '../js/components/EditableStringList';
-import { createTournament }       from '../js/api';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {Footer} from '../js/components/Footer';
+import {UserRestrictor, Option} from '../js/components/UserRestrictor';
+import {Login} from '../js/components/Login';
+import EditableStringList from '../js/components/EditableStringList';
+import {createTournament} from '../js/api';
 
 import '../static/everypage.css';
 
 class CreatePage extends React.Component {
-
     render() {
-        const { isSignedIn } = this.props;
+        const {isSignedIn} = this.props;
 
-        return (
-            <UserRestrictor>
-                <Option condition={isSignedIn}>
-                    <div className="main generic-fullpage-bg">
-                        <Head>
-                            <title>Turnier erstellen: turnie.re</title>
-                        </Head>
-                        <TurniereNavigation/>
-                        <div>
-                            <CreateTournamentCard/>
-                        </div>
-                        <Footer/>
+        return (<UserRestrictor>
+            <Option condition={isSignedIn}>
+                <div className="main generic-fullpage-bg">
+                    <Head>
+                        <title>Turnier erstellen: turnie.re</title>
+                    </Head>
+                    <TurniereNavigation/>
+                    <div>
+                        <CreateTournamentCard/>
                     </div>
-                </Option>
-                <Option condition={true}>
-                    <div className="main generic-fullpage-bg">
-                        <Head>
-                            <title>Anmeldung</title>
-                        </Head>
-                        <TurniereNavigation/>
-                        <div>
-                            <Login hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
-                        </div>
-                        <Footer/>
+                    <Footer/>
+                </div>
+            </Option>
+            <Option condition={true}>
+                <div className="main generic-fullpage-bg">
+                    <Head>
+                        <title>Anmeldung</title>
+                    </Head>
+                    <TurniereNavigation/>
+                    <div>
+                        <Login hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
                     </div>
-                </Option>
-            </UserRestrictor>
-        );
+                    <Footer/>
+                </div>
+            </Option>
+        </UserRestrictor>);
     }
 }
 
 function mapStateToCreatePageProperties(state) {
-    const { isSignedIn } = state.userinfo;
-    return { isSignedIn };
+    const {isSignedIn} = state.userinfo;
+    return {isSignedIn};
 }
 
-export default connect(
-    mapStateToCreatePageProperties
-)(CreatePage);
+export default connect(mapStateToCreatePageProperties)(CreatePage);
 
 function CreateTournamentCard() {
-    return (
-        <Container className="py-5">
-            <Card className="shadow">
-                <CardBody>
-                    <h1 className="custom-font">Turnier erstellen</h1>
-                    <CreateTournamentForm/>
-                </CardBody>
-            </Card>
-        </Container>
-    );
+    return (<Container className="py-5">
+        <Card className="shadow">
+            <CardBody>
+                <h1 className="custom-font">Turnier erstellen</h1>
+                <CreateTournamentForm/>
+            </CardBody>
+        </Card>
+    </Container>);
 }
 
 const GroupphaseFader = posed.div({
     visible: {
-        opacity: 1,
-        height: 150
-    },
-    hidden: {
-        opacity: 0,
-        height: 0
+        opacity: 1, height: 150
+    }, hidden: {
+        opacity: 0, height: 0
     }
 });
 
 class CreateTournamentForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             groupPhaseEnabled: false,
 
-            name: '',
-            description: '',
-            public: false,
-              
-            groupSize: 4,
-            groupAdvance: 1,
-            teams: [],
-            groups: []
+            name: '', description: '', public: false,
+
+            groupSize: 4, groupAdvance: 1, teams: [], groups: []
         };
         this.handleGroupPhaseEnabledInput = this.handleGroupPhaseEnabledInput.bind(this);
         this.teamListUpdate = this.teamListUpdate.bind(this);
@@ -123,53 +100,57 @@ class CreateTournamentForm extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <Form>
+        return (<div>
+            <Form>
+                <FormGroup>
+                    <Label for="name">Name des Turniers</Label>
+                    <Input type="text" name="name" size="255" required value={this.state.name}
+                        onChange={this.handleNameInput}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="description">Beschreibung (optional)</Label>
+                    <Input type="text" name="description" size="255" value={this.state.description}
+                        onChange={this.handleDescriptionInput}/>
+                </FormGroup>
+                <FormGroup>
+                    <CustomInput type="checkbox" id="public"
+                        label="Turnier öffentlich anzeigen (schreibgeschützt)" checked={this.state.public}
+                        onChange={this.handlePublicInput}/>
+                    <CustomInput type="checkbox" id="mix-teams" label="Teams mischen"/>
+                    <CustomInput type="checkbox" id="group-phase" label="Gruppenphase"
+                        checked={this.state.groupPhaseEnabled}
+                        onChange={this.handleGroupPhaseEnabledInput}/>
+                </FormGroup>
+                <GroupphaseFader pose={this.state.groupPhaseEnabled ? 'visible' : 'hidden'}
+                    className="groupphasefader">
                     <FormGroup>
-                        <Label for="name">Name des Turniers</Label>
-                        <Input type="text" name="name" size="255" required value={this.state.name} onChange={this.handleNameInput}/>
+                        <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
+                        <Input type="number" name="teams-per-group" min="3"
+                            value={this.state.groupSize} onChange={this.handleGroupSizeInput}/>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="description">Beschreibung (optional)</Label>
-                        <Input type="text" name="description" size="255" value={this.state.description} onChange={this.handleDescriptionInput}/>
-                    </FormGroup>
-                    <FormGroup>
-                        <CustomInput type="checkbox" id="public"
-                            label="Turnier öffentlich anzeigen (schreibgeschützt)" checked={this.state.public} onChange={this.handlePublicInput}/>
-                        <CustomInput type="checkbox" id="mix-teams" label="Teams mischen"/>
-                        <CustomInput type="checkbox" id="group-phase" label="Gruppenphase"
-                            checked={this.state.groupPhaseEnabled} onChange={this.handleGroupPhaseEnabledInput}/>
-                    </FormGroup>
-                    <GroupphaseFader pose={this.state.groupPhaseEnabled? 'visible' : 'hidden'} className="groupphasefader">
-                        <FormGroup>
-                            <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                            <Input type="number" name="teams-per-group" min="3"
-                                value={this.state.groupSize} onChange={this.handleGroupSizeInput}/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
+                        <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
                                 weiterkommen?</Label>
-                            <Input type="number" name="teams-group-to-playoff" min="1" max={this.state.groupSize - 1}
-                                value={this.state.groupAdvance} onChange={this.handleGroupAdvanceInput}/>
-                        </FormGroup>
-                    </GroupphaseFader>
-                </Form>
-                <h3 className="custom-font mt-4">Teams</h3>
-                <EditableStringList 
-                    addButtonText="hinzufügen"
-                    teamPlaceholder="Keine Teams hinzugefügt!"
-                    groupPlaceHolder="Keine Gruppen verfügbar!"
-                    teams={[]}
-                    groups={[]}
-                    groupPhaseEnabled={this.state.groupPhaseEnabled}
-                    groupSize={this.state.groupSize}
-                    onTeamsChange={this.teamListUpdate}
-                    onGroupsChange={this.groupListUpdate}
-                    inputPlaceholder="Teamname"/>
-                <Button color="success" size="lg" className="w-100 shadow-sm mt-4" onClick={this.create}>Turnier erstellen</Button>
-            </div>
-        );
+                        <Input type="number" name="teams-group-to-playoff" min="1" max={this.state.groupSize - 1}
+                            value={this.state.groupAdvance} onChange={this.handleGroupAdvanceInput}/>
+                    </FormGroup>
+                </GroupphaseFader>
+            </Form>
+            <h3 className="custom-font mt-4">Teams</h3>
+            <EditableStringList
+                addButtonText="hinzufügen"
+                teamPlaceholder="Keine Teams hinzugefügt!"
+                groupPlaceHolder="Keine Gruppen verfügbar!"
+                teams={[]}
+                groups={[]}
+                groupPhaseEnabled={this.state.groupPhaseEnabled}
+                groupSize={this.state.groupSize}
+                onTeamsChange={this.teamListUpdate}
+                onGroupsChange={this.groupListUpdate}
+                inputPlaceholder="Teamname"/>
+            <Button color="success" size="lg" className="w-100 shadow-sm mt-4" onClick={this.create}>Turnier
+                    erstellen</Button>
+        </div>);
     }
 
     teamListUpdate(list) {
@@ -181,35 +162,34 @@ class CreateTournamentForm extends React.Component {
     }
 
     handleGroupSizeInput(input) {
-        let newSize = input.target.value;
-        if(newSize <= this.state.groupAdvance) {
+        const newSize = input.target.value;
+        if (newSize <= this.state.groupAdvance) {
             this.setState({
-                groupSize: newSize,
-                groupAdvance: newSize - 1
+                groupSize: newSize, groupAdvance: newSize - 1
             });
         } else {
-            this.setState({ groupSize: newSize });
+            this.setState({groupSize: newSize});
         }
     }
 
     handleGroupAdvanceInput(input) {
-        this.setState({ groupAdvance: input.target.value });
+        this.setState({groupAdvance: input.target.value});
     }
 
     handleGroupPhaseEnabledInput(input) {
-        this.setState({ groupPhaseEnabled: input.target.checked });
+        this.setState({groupPhaseEnabled: input.target.checked});
     }
 
     handleNameInput(input) {
-        this.setState({ name: input.target.value });
+        this.setState({name: input.target.value});
     }
 
     handleDescriptionInput(input) {
-        this.setState({ description: input.target.value });
+        this.setState({description: input.target.value});
     }
 
     handlePublicInput(input) {
-        this.setState({ public: input.target.checked });
+        this.setState({public: input.target.checked});
     }
 
     create() {
@@ -225,7 +205,6 @@ class CreateTournamentForm extends React.Component {
             notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
         });
     }
-
 }
 
 /**
@@ -245,20 +224,19 @@ class CreateTournamentForm extends React.Component {
  *     backend
  */
 function createTeamArray(groupphase, groups, teams) {
-    let result = [];
+    const result = [];
 
-    if(groupphase) {
-        for(let groupNumber = 0; groupNumber < groups.length; groupNumber++) {
-            for(let groupMember = 0; groupMember < groups[groupNumber].length; groupMember++) {
+    if (groupphase) {
+        for (let groupNumber = 0; groupNumber < groups.length; groupNumber++) {
+            for (let groupMember = 0; groupMember < groups[groupNumber].length; groupMember++) {
                 result[result.length] = {
-                    'name': groups[groupNumber][groupMember],
-                    'group': groupNumber
+                    'name': groups[groupNumber][groupMember], 'group': groupNumber
                 };
             }
         }
     } else {
-        for(let i = 0; i < teams.length; i++) {
-            result[i] = { 'name': teams[i] };
+        for (let i = 0; i < teams.length; i++) {
+            result[i] = {'name': teams[i]};
         }
     }
 

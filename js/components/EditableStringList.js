@@ -1,25 +1,15 @@
 import React from 'react';
-import { 
-    Alert,
-    Button,
-    Card,
-    CardBody,
-    CardTitle,
-    Input, 
-    InputGroup, 
-    InputGroupAddon 
+import {
+    Alert, Button, Card, CardBody, CardTitle, Input, InputGroup, InputGroupAddon
 } from 'reactstrap';
 
 import '../../static/css/editablestringlist.css';
 
 export default class EditableStringList extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            groupSize: props.groupSize,
-            teams: props.teams,
-            groups: props.groups
+            groupSize: props.groupSize, teams: props.teams, groups: props.groups
         };
         this.add = this.add.bind(this);
         this.remove = this.remove.bind(this);
@@ -31,17 +21,16 @@ export default class EditableStringList extends React.Component {
             return false;
         }
         this.state.teams.push(text);
-        
-        var lastGroup = this.state.groups[this.state.groups.length - 1];
-        if(lastGroup === undefined || lastGroup.length >= this.state.groupSize) {
+
+        let lastGroup = this.state.groups[this.state.groups.length - 1];
+        if (lastGroup === undefined || lastGroup.length >= this.state.groupSize) {
             this.state.groups[this.state.groups.length] = [];
         }
         lastGroup = this.state.groups[this.state.groups.length - 1];
         lastGroup[lastGroup.length] = text;
 
         this.setState({
-            teams: this.state.teams,
-            groups: this.state.groups
+            teams: this.state.teams, groups: this.state.groups
         });
 
         this.props.onTeamsChange(this.state.teams);
@@ -51,13 +40,12 @@ export default class EditableStringList extends React.Component {
     }
 
     remove(text) {
-        if(this.removeTeamFromGroup(text) === false) {
+        if (this.removeTeamFromGroup(text) === false) {
             return false;
         }
 
         this.setState({
-            teams: this.state.teams,
-            groups: this.state.groups
+            teams: this.state.teams, groups: this.state.groups
         });
 
         this.props.onTeamsChange(this.state.teams);
@@ -67,20 +55,20 @@ export default class EditableStringList extends React.Component {
     removeTeamFromGroup(text) {
         this.state.teams = this.state.teams.filter(item => item !== text);
 
-        let teamIndex = this.findTeam(text);
-        if(teamIndex === null) {
+        const teamIndex = this.findTeam(text);
+        if (teamIndex === null) {
             return false;
         }
-        
+
         // Move every first team to the next group
         this.state.groups[teamIndex.group].splice(teamIndex.team, 1);
-        for(var group = teamIndex.group; group < this.state.groups.length - 1; group++) {
-            let currentGroup = this.state.groups[group];
+        for (let group = teamIndex.group; group < this.state.groups.length - 1; group++) {
+            const currentGroup = this.state.groups[group];
             currentGroup[currentGroup.length] = this.state.groups[group + 1].splice(0, 1)[0];
         }
 
         // delete the last group in case it is empty
-        if(this.state.groups[this.state.groups.length - 1].length === 0) {
+        if (this.state.groups[this.state.groups.length - 1].length === 0) {
             this.state.groups.splice(this.state.groups.length - 1, 1);
         }
 
@@ -88,12 +76,11 @@ export default class EditableStringList extends React.Component {
     }
 
     findTeam(text) {
-        for(var group = 0; group < this.state.groups.length; group++) {
-            for(var team = 0; team < this.state.groups[group].length; team++) {
-                if(this.state.groups[group][team] === text) {
+        for (let group = 0; group < this.state.groups.length; group++) {
+            for (let team = 0; team < this.state.groups[group].length; team++) {
+                if (this.state.groups[group][team] === text) {
                     return {
-                        group: group,
-                        team: team
+                        group: group, team: team
                     };
                 }
             }
@@ -102,17 +89,17 @@ export default class EditableStringList extends React.Component {
     }
 
     resizeGroups(newSize) {
-        let oldGroups = this.state.groups;
-        var rearrangedGroups = [];
+        const oldGroups = this.state.groups;
+        const rearrangedGroups = [];
 
-        for(var oldGroupIndex = 0; oldGroupIndex < oldGroups.length; oldGroupIndex++) {
-            for(var oldTeamIndex = 0; oldTeamIndex < oldGroups[oldGroupIndex].length; oldTeamIndex++) {
-                let index = oldGroupIndex * this.state.groupSize + oldTeamIndex;
+        for (let oldGroupIndex = 0; oldGroupIndex < oldGroups.length; oldGroupIndex++) {
+            for (let oldTeamIndex = 0; oldTeamIndex < oldGroups[oldGroupIndex].length; oldTeamIndex++) {
+                const index = oldGroupIndex * this.state.groupSize + oldTeamIndex;
 
-                let newGroupIndex = Math.floor(index / newSize);
-                let newTeamIndex = index % newSize;
+                const newGroupIndex = Math.floor(index / newSize);
+                const newTeamIndex = index % newSize;
 
-                if(newTeamIndex === 0) {
+                if (newTeamIndex === 0) {
                     rearrangedGroups[newGroupIndex] = [];
                 }
 
@@ -121,8 +108,7 @@ export default class EditableStringList extends React.Component {
         }
 
         this.setState({
-            groupSize: newSize,
-            groups: rearrangedGroups
+            groupSize: newSize, groups: rearrangedGroups
         });
         this.props.onGroupsChange(this.state.groups);
     }
@@ -143,85 +129,71 @@ export default class EditableStringList extends React.Component {
     }
 
     render() {
-        if(this.props.groupSize !== this.state.groupSize) {
+        if (this.props.groupSize !== this.state.groupSize) {
             this.resizeGroups(this.props.groupSize);
         }
 
-        if(this.props.groupPhaseEnabled) {
+        if (this.props.groupPhaseEnabled) {
             if ((typeof this.state.teams !== 'undefined') && this.state.teams.length > 0) {
-                return (
-                    <div className="bg-light p-3 text-secondary font-italic">
-                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                        <GroupView groups={this.state.groups} removeTeam={this.remove} onGroupSwitched={this.onGroupSwitch}/>
-                    </div>
-                );
+                return (<div className="bg-light p-3 text-secondary font-italic">
+                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder}
+                        addButtonText={this.props.addButtonText}/>
+                    <GroupView groups={this.state.groups} removeTeam={this.remove}
+                        onGroupSwitched={this.onGroupSwitch}/>
+                </div>);
             } else {
-                return (
-                    <div className="bg-light p-3 text-secondary text-center font-italic">
-                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                        {this.props.groupPlaceHolder}
-                    </div>
-                );
+                return (<div className="bg-light p-3 text-secondary text-center font-italic">
+                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder}
+                        addButtonText={this.props.addButtonText}/>
+                    {this.props.groupPlaceHolder}
+                </div>);
             }
         } else {
             if ((typeof this.state.teams !== 'undefined') && this.state.teams.length > 0) {
-                return (
-                    <div className="bg-light p-3 text-secondary font-italic">
-                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                        {this.state.teams.map((text) => <Item text={text} key={text} removeItem={this.remove}/>)}
-                    </div>
-                );
+                return (<div className="bg-light p-3 text-secondary font-italic">
+                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder}
+                        addButtonText={this.props.addButtonText}/>
+                    {this.state.teams.map(text => <Item text={text} key={text} removeItem={this.remove}/>)}
+                </div>);
             } else {
-                return (
-                    <div className="bg-light p-3 text-secondary text-center font-italic">
-                        <StringInput submit={this.add} placeholder={this.props.inputPlaceholder} addButtonText={this.props.addButtonText}/>
-                        {this.props.teamPlaceholder}
-                    </div>
-                );
+                return (<div className="bg-light p-3 text-secondary text-center font-italic">
+                    <StringInput submit={this.add} placeholder={this.props.inputPlaceholder}
+                        addButtonText={this.props.addButtonText}/>
+                    {this.props.teamPlaceholder}
+                </div>);
             }
         }
     }
 }
 
 class GroupView extends React.Component {
-
     constructor(props) {
         super(props);
     }
 
     render() {
-        return (
-            <div>
-                {this.props.groups.map((group, groupindex) => (
-                    <Card className="group-card" key={groupindex}>
-                        <CardBody>
-                            <CardTitle>Group {groupindex + 1}</CardTitle>
-                            {group.map((team, teamindex) => (
-                                <div key={team} draggable droppable="droppable"
-                                    className="grouped-team-item"
-                                    onDragStart={(e) => this.onDragStart(e, groupindex,teamindex)}
-                                    onDragOver={(e) => this.onDragOver(e)}
-                                    onDrop={(e) => this.onDrop(e, groupindex, teamindex)}>
+        return (<div>
+            {this.props.groups.map((group, groupindex) => (<Card className="group-card" key={groupindex}>
+                <CardBody>
+                    <CardTitle>Group {groupindex + 1}</CardTitle>
+                    {group.map((team, teamindex) => (<div key={team} draggable droppable="droppable"
+                        className="grouped-team-item"
+                        onDragStart={e => this.onDragStart(e, groupindex, teamindex)}
+                        onDragOver={e => this.onDragOver(e)}
+                        onDrop={e => this.onDrop(e, groupindex, teamindex)}>
 
-                                    <Item text={team} removeItem={this.props.removeTeam}/>
+                        <Item text={team} removeItem={this.props.removeTeam}/>
 
-                                </div>
-                            ))}
-                        </CardBody>
-                    </Card>
-                ))}
-            </div>
-        );
+                    </div>))}
+                </CardBody>
+            </Card>))}
+        </div>);
     }
 
     onDragStart(e, group, team) {
-        e.dataTransfer.setData(
-            'text/plain',
-            JSON.stringify({
-                group: group,
-                team: team
-            })
-        );
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            group: group, team: team
+        }));
     }
 
     onDragOver(e) {
@@ -231,10 +203,9 @@ class GroupView extends React.Component {
     onDrop(e, group, team) {
         e.preventDefault();
 
-        let src = JSON.parse(e.dataTransfer.getData('text'));
-        let dest = {
-            group: group,
-            team: team
+        const src = JSON.parse(e.dataTransfer.getData('text'));
+        const dest = {
+            group: group, team: team
         };
 
         this.props.onGroupSwitched(src, dest);
@@ -254,20 +225,19 @@ class StringInput extends React.Component {
     }
 
     render() {
-        return (
-            <InputGroup className="mb-3">
-                <Input placeholder={this.props.placeholder} type="text" size="255" value={this.state.value} required onChange={this.handleChange} onKeyPress={(e) => {
+        return (<InputGroup className="mb-3">
+            <Input placeholder={this.props.placeholder} type="text" size="255" value={this.state.value} required
+                onChange={this.handleChange} onKeyPress={e => {
                     if (e.key === 'Enter') {
                         this.submit();
                         return false;
                     }
                 }}/>
-                <InputGroupAddon addonType="append">
-                    <Button color="success" outline={true}
-                        onClick={() => this.submit()}>{this.props.addButtonText}</Button>
-                </InputGroupAddon>
-            </InputGroup>
-        );
+            <InputGroupAddon addonType="append">
+                <Button color="success" outline={true}
+                    onClick={() => this.submit()}>{this.props.addButtonText}</Button>
+            </InputGroupAddon>
+        </InputGroup>);
     }
 
     submit() {
@@ -292,10 +262,8 @@ class Item extends React.Component {
     }
 
     render() {
-        return (
-            <Alert className="team-item m-2" color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
-                {this.props.text}
-            </Alert>
-        );
+        return (<Alert className="team-item m-2" color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
+            {this.props.text}
+        </Alert>);
     }
 }

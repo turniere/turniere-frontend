@@ -1,9 +1,9 @@
-import Head                   from 'next/head';
-import React                  from 'react';
-import { Container }          from 'reactstrap';
+import Head from 'next/head';
+import React from 'react';
+import {Container} from 'reactstrap';
 
-import { TurniereNavigation } from './Navigation';
-import { Footer }             from './Footer';
+import {TurniereNavigation} from './Navigation';
+import {Footer} from './Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,9 +11,8 @@ import '../../static/everypage.css';
 import '../../static/css/error.css';
 
 export class ErrorPageComponent extends React.Component {
-
-    static getInitialProps({ statusCode }) {
-        return { statusCode };
+    static getInitialProps({statusCode}) {
+        return {statusCode};
     }
 
     render() {
@@ -30,7 +29,7 @@ export class ErrorPageComponent extends React.Component {
     }
 }
 
-export function ErrorPage(props){
+export function ErrorPage(props) {
     return (
         <Container className="mb-5">
             <div className="row mb-5">
