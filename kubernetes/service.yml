@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: turniere-frontend
+spec:
+  selector:
+    app: turniere-frontend
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  namespace: turniere-frontend
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: frontend01.turnie.re
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: frontend-service
+          servicePort: http
