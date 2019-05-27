@@ -23,6 +23,28 @@ function Main() {
             <Marketing/>
             <MainPromotedLinks/>
             <MainBottomSummary/>
+
+            <script>
+                
+                // Requires jQuery!
+                jQuery.ajax({
+                    url: "https://jiratinf16b4.it.dh-karlsruhe.de:8443/s/82f45859d4fcea9e0eaf99f49fb17990-T/-dal5ft/712002/b6b48b2829824b869586ac216d119363/2.0.31/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=e275a6f5",
+                    type: "get",
+                    cache: true,
+                    dataType: "script"
+                });
+
+                 window.ATL_JQ_PAGE_PROPS =  {
+                    "triggerFunction": function(showCollectorDialog) {
+                        //Requires that jQuery is available! 
+                        jQuery("#myCustomTrigger").click(function(e) {
+                            e.preventDefault();
+                            showCollectorDialog();
+                        });
+                    }};
+
+            </script>
+
         </div>
     );
 }
