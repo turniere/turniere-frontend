@@ -12,15 +12,21 @@ import {
     Table
 } from 'reactstrap';
 import React from 'react';
+import {startMatch} from '../api';
+import {notify} from 'react-notify-toast';
 
 
 export class Match extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false
+            modal: false,
+            matchState: this.props.match.state
         };
         this.toggleModal = this.toggleModal.bind(this);
+        this.startMatch = this.startMatch.bind(this);
+        this.onStartMatchSuccess = this.onStartMatchSuccess.bind(this);
+        this.onStartMatchError = this.onStartMatchError.bind(this);
     }
 
     toggleModal() {
@@ -31,12 +37,26 @@ export class Match extends React.Component {
         }
     }
 
+    startMatch() {
+        startMatch(this.props.match.id, this.onStartMatchSuccess, this.onStartMatchError);
+    }
+
+    onStartMatchSuccess() {
+        this.setState({matchState: 'in_progress'});
+        this.toggleModal();
+    }
+
+    onStartMatchError() {
+        this.toggleModal();
+        notify.show('Das Match konnte nicht gestartet werden.', 'error', 3000);
+    }
+
     render() {
         let cardClass;
         let smallMessage;
         let borderClass;
         // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
-        switch (this.props.match.state) {
+        switch (this.state.matchState) {
         case 'in_progress':
             cardClass = 'table-warning';
             borderClass = 'border-warning';
@@ -76,7 +96,8 @@ export class Match extends React.Component {
                 </CardBody>
             </Card>
             <small className='text-muted'>{smallMessage}</small>
-            <MatchModal title='Match' isOpen={this.state.modal} toggle={this.toggleModal} match={this.props.match}/>
+            <MatchModal title='Match' isOpen={this.state.modal} toggle={this.toggleModal} match={this.props.match}
+                startMatch={this.startMatch}/>
         </div>);
     }
 }
@@ -104,7 +125,7 @@ function MatchModal(props) {
         break;
     case 'not_started':
         title = 'Spiel kann gestartet werden';
-        actionButton = <Button color='primary' onClick={props.toggle}>Spiel starten</Button>;
+        actionButton = <Button color='primary' onClick={props.startMatch}>Spiel starten</Button>;
         break;
     case 'undecided':
         title = 'Spiel beendet';

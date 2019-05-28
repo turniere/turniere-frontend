@@ -222,6 +222,19 @@ const reducerTournamentinfo = (state = defaultStateTournamentinfo, action) => {
     case actionTypesTournamentinfo.REHYDRATE:
 
         return Object.assign({}, state, {});
+    case actionTypesTournamentinfo.START_MATCH:
+        patchRequest(action.state, '/matches/' + action.parameters.matchId, {
+            state: 'in_progress'
+        }).then(resp => {
+            storeOptionalToken(resp);
+            action.parameters.successCallback();
+        }).catch(error => {
+            if (error.response) {
+                storeOptionalToken(error.response);
+            }
+            action.parameters.errorCallback();
+        });
+        return Object.assign({}, state, {});
     case actionTypesTournamentinfo.CLEAR:
 
         return Object.assign({}, state, {});
@@ -359,6 +372,18 @@ export function updateTeamName(team, successCB, errorCB) {
             name: team.name,
             onSuccess: successCB,
             onError: errorCB
+        },
+        state: __store.getState()
+    });
+}
+
+export function startMatch(matchId, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actionTypesTournamentinfo.START_MATCH,
+        parameters: {
+            matchId: matchId,
+            successCallback: successCallback,
+            errorCallback: errorCallback
         },
         state: __store.getState()
     });
