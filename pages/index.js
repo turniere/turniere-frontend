@@ -11,7 +11,7 @@ import {Footer} from '../js/components/Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import '../static/everypage.css';
+import '../static/css/everypage.css';
 import '../static/css/index.css';
 
 function Main() {

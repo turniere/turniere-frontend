@@ -5,7 +5,7 @@ import {Card, CardBody, Container} from 'reactstrap';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 
-import '../static/everypage.css';
+import '../static/css/everypage.css';
 import TournamentList from '../js/components/TournamentList';
 import {connect} from 'react-redux';
 

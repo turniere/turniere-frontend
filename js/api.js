@@ -1,123 +1,14 @@
-import {
-    createStore,
-    applyMiddleware,
-    combineReducers
-} from 'redux';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 
 import {errorMessages} from './constants';
 
-import getConfig from 'next/config';
-const {publicRuntimeConfig} = getConfig();
+import {actionTypesUserinfo, defaultStateUserinfo} from './redux/userInfo';
+import {actionTypesTournamentinfo, defaultStateTournamentinfo} from './redux/tournamentInfo';
+import {actionTypesTournamentlist, defaultStateTournamentlist} from './redux/tournamentList';
+import {deleteRequest, getRequest, patchRequest, postRequest} from './redux/backendApi';
 
-const apiUrl = publicRuntimeConfig.api_url;
-
-const axios = require('axios');
-
-const actionTypesUserinfo = {
-    'REGISTER': 'REGISTER',
-    'REGISTER_RESULT_SUCCESS': 'REGISTER_RESULT_SUCCESS',
-    'REGISTER_RESULT_ERROR': 'REGISTER_RESULT_ERROR',
-
-    'LOGIN': 'LOGIN',
-    'LOGIN_RESULT_SUCCESS': 'LOGIN_RESULT_SUCCESS',
-    'LOGIN_RESULT_ERROR': 'LOGIN_RESULT_ERROR',
-
-    'LOGOUT': 'LOGOUT',
-
-    'VERIFY_CREDENTIALS': 'VERIFY_CREDENTIALS',
-    'VERIFY_CREDENTIALS_SUCCESS': 'VERIFY_CREDENTIALS_SUCCESS',
-    'VERIFY_CREDENTIALS_ERROR': 'VERIFY_CREDENTIALS_ERROR',
-
-    'STORE_AUTH_HEADERS': 'STORE_AUTH_HEADERS',
-
-    'REHYDRATE': 'USERINFO_REHYDRATE',
-    'CLEAR': 'USERINFO_CLEAR'
-};
-
-const defaultStateUserinfo = {
-    isSignedIn: false,
-    username: null,
-    error: false,
-    errorMessages: [],
-
-    accesstoken: null,
-    client: null,
-    expiry: null,
-    uid: null
-};
-
-const actionTypesTournamentinfo = {
-    'REQUEST_TOURNAMENT': 'REQUEST_TOURNAMENT',
-    'REQUEST_TOURNAMENT_SUCCESS': 'REQUEST_TOURNAMENT_SUCCESS',
-
-    'CREATE_TOURNAMENT': 'CREATE_TOURNAMENT',
-
-    'MODIFY_TOURNAMENT': 'MODIFY_TOURNAMENT',
-    'MODIFY_TOURNAMENT_SUCCESS': 'MODIFY_TOURNAMENT_SUCCESS',
-    'MODIFY_TOURNAMENT_ERROR': 'MODIFY_TOURNAMENT_ERROR',
-
-    'REHYDRATE': 'TOURNAMENTINFO_REHYDRATE',
-    'CLEAR': 'TOURNAMENTINFO_CLEAR'
-};
-
-const defaultStateTournamentinfo = {
-    code: '',
-    description: '',
-    id: -1,
-    name: '',
-    ownerUsername: '',
-    isPublic: '',
-    stages: [],
-    teams: []
-};
-
-const actionTypesTournamentlist = {
-    'FETCH': 'FETCH',
-    'FETCH_SUCCESS': 'FETCH_SUCCESS',
-    'REHYDRATE': 'REHYDRATE'
-};
-
-const defaultStateTournamentlist = {
-    tournaments: []
-};
-
-export function postRequest(state, url, data) {
-    return axios.post(apiUrl + url, data, {
-        headers: generateHeaders(state)
-    });
-}
-
-export function getRequest(state, url) {
-    return axios.get(apiUrl + url, {
-        headers: generateHeaders(state)
-    });
-}
-
-export function deleteRequest(state, url) {
-    return axios.delete(apiUrl + url, {
-        headers: generateHeaders(state)
-    });
-}
-
-export function patchRequest(state, url, data) {
-    return axios.patch(apiUrl + url, data, {
-        headers: generateHeaders(state)
-    });
-}
-
-function generateHeaders(state) {
-    if (state.userinfo.isSignedIn) {
-        return {
-            'access-token': state.userinfo.accesstoken,
-            'client': state.userinfo.client,
-            'uid': state.userinfo.uid
-        };
-    } else {
-        return {};
-    }
-}
 
 function storeOptionalToken(response) {
     if (checkForAuthenticationHeaders(response)) {

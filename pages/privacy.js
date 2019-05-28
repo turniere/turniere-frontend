@@ -8,7 +8,7 @@ import {Footer} from '../js/components/Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import '../static/everypage.css';
+import '../static/css/everypage.css';
 
 function Main() {
     return (<div className="main running-text">
