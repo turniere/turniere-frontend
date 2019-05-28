@@ -121,24 +121,42 @@ function convertGroup(apiGroup) {
 
 function convertMatch(apiMatch) {
     const result = {
-        id: apiMatch.id, state: apiMatch.state
+        id: apiMatch.id, state: apiMatch.state, winnerTeamId: apiMatch.winner === null ? null : apiMatch.winner.id
     };
 
     if (apiMatch.match_scores.length === 2) {
-        result.team1 = apiMatch.match_scores[0].team.name;
-        result.scoreTeam1 = apiMatch.match_scores[0].points;
-        result.team2 = apiMatch.match_scores[1].team.name;
-        result.scoreTeam2 = apiMatch.match_scores[1].points;
+        result.team1 = {
+            name: apiMatch.match_scores[0].team.name,
+            id: apiMatch.match_scores[0].team.id,
+            score: apiMatch.match_scores[0].points
+        };
+        result.team2 = {
+            name: apiMatch.match_scores[1].team.name,
+            id: apiMatch.match_scores[1].team.id,
+            score: apiMatch.match_scores[1].points
+        };
     } else if (apiMatch.match_scores.length === 1) {
-        result.team1 = apiMatch.match_scores[0].team.name;
-        result.scoreTeam1 = apiMatch.match_scores[0].points;
-        result.team2 = 'TBD';
-        result.scoreTeam2 = 0;
+        result.team1 = {
+            name: apiMatch.match_scores[0].team.name,
+            id: apiMatch.match_scores[0].team.id,
+            score: apiMatch.match_scores[0].points
+        };
+        result.team2 = {
+            name: 'TBD',
+            id: null,
+            score: 0
+        };
     } else {
-        result.team1 = 'TBD';
-        result.scoreTeam1 = 0;
-        result.team2 = 'TBD';
-        result.scoreTeam2 = 0;
+        result.team1 = {
+            name: 'TBD',
+            id: null,
+            score: 0
+        };
+        result.team2 = {
+            name: 'TBD',
+            id: null,
+            score: 0
+        };
     }
 
     return result;

@@ -12,7 +12,7 @@ import {
     Table
 } from 'reactstrap';
 import React from 'react';
-import {startMatch} from '../api';
+import {endMatch, startMatch} from '../api';
 import {notify} from 'react-notify-toast';
 
 
@@ -21,12 +21,16 @@ export class Match extends React.Component {
         super(props);
         this.state = {
             modal: false,
-            matchState: this.props.match.state
+            match: this.props.match
         };
         this.toggleModal = this.toggleModal.bind(this);
         this.startMatch = this.startMatch.bind(this);
         this.onStartMatchSuccess = this.onStartMatchSuccess.bind(this);
         this.onStartMatchError = this.onStartMatchError.bind(this);
+        this.endMatch = this.endMatch.bind(this);
+        this.onEndMatchSuccess = this.onEndMatchSuccess.bind(this);
+        this.onEndMatchError = this.onEndMatchError.bind(this);
+        this.getMatchFinishedMessage = this.getMatchFinishedMessage.bind(this);
     }
 
     toggleModal() {
@@ -38,11 +42,13 @@ export class Match extends React.Component {
     }
 
     startMatch() {
-        startMatch(this.props.match.id, this.onStartMatchSuccess, this.onStartMatchError);
+        startMatch(this.state.match.id, this.onStartMatchSuccess, this.onStartMatchError);
     }
 
     onStartMatchSuccess() {
-        this.setState({matchState: 'in_progress'});
+        const updatedMatch = this.state.match;
+        updatedMatch.state = 'in_progress';
+        this.setState({match: updatedMatch});
         this.toggleModal();
     }
 
@@ -51,26 +57,52 @@ export class Match extends React.Component {
         notify.show('Das Match konnte nicht gestartet werden.', 'error', 3000);
     }
 
+    endMatch() {
+        endMatch(this.state.match.id, this.onEndMatchSuccess, this.onEndMatchError);
+    }
+
+    onEndMatchSuccess(winner) {
+        const updatedMatch = this.state.match;
+        updatedMatch.state = 'finished';
+        updatedMatch.winnerTeamId = winner === null ? null : winner.id;
+        this.setState({match: updatedMatch});
+        this.toggleModal();
+    }
+
+    onEndMatchError() {
+        this.toggleModal();
+        notify.show('Das Match konnte nicht beendet werden.', 'error', 3000);
+    }
+
+    getMatchFinishedMessage() {
+        const match = this.state.match;
+        if (match.winnerTeamId === null) {
+            return 'Spiel beendet, unentschieden';
+        }
+        if (match.winnerTeamId === match.team1.id) {
+            return 'Gewinner: ' + match.team1.name;
+        }
+        if (match.winnerTeamId === match.team2.id) {
+            return 'Gewinner: ' + match.team2.name;
+        }
+        return 'Spiel beendet';
+    }
+
     render() {
         let cardClass;
         let smallMessage;
         let borderClass;
-        // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
-        switch (this.state.matchState) {
+        // possible states: single_team not_ready not_started in_progress finished
+        switch (this.state.match.state) {
         case 'in_progress':
             cardClass = 'table-warning';
             borderClass = 'border-warning';
             smallMessage = 'Spiel läuft';
             break;
-        case 'team1_won':
+        case 'finished':
             cardClass = 'table-success';
             borderClass = 'border-success';
-            smallMessage = 'Gewinner: ' + this.props.match.team1;
-            break;
-        case 'team2_won':
-            cardClass = 'table-success';
-            borderClass = 'border-success';
-            smallMessage = 'Gewinner: ' + this.props.match.team2;
+            smallMessage = this.getMatchFinishedMessage();
             break;
         case 'single_team':
             cardClass = 'table-success';
@@ -83,21 +115,16 @@ export class Match extends React.Component {
         case 'not_started':
             smallMessage = 'Spiel kann gestartet werden';
             break;
-        case 'undecided':
-            cardClass = 'table-success';
-            borderClass = 'border-success';
-            smallMessage = 'Spiel beendet, unentschieden';
-            break;
         }
         return (<div className='mb-3'>
             <Card className='shadow-sm match' onClick={this.toggleModal}>
                 <CardBody className={borderClass + ' border py-2 ' + cardClass}>
-                    <MatchTable match={this.props.match} borderColor={borderClass}/>
+                    <MatchTable match={this.state.match} borderColor={borderClass}/>
                 </CardBody>
             </Card>
             <small className='text-muted'>{smallMessage}</small>
-            <MatchModal title='Match' isOpen={this.state.modal} toggle={this.toggleModal} match={this.props.match}
-                startMatch={this.startMatch}/>
+            <MatchModal title='Match' isOpen={this.state.modal} toggle={this.toggleModal} match={this.state.match}
+                startMatch={this.startMatch} endMatch={this.endMatch}/>
         </div>);
     }
 }
@@ -105,16 +132,13 @@ export class Match extends React.Component {
 function MatchModal(props) {
     let title;
     let actionButton = '';
-    // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
+    // possible states: single_team not_ready not_started in_progress finished
     switch (props.match.state) {
     case 'in_progress':
         title = 'Spiel läuft';
-        actionButton = <Button color='primary' onClick={props.toggle}>Spiel beenden</Button>;
+        actionButton = <Button color='primary' onClick={props.endMatch}>Spiel beenden</Button>;
         break;
-    case 'team1_won':
-        title = 'Spiel beendet';
-        break;
-    case 'team2_won':
+    case 'finished':
         title = 'Spiel beendet';
         break;
     case 'single_team':
@@ -127,15 +151,12 @@ function MatchModal(props) {
         title = 'Spiel kann gestartet werden';
         actionButton = <Button color='primary' onClick={props.startMatch}>Spiel starten</Button>;
         break;
-    case 'undecided':
-        title = 'Spiel beendet';
-        break;
     }
     return (<Modal isOpen={props.isOpen} toggle={props.toggle}>
         <ModalHeader toggle={props.toggle}>{title}</ModalHeader>
         <ModalBody>
-            {props.match.state === 'in_progress' ? <EditableMatchTable match={props.match}/> :
-                <MatchTable match={props.match}/>}
+            {props.matchState === 'in_progress' ? <EditableMatchTable match={props.match}/> :
+                <MatchTable match={props.match} matchStatus={props.matchState}/>}
         </ModalBody>
         <ModalFooter>
             {actionButton}
@@ -147,17 +168,22 @@ function MatchModal(props) {
 function MatchTable(props) {
     let team1Class;
     let team2Class;
-    // possible states: single_team not_ready not_started in_progress team1_won team2_won undecided
-    switch (props.match.state) {
+    // possible states: single_team not_ready not_started in_progress finished
+    switch (props.matchState) {
     case 'in_progress':
         break;
-    case 'team1_won':
-        team1Class = 'font-weight-bold';
-        team2Class = 'lost-team';
-        break;
-    case 'team2_won':
-        team1Class = 'lost-team';
-        team2Class = 'font-weight-bold';
+    case 'finished':
+        if (props.match.winnerTeamId === undefined) {
+            break;
+        }
+        if (props.winnerTeamId === props.match.team1.id) {
+            team1Class = 'font-weight-bold';
+            team2Class = 'lost-team';
+        }
+        if (props.winnerTeamId === props.match.team2.id) {
+            team1Class = 'lost-team';
+            team2Class = 'font-weight-bold';
+        }
         break;
     case 'single_team':
         team2Class = 'text-muted';
@@ -166,14 +192,12 @@ function MatchTable(props) {
         break;
     case 'not_started':
         break;
-    case 'undecided':
-        break;
     }
     if (props.match.state === 'single_team') {
         return (<Table className='mb-0'>
             <tbody>
                 <tr>
-                    <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
+                    <td className={'border-top-0 ' + team1Class}>{props.match.team1.name}</td>
                 </tr>
                 <tr>
                     <td className={props.borderColor + ' ' + team2Class}>kein Gegner</td>
@@ -184,12 +208,12 @@ function MatchTable(props) {
         return (<Table className='mb-0'>
             <tbody>
                 <tr>
-                    <th className='stage border-top-0'>{props.match.scoreTeam1}</th>
-                    <td className={'border-top-0 ' + team1Class}>{props.match.team1}</td>
+                    <th className='stage border-top-0'>{props.match.team1.score}</th>
+                    <td className={'border-top-0 ' + team1Class}>{props.match.team1.name}</td>
                 </tr>
                 <tr>
-                    <th className={'stage ' + props.borderColor}>{props.match.scoreTeam2}</th>
-                    <td className={props.borderColor + ' ' + team2Class}>{props.match.team2}</td>
+                    <th className={'stage ' + props.borderColor}>{props.match.team2.score}</th>
+                    <td className={props.borderColor + ' ' + team2Class}>{props.match.team2.name}</td>
                 </tr>
             </tbody>
         </Table>);
@@ -201,15 +225,15 @@ function EditableMatchTable(props) {
         <tbody>
             <tr>
                 <td className='scoreInput border-top-0'>
-                    <ScoreInput score={props.match.scoreTeam1}/>
+                    <ScoreInput score={props.match.team1.score}/>
                 </td>
-                <td className='align-middle border-top-0'>{props.match.team1}</td>
+                <td className='align-middle border-top-0'>{props.match.team1.name}</td>
             </tr>
             <tr>
                 <td className='scoreInput'>
-                    <ScoreInput score={props.match.scoreTeam2}/>
+                    <ScoreInput score={props.match.team2.score}/>
                 </td>
-                <td className='align-middle'>{props.match.team2}</td>
+                <td className='align-middle'>{props.match.team2.name}</td>
             </tr>
         </tbody>
     </Table>);
