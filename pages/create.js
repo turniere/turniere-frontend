@@ -163,6 +163,11 @@ class CreateTournamentForm extends React.Component {
 
     handleGroupSizeInput(input) {
         const newSize = input.target.value;
+
+        if (newSize === undefined || newSize < 2) {
+            return;
+        }
+
         if (newSize <= this.state.groupAdvance) {
             this.setState({
                 groupSize: newSize, groupAdvance: newSize - 1
@@ -173,7 +178,14 @@ class CreateTournamentForm extends React.Component {
     }
 
     handleGroupAdvanceInput(input) {
-        this.setState({groupAdvance: input.target.value});
+        const newAdvance = input.target.value;
+
+        if (newAdvance === undefined || newAdvance <= 0 ||
+            newAdvance >= this.state.groupSize) {
+            return;
+        }
+
+        this.setState({groupAdvance: newAdvance});
     }
 
     handleGroupPhaseEnabledInput(input) {
