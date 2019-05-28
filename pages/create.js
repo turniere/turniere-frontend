@@ -163,12 +163,14 @@ class CreateTournamentForm extends React.Component {
 
     handleGroupSizeInput(input) {
         const newSize = input.target.value;
-        if (newSize <= this.state.groupAdvance) {
-            this.setState({
-                groupSize: newSize, groupAdvance: newSize - 1
-            });
-        } else {
-            this.setState({groupSize: newSize});
+        if (newSize !== undefined && newSize > 2) {
+            if (newSize <= this.state.groupAdvance) {
+                this.setState({
+                    groupSize: newSize, groupAdvance: newSize - 1
+                });
+            } else {
+                this.setState({groupSize: newSize});
+            }
         }
     }
 
