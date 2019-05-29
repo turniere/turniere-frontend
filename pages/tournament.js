@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
-import {Col, Container, ListGroup, ListGroupItem, Row} from 'reactstrap';
+import {Col, Container, Row} from 'reactstrap';
 
 import {ErrorPageComponent} from '../js/components/ErrorComponents';
 import {Footer} from '../js/components/Footer';
@@ -19,14 +19,14 @@ import {Match} from '../js/components/Match';
 
 class PrivateTournamentPage extends React.Component {
     render() {
-        const {owner_username, playoffStages} = this.props.tournament;
+        const {ownerUsername, playoffStages} = this.props.tournament;
         const {isSignedIn, username} = this.props;
-        
+
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
             <TournamentInformationView tournament={this.props.tournament} currentpage='tournament'/>
             <div className='stages pt-5'>
-                {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === owner_username}
+                {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername}
                     level={getLevelName(stage.level)} matches={stage.matches}
                     key={stage.level}/>)}
             </div>
@@ -85,7 +85,7 @@ function convertTournament(apiTournament) {
         description: apiTournament.description,
         name: apiTournament.name,
         isPublic: apiTournament.public,
-        owner_username: apiTournament.owner_username,
+        ownerUsername: apiTournament.owner_username,
         groupStage: groupStage,
         playoffStages: playoffStages
     };

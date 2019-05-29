@@ -300,10 +300,10 @@ const reducerTournamentStatistics = (state = defaultStateTournamentStatistics, a
         return Object.assign({}, state, action.parameters.tournamentInfo);
     case actionTypesTournamentStatistics.REQUEST_TOURNAMENT_STATISTICS_SUCCESS:
         action.parameters.successCallback();
-        return Object.assign({}, state, tournamentStatistics);
+        return Object.assign({}, state, action.parameters.tournamentStatistics);
     default: return state;
     }
-}
+};
 
 const reducerTournamentlist = (state = defaultStateTournamentlist, action) => {
     switch (action.type) {

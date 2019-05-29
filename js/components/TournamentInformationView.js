@@ -1,5 +1,5 @@
-import React                  from 'react';
-import { connect }            from 'react-redux';
+import React from 'react';
+import {connect} from 'react-redux';
 import {
     Button,
     ButtonGroup,
@@ -12,15 +12,14 @@ import {
 
 
 class PrivateTournamentInformationView extends React.Component {
-
     render() {
-        const { tournament, isSignedIn, username, currentpage } = this.props;
+        const {tournament, isSignedIn, username, currentpage} = this.props;
 
         return (
             <Container>
                 <Row>
                     <Col xs="6">
-                        <ButtonsBadge 
+                        <ButtonsBadge
                             id={tournament.id}
                             ownerName={tournament.owner_username}
                             isSignedIn={isSignedIn}
@@ -45,8 +44,8 @@ class PrivateTournamentInformationView extends React.Component {
 }
 
 function mapStateToPrivateTournamentInformationViewProps(state) {
-    const { isSignedIn, username } = state.userinfo;
-    return { isSignedIn, username };
+    const {isSignedIn, username} = state.userinfo;
+    return {isSignedIn, username};
 }
 
 export const TournamentInformationView = connect(
@@ -54,9 +53,9 @@ export const TournamentInformationView = connect(
 )(PrivateTournamentInformationView);
 
 function ButtonsBadge(props) {
-    const { id, ownerName, isSignedIn, username, currentpage } = props;
-    
-    switch(currentpage) {
+    const {id, ownerName, isSignedIn, username, currentpage} = props;
+
+    switch (currentpage) {
     case 'statistics':
         return (
             <ButtonGroup className={props.className}>
@@ -83,14 +82,14 @@ function ButtonsBadge(props) {
 }
 
 function TournamentButton(props) {
-    const { id } = props;
+    const {id} = props;
     return <Button href={'/t/' + id} color='success'>Zum Turnier</Button>;
 }
 
 function EditButton(props) {
-    const { id, ownerName, isSignedIn, username } = props;
+    const {id, ownerName, isSignedIn, username} = props;
 
-    if(isSignedIn && ownerName === username) {
+    if (isSignedIn && ownerName === username) {
         return (
             <Button href={'/t/' + id + '/edit'} color='success'>Turnier bearbeiten</Button>
         );
@@ -100,7 +99,7 @@ function EditButton(props) {
 }
 
 function StatisticsButton(props) {
-    const { id } = props;
+    const {id} = props;
     return <Button href={'/t/' + id + '/statistics'} color='success'>Statistiken zum Turnier</Button>;
 }
 

@@ -18,7 +18,7 @@ export const defaultStateTournamentStatistics = {
 
     statistics_available: false,
 
-    most_dominant_team: {}, 
+    most_dominant_team: {},
     least_dominant_team: {},
     group_phase_performances: []
 };
@@ -36,7 +36,7 @@ export function transformTournamentInfoToStatistics(data) {
 }
 
 export function transformTournamentStatsToStatistics(data) {
-    if(statisticsUnavailable(data)) {
+    if (statisticsUnavailable(data)) {
         return {
             statistics_available: false,
             most_dominant_team: {},
@@ -61,14 +61,14 @@ export function transformTournamentStatsToStatistics(data) {
     };
 
     for (let i = 0; i < data.group_scores.length; i++) {
-        let score = data.group_scores[i];
+        const score = data.group_scores[i];
 
         statistics.group_phase_performances[i] = {
             win_loss_differential: score.group_points,
             point_differential: score.scored_points - score.received_points,
             rank: i + 1,
             team_name: score.team.name
-        }
+        };
     }
 
     return statistics;

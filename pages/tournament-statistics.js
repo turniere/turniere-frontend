@@ -1,22 +1,21 @@
-import Head                   from 'next/head';
-import React                  from 'react';
-import { connect }            from 'react-redux';
+import Head from 'next/head';
+import React from 'react';
+import {connect} from 'react-redux';
 import {
     Col,
     Container,
     Row
 } from 'reactstrap';
 
-import { TurniereNavigation } from '../js/components/Navigation';
-import { TournamentInformationView } from '../js/components/TournamentInformationView';
-import { BigImage } from '../js/components/BigImage';
-import { StandingsTable } from '../js/components/StandingsTable';
-import { DominanceShower } from '../js/components/DominanceShower';
-import { Footer } from '../js/components/Footer';
-import { requestTournamentStatistics } from '../js/api';
+import {TurniereNavigation} from '../js/components/Navigation';
+import {TournamentInformationView} from '../js/components/TournamentInformationView';
+import {BigImage} from '../js/components/BigImage';
+import {StandingsTable} from '../js/components/StandingsTable';
+import {DominanceShower} from '../js/components/DominanceShower';
+import {Footer} from '../js/components/Footer';
+import {requestTournamentStatistics} from '../js/api';
 
 class StatisticsTournamentPage extends React.Component {
-
     static async getInitialProps({query}) {
         return {query};
     }
@@ -26,7 +25,7 @@ class StatisticsTournamentPage extends React.Component {
     }
 
     render() {
-        const { tournamentStatistics } = this.props;
+        const {tournamentStatistics} = this.props;
 
         return (
             <div>
@@ -51,10 +50,12 @@ function StatisticsView(props) {
             <Container className="py-5">
                 <Row>
                     <Col xs="6">
-                        <DominanceShower stats={props.tournamentStatistics.most_dominant_team} title="Stärkstes Team"/>
+                        <DominanceShower stats={props.tournamentStatistics.most_dominant_team}
+                            title="Stärkstes Team"/>
                     </Col>
                     <Col xs="6">
-                        <DominanceShower stats={props.tournamentStatistics.least_dominant_team} title="Schwächstes Team"/>
+                        <DominanceShower stats={props.tournamentStatistics.least_dominant_team}
+                            title="Schwächstes Team"/>
                     </Col>
                 </Row>
             </Container>

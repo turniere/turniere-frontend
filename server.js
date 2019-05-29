@@ -29,7 +29,7 @@ app.prepare()
 
         server.get('/t/:code/statistics', (req, res) => {
             const actualPage = '/tournament-statistics';
-            const queryParam = { code: req.params.code };
+            const queryParam = {code: req.params.code};
             app.render(req, res, actualPage, queryParam);
         });
 

@@ -7,10 +7,9 @@ import {
     Table
 } from 'reactstrap';
 
-import { rangedmap } from '../utils/rangedmap';
+import {rangedmap} from '../utils/rangedmap';
 
 export class StandingsTable extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -21,7 +20,7 @@ export class StandingsTable extends React.Component {
     }
 
     render() {
-        let performances = this.props.data.group_phase_performances;
+        const performances = this.props.data.group_phase_performances;
 
         return (
             <Card className="shadow-sm">
@@ -38,18 +37,21 @@ export class StandingsTable extends React.Component {
                         </thead>
                         <tbody>
                             { rangedmap(performances, (team, index) => (
-                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teamToShow={team}/>
+                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'}
+                                    key={index} teamToShow={team}/>
                             ), 0, 3) }
                         </tbody>
                         <Collapse isOpen={ this.state.showFullTable } tag="tbody">
                             { rangedmap(performances, (team, index) => (
-                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teamToShow={team}/>
+                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'}
+                                    key={index} teamToShow={team}/>
                             ), 3) }
                         </Collapse>
                         <tfoot>
                             <tr>
                                 <td colSpan='4'>
-                                    <TableButton isFullTableShown={this.state.showFullTable} onToggle={this.toggleShowFullTable}/>
+                                    <TableButton isFullTableShown={this.state.showFullTable}
+                                        onToggle={this.toggleShowFullTable}/>
                                 </td>
                             </tr>
                         </tfoot>
@@ -60,7 +62,7 @@ export class StandingsTable extends React.Component {
     }
 
     toggleShowFullTable() {
-        this.setState({ showFullTable: !this.state.showFullTable });
+        this.setState({showFullTable: !this.state.showFullTable});
     }
 }
 
@@ -82,11 +84,10 @@ class TeamRow extends React.Component {
 }
 
 class TableButton extends React.Component {
-
     render() {
-        const { isFullTableShown } = this.props;
+        const {isFullTableShown} = this.props;
 
-        if(isFullTableShown) {
+        if (isFullTableShown) {
             return <Button className="w-100" onClick={this.props.onToggle}>Zeige nur die 3 besten Teams</Button>;
         } else {
             return <Button className="w-100" onClick={this.props.onToggle}>Zeige alle Teams</Button>;

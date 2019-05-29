@@ -7,7 +7,6 @@ import {
 } from 'reactstrap';
 
 export class DominanceShower extends React.Component {
-
     render() {
         return (
             <Card className="shadow-sm">
