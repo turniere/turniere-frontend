@@ -191,12 +191,12 @@ class StatisticsTournamentPage extends React.Component {
         return (
             <div>
                 <Head>
-                    <title>{tournamentStatistics.tournament.name}: turnie.re</title>
+                    <title>{tournamentStatistics.name}: turnie.re</title>
                 </Head>
                 <TurniereNavigation/>
-                <BigImage text={tournamentStatistics.tournament.name}/>
+                <BigImage text={tournamentStatistics.name}/>
                 <div className='pb-5'>
-                    <TournamentInformationView tournament={tournamentStatistics.tournament} currentpage='statistics'/>
+                    <TournamentInformationView tournament={tournamentStatistics} currentpage='statistics'/>
                     <Container className="py-5">
                         <Row>
                             <Col xs="6">
