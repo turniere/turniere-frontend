@@ -266,6 +266,7 @@ const reducerTournamentStatistics = (state = defaultStateTournamentStatistics, a
             storeOptionalToken(resp);
             __store.dispatch({
                 type: actionTypesTournamentStatistics.INT_REQUEST_TOURNAMENT_STATISTICS,
+                state: action.state,
                 parameters: {
                     code: action.parameters.code,
                     tournamentInfo: transformTournamentInfoToStatistics(resp.data),
