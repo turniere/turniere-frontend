@@ -21,6 +21,7 @@ class StatisticsTournamentPage extends React.Component {
     }
 
     render() {
+        /*
         let tournamentStatistics = {
             tournament: {
                 code: 'abcd1234',
@@ -185,6 +186,7 @@ class StatisticsTournamentPage extends React.Component {
                 points_received: 103
             }
         };
+        */
 
         return (
             <div>
@@ -198,10 +200,10 @@ class StatisticsTournamentPage extends React.Component {
                     <Container className="py-5">
                         <Row>
                             <Col xs="6">
-                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.most_dominant_team} title="Stärkstes Team"/>
+                                <DominanceShower stats={tournamentStatistics.most_dominant_team} title="Stärkstes Team"/>
                             </Col>
                             <Col xs="6">
-                                <DominanceShower teams={tournamentStatistics.teams} stats={tournamentStatistics.least_dominant_team} title="Schwächstes Team"/>
+                                <DominanceShower stats={tournamentStatistics.least_dominant_team} title="Schwächstes Team"/>
                             </Col>
                         </Row>
                     </Container>

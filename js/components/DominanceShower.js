@@ -6,8 +6,6 @@ import {
     Table
 } from 'reactstrap';
 
-import { findTeam } from '../utils/findTeam';
-
 export class DominanceShower extends React.Component {
 
     render() {
@@ -18,7 +16,7 @@ export class DominanceShower extends React.Component {
                     <Table borderless className="m-0">
                         <tbody>
                             <tr>
-                                <th colSpan="2" className="h3 text-center">{findTeam(this.props.teams, this.props.stats.id).name}</th>
+                                <th colSpan="2" className="h3 text-center">{this.props.stats.team_name}</th>
                             </tr>
                             <tr>
                                 <td className="h4 text-success pb-0">{this.props.stats.points_made}</td>
