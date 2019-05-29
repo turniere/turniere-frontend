@@ -155,8 +155,8 @@ function MatchModal(props) {
     return (<Modal isOpen={props.isOpen} toggle={props.toggle}>
         <ModalHeader toggle={props.toggle}>{title}</ModalHeader>
         <ModalBody>
-            {props.matchState === 'in_progress' ? <EditableMatchTable match={props.match}/> :
-                <MatchTable match={props.match} matchStatus={props.matchState}/>}
+            {props.match.state === 'in_progress' ? <EditableMatchTable match={props.match}/> :
+                <MatchTable match={props.match} matchStatus={props.match.state}/>}
         </ModalBody>
         <ModalFooter>
             {actionButton}
