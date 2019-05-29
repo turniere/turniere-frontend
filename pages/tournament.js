@@ -19,14 +19,14 @@ import {Match} from '../js/components/Match';
 
 class PrivateTournamentPage extends React.Component {
     render() {
-        const {ownerUsername, playoffStages} = this.props.tournament;
+        const {owner_username, playoffStages} = this.props.tournament;
         const {isSignedIn, username} = this.props;
         
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
             <TournamentInformationView tournament={this.props.tournament} currentpage='tournament'/>
             <div className='stages pt-5'>
-                {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername}
+                {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === owner_username}
                     level={getLevelName(stage.level)} matches={stage.matches}
                     key={stage.level}/>)}
             </div>
