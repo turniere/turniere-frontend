@@ -13,8 +13,10 @@ export const defaultStateTournamentStatistics = {
     description: '',
     id: -1,
     name: '',
-    ownerUsername: '',
+    owner_username: '',
     isPublic: '',
+
+    statistics_available: false,
 
     most_dominant_team: {}, 
     least_dominant_team: {},
@@ -28,13 +30,23 @@ export function transformTournamentInfoToStatistics(data) {
         description: data.description,
         id: data.id,
         name: data.name,
-        ownerUsername: data.owner_username,
+        owner_username: data.owner_username,
         isPublic: data.public
     };
 }
 
 export function transformTournamentStatsToStatistics(data) {
+    if(statisticsUnavailable(data)) {
+        return {
+            statistics_available: false,
+            most_dominant_team: {},
+            least_dominant_team: {},
+            group_phase_performances: []
+        };
+    }
+
     const statistics = {
+        statistics_available: true,
         most_dominant_team: {
             points_made: data.most_dominant_score.scored_points,
             points_received: data.most_dominant_score.received_points,
@@ -60,5 +72,10 @@ export function transformTournamentStatsToStatistics(data) {
     }
 
     return statistics;
+}
+
+function statisticsUnavailable(data) {
+    return data === {} || data.most_dominant_score === null ||
+        data.least_dominant_score === null || data.group_scores === [];
 }
 

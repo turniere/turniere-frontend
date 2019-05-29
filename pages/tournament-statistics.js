@@ -37,23 +37,35 @@ class StatisticsTournamentPage extends React.Component {
                 <BigImage text={tournamentStatistics.name}/>
                 <div className='pb-5'>
                     <TournamentInformationView tournament={tournamentStatistics} currentpage='statistics'/>
-                    <Container className="py-5">
-                        <Row>
-                            <Col xs="6">
-                                <DominanceShower stats={tournamentStatistics.most_dominant_team} title="Stärkstes Team"/>
-                            </Col>
-                            <Col xs="6">
-                                <DominanceShower stats={tournamentStatistics.least_dominant_team} title="Schwächstes Team"/>
-                            </Col>
-                        </Row>
-                    </Container>
-                    <Container className="pb-5">
-                        <StandingsTable data={tournamentStatistics}/>
-                    </Container>
+                    <StatisticsView tournamentStatistics={tournamentStatistics} />
                 </div>
                 <Footer/>
             </div>
         );
+    }
+}
+
+function StatisticsView(props) {
+    if (props.tournamentStatistics.statistics_available) {
+        return (<div>
+            <Container className="py-5">
+                <Row>
+                    <Col xs="6">
+                        <DominanceShower stats={props.tournamentStatistics.most_dominant_team} title="Stärkstes Team"/>
+                    </Col>
+                    <Col xs="6">
+                        <DominanceShower stats={props.tournamentStatistics.least_dominant_team} title="Schwächstes Team"/>
+                    </Col>
+                </Row>
+            </Container>
+            <Container className="pb-5">
+                <StandingsTable data={props.tournamentStatistics}/>
+            </Container>
+        </div>);
+    } else {
+        return (<Container className="py-5">
+            <h2 className="text-center">Statistiken sind für dieses Turnier leider nicht verfügbar.</h2>
+        </Container>);
     }
 }
 
