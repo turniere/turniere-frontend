@@ -1,0 +1,64 @@
+export const actionTypesTournamentinfo = {
+    'REQUEST_TOURNAMENT_STATISTICS': 'REQUEST_TOURNAMENT_STATISTICS',
+    'INT_REQUEST_TOURNAMENT_STATISTICS': 'INT_REQUEST_TOURNAMENT_STATISTICS',
+
+    'REQUEST_TOURNAMENT_STATISTICS_SUCCESS': 'REQUEST_TOURNAMENT_STATISTICS_SUCCESS',
+
+    'REHYDRATE': 'TOURNAMENTINFO_REHYDRATE',
+    'CLEAR': 'TOURNAMENTINFO_CLEAR'
+};
+
+export const defaultStateTournamentinfo = {
+    code: '',
+    description: '',
+    id: -1,
+    name: '',
+    ownerUsername: '',
+    isPublic: '',
+
+    most_dominant_team: {}, 
+    least_dominant_team: {},
+    group_phase_performances: []
+};
+
+
+export function transformTournamentInfoToStatistics(data) {
+    return {
+        code: data.code,
+        description: data.description,
+        id: data.id,
+        name: data.name,
+        ownerUsername: data.owner_username,
+        isPublic: data.public
+    };
+}
+
+export function transformTournamentStatsToStatistics(data) {
+    const statistics = {
+        most_dominant_team: {
+            points_made: data.most_dominant_score.scored_points,
+            points_received: data.most_dominant_score.received_points,
+            team_name: data.most_dominant_score.team.name
+        },
+        least_dominant_team: {
+            points_made: data.least_dominant_score.scored_points,
+            points_received: data.least_dominant_score.received_points,
+            team_name: data.least_dominant_score.team.name
+        },
+        group_phase_performances: []
+    };
+
+    for (let i = 0; i < data.group_scores.length; i++) {
+        let score = data.group_scores[i];
+
+        statistics.group_phase_performances[i] = {
+            win_loss_differential: score.group_points,
+            point_differential: score.scored_points - score.received_points,
+            rank: i + 1,
+            team: score.team.name
+        }
+    }
+
+    return statistics;
+}
+
