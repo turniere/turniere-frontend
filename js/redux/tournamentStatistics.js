@@ -1,4 +1,4 @@
-export const actionTypesTournamentinfo = {
+export const actionTypesTournamentStatistics = {
     'REQUEST_TOURNAMENT_STATISTICS': 'REQUEST_TOURNAMENT_STATISTICS',
     'INT_REQUEST_TOURNAMENT_STATISTICS': 'INT_REQUEST_TOURNAMENT_STATISTICS',
 
@@ -8,7 +8,7 @@ export const actionTypesTournamentinfo = {
     'CLEAR': 'TOURNAMENTINFO_CLEAR'
 };
 
-export const defaultStateTournamentinfo = {
+export const defaultStateTournamentStatistics = {
     code: '',
     description: '',
     id: -1,
@@ -55,7 +55,7 @@ export function transformTournamentStatsToStatistics(data) {
             win_loss_differential: score.group_points,
             point_differential: score.scored_points - score.received_points,
             rank: i + 1,
-            team: score.team.name
+            team_name: score.team.name
         }
     }
 

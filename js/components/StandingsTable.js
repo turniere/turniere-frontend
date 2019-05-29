@@ -8,8 +8,6 @@ import {
 } from 'reactstrap';
 
 import { rangedmap } from '../utils/rangedmap';
-import { findTeam } from '../utils/findTeam';
-import { Order, sort } from '../utils/sort';
 
 export class StandingsTable extends React.Component {
 
@@ -25,13 +23,6 @@ export class StandingsTable extends React.Component {
     render() {
         let performances = this.props.data.group_phase_performances;
 
-        /**
-         * comparison(p1, p2) < 0 => p1 < p2
-         * comparison(p1, p2) = 0 => p1 = p2
-         * comparison(p1, p2) > 0 => p1 > p2
-         */
-        let sortedPerformances = sort(performances, (p1, p2) => p1.rank - p2.rank, Order.descending);
-
         return (
             <Card className="shadow-sm">
                 <CardBody>
@@ -46,13 +37,13 @@ export class StandingsTable extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            { rangedmap(sortedPerformances, (team, index) => (
-                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teams={this.props.data.teams} teamToShow={team}/>
+                            { rangedmap(performances, (team, index) => (
+                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teamToShow={team}/>
                             ), 0, 3) }
                         </tbody>
                         <Collapse isOpen={ this.state.showFullTable } tag="tbody">
-                            { rangedmap(sortedPerformances, (team, index) => (
-                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teams={this.props.data.teams} teamToShow={team}/>
+                            { rangedmap(performances, (team, index) => (
+                                <TeamRow className={(index % 2 === 0)? 'bg-light' : 'bg-white'} key={index} teamToShow={team}/>
                             ), 3) }
                         </Collapse>
                         <tfoot>
@@ -82,7 +73,7 @@ class TeamRow extends React.Component {
         return (
             <tr className={this.props.className}>
                 <td>{ this.props.teamToShow.rank }</td>
-                <td className="w-100">{findTeam(this.props.teams, this.props.teamToShow.team).name}</td>
+                <td className="w-100">{ this.props.teamToShow.team_name }</td>
                 <td className="text-center">{ this.props.teamToShow.win_loss_differential }</td>
                 <td className="text-center">{ this.props.teamToShow.point_differential }</td>
             </tr>
