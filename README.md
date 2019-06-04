@@ -2,6 +2,9 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/300915a8466f4f059150b543e9a6d1b0)](https://app.codacy.com/app/JP1998/turniere-frontend?utm_source=github.com&utm_medium=referral&utm_content=turniere/turniere-frontend&utm_campaign=Badge_Grade_Dashboard)
 
+## Quick install with Docker
+[turnie.re - Quickstart](https://github.com/turniere/turniere-quickstart)
+
 ## Development Setup
 ### Prerequisites
 
