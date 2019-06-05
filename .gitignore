@@ -1,4 +1,9 @@
 /.next/
 /node_modules/
 /.idea
-check-syntax.sh
+check-syntax
+format
+server
+/SeleniumTests/.idea/*
+/SeleniumTests/*.iml
+/SeleniumTests/target/*
