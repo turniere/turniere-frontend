@@ -28,7 +28,7 @@ class LoginErrorList extends React.Component {
     render() {
         const {error, errorMessages} = this.props;
         if (error) {
-            return (<ul className='mt-3 error-box'>
+            return (<ul id="error-list" className='mt-3 error-box'>
                 {errorMessages.map((message, index) => <li key={index}>
                     {message}
                 </li>)}
@@ -81,15 +81,15 @@ class LoginForm extends React.Component {
         return (<Form onSubmit={this.tryLogin.bind(this)}>
             <FormGroup>
                 <Label for="username">E-Mail-Adresse</Label>
-                <Input type="email" name="username" value={this.state.email}
+                <Input id="email-input" type="email" name="username" value={this.state.email}
                     onChange={this.handleEmailInput.bind(this)}/>
             </FormGroup>
             <FormGroup>
                 <Label for="password">Passwort</Label>
-                <Input type="password" name="password" value={this.state.password}
+                <Input id="password-input" type="password" name="password" value={this.state.password}
                     onChange={this.handlePasswordInput.bind(this)}/>
             </FormGroup>
-            <input type="submit" className="btn btn-lg btn-success w-100 shadow-sm" value="Anmelden"/>
+            <input id="login-button" type="submit" className="btn btn-lg btn-success w-100 shadow-sm" value="Anmelden"/>
             <VisibleLoginErrorList/>
             <LoginSuccessRedirect/>
         </Form>);
