@@ -10,7 +10,11 @@ export function MatchModal(props) {
     switch (props.match.state) {
     case 'in_progress':
         title = 'Spiel läuft';
-        actionButton = <Button color='primary' onClick={props.endMatch}>Spiel beenden</Button>;
+        if (!props.match.allowUndecided && props.match.team1.score === props.match.team2.score) {
+            actionButton = <Button color='primary' disabled>Spiel beenden</Button>;
+        } else {
+            actionButton = <Button color='primary' onClick={props.endMatch}>Spiel beenden</Button>;
+        }
         break;
     case 'finished':
         title = 'Spiel beendet';

@@ -94,7 +94,7 @@ function convertTournament(apiTournament) {
         } else {
             // playoff stage
             playoffStages.push({
-                id: stage.id, level: stage.level, matches: stage.matches.map(match => convertMatch(match))
+                id: stage.id, level: stage.level, matches: stage.matches.map(match => convertMatch(match, false))
             });
         }
     }
@@ -115,13 +115,14 @@ function convertGroup(apiGroup) {
         id: apiGroup.id,
         number: apiGroup.number,
         scores: apiGroup.group_scores,
-        matches: apiGroup.matches.map(match => convertMatch(match))
+        matches: apiGroup.matches.map(match => convertMatch(match, true))
     };
 }
 
-function convertMatch(apiMatch) {
+function convertMatch(apiMatch, allowUndecided) {
     const result = {
-        id: apiMatch.id, state: apiMatch.state, winnerTeamId: apiMatch.winner === null ? null : apiMatch.winner.id
+        id: apiMatch.id, state: apiMatch.state, allowUndecided: allowUndecided,
+        winnerTeamId: apiMatch.winner === null ? null : apiMatch.winner.id
     };
 
     if (apiMatch.match_scores.length === 2) {
