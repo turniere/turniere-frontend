@@ -4,49 +4,30 @@ import {notify} from 'react-notify-toast';
 import {connect} from 'react-redux';
 import posed from 'react-pose';
 
-import {
-    Button, Card, CardBody, Container, CustomInput, Form, FormGroup, Input, Label
-} from 'reactstrap';
+import {Button, Card, CardBody, Container, CustomInput, Form, FormGroup, Input, Label} from 'reactstrap';
 
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
-import {UserRestrictor, Option} from '../js/components/UserRestrictor';
-import {Login} from '../js/components/Login';
 import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
 
 import '../static/css/everypage.css';
+import RequireLogin from '../js/components/RequireLogin';
 
 class CreatePage extends React.Component {
     render() {
-        const {isSignedIn} = this.props;
-
-        return (<UserRestrictor>
-            <Option condition={isSignedIn}>
-                <div className="main generic-fullpage-bg">
-                    <Head>
-                        <title>Turnier erstellen: turnie.re</title>
-                    </Head>
-                    <TurniereNavigation/>
-                    <div>
-                        <CreateTournamentCard/>
-                    </div>
-                    <Footer/>
+        return (<RequireLogin loginMessage='Sie müssen angemeldet sein, um ein neues Turnier zu erstellen.'>
+            <div className="main generic-fullpage-bg">
+                <Head>
+                    <title>Turnier erstellen: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <div>
+                    <CreateTournamentCard/>
                 </div>
-            </Option>
-            <Option condition={true}>
-                <div className="main generic-fullpage-bg">
-                    <Head>
-                        <title>Anmeldung</title>
-                    </Head>
-                    <TurniereNavigation/>
-                    <div>
-                        <Login hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
-                    </div>
-                    <Footer/>
-                </div>
-            </Option>
-        </UserRestrictor>);
+                <Footer/>
+            </div>
+        </RequireLogin>);
     }
 }
 
