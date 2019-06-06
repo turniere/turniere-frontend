@@ -21,6 +21,7 @@ export class Match extends React.Component {
         this.onEndMatchSuccess = this.onEndMatchSuccess.bind(this);
         this.onEndMatchError = this.onEndMatchError.bind(this);
         this.getMatchFinishedMessage = this.getMatchFinishedMessage.bind(this);
+        this.changeScores = this.changeScores.bind(this);
     }
 
     toggleModal() {
@@ -62,6 +63,13 @@ export class Match extends React.Component {
     onEndMatchError() {
         this.toggleModal();
         notify.show('Das Match konnte nicht beendet werden.', 'error', 3000);
+    }
+
+    changeScores(scoreTeam1, scoreTeam2) {
+        const updatedMatch = this.state.match;
+        updatedMatch.team1.score = scoreTeam1;
+        updatedMatch.team2.score = scoreTeam2;
+        this.setState({match: updatedMatch});
     }
 
     getMatchFinishedMessage() {
@@ -114,7 +122,7 @@ export class Match extends React.Component {
             </Card>
             <small className='text-muted'>{smallMessage}</small>
             <MatchModal title='Match' isOpen={this.state.modal} toggle={this.toggleModal} match={this.state.match}
-                startMatch={this.startMatch} endMatch={this.endMatch}/>
+                startMatch={this.startMatch} endMatch={this.endMatch} changeScores={this.changeScores}/>
         </div>);
     }
 }

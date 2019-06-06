@@ -37,6 +37,7 @@ export class MatchModal extends Component {
 
     onSubmitScoresSuccess() {
         this.props.toggle();
+        this.props.changeScores(this.state.scoreTeam1, this.state.scoreTeam2);
         notify.show('Der Spielstand wurde geändert.', 'success', 2000);
     }
 
