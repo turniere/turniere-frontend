@@ -6,15 +6,19 @@ import {MatchTable} from './MatchTable';
 export function MatchModal(props) {
     let title;
     let actionButton = '';
+    let submitScoresButton = '';
+    let matchTable = <MatchTable match={props.match} matchStatus={props.match.state}/>;
     // possible states: single_team not_ready not_started in_progress finished
     switch (props.match.state) {
     case 'in_progress':
         title = 'Spiel läuft';
+        submitScoresButton = <Button color='primary'>Spielstand ändern</Button>;
         if (!props.match.allowUndecided && props.match.team1.score === props.match.team2.score) {
             actionButton = <Button color='primary' disabled>Spiel beenden</Button>;
         } else {
             actionButton = <Button color='primary' onClick={props.endMatch}>Spiel beenden</Button>;
         }
+        matchTable = <EditableMatchTable match={props.match}/>;
         break;
     case 'finished':
         title = 'Spiel beendet';
@@ -33,10 +37,10 @@ export function MatchModal(props) {
     return (<Modal isOpen={props.isOpen} toggle={props.toggle}>
         <ModalHeader toggle={props.toggle}>{title}</ModalHeader>
         <ModalBody>
-            {props.match.state === 'in_progress' ? <EditableMatchTable match={props.match}/> :
-                <MatchTable match={props.match} matchStatus={props.match.state}/>}
+            {matchTable}
         </ModalBody>
         <ModalFooter>
+            {submitScoresButton}
             {actionButton}
             <Button color='secondary' onClick={props.toggle}>Abbrechen</Button>
         </ModalFooter>
