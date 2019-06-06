@@ -13,6 +13,7 @@ import '../static/css/profile.css';
 import {connect} from 'react-redux';
 import {changeMail} from '../js/api';
 import {notify} from 'react-notify-toast';
+import RequireLogin from '../js/components/RequireLogin';
 
 function ContentContainer(props) {
     return (<Container className="pb-5">
@@ -24,7 +25,7 @@ function ContentContainer(props) {
 
 export default class ProfilePage extends React.Component {
     render() {
-        return (<div>
+        return (<RequireLogin loginMessage='Sie müssen angemeldet sein, um Ihr Profil einzusehen.'>
             <Head>
                 <title>Profil: turnie.re</title>
             </Head>
@@ -34,7 +35,7 @@ export default class ProfilePage extends React.Component {
                 <Content/>
             </div>
             <Footer/>
-        </div>);
+        </RequireLogin>);
     }
 }
 
