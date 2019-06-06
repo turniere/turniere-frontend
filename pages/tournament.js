@@ -129,18 +129,21 @@ function convertMatch(apiMatch, allowUndecided) {
         result.team1 = {
             name: apiMatch.match_scores[0].team.name,
             id: apiMatch.match_scores[0].team.id,
-            score: apiMatch.match_scores[0].points
+            score: apiMatch.match_scores[0].points,
+            scoreId: apiMatch.match_scores[0].id
         };
         result.team2 = {
             name: apiMatch.match_scores[1].team.name,
             id: apiMatch.match_scores[1].team.id,
-            score: apiMatch.match_scores[1].points
+            score: apiMatch.match_scores[1].points,
+            scoreId: apiMatch.match_scores[1].id
         };
     } else if (apiMatch.match_scores.length === 1) {
         result.team1 = {
             name: apiMatch.match_scores[0].team.name,
             id: apiMatch.match_scores[0].team.id,
-            score: apiMatch.match_scores[0].points
+            score: apiMatch.match_scores[0].points,
+            scoreId: apiMatch.match_scores[0].id
         };
         result.team2 = {
             name: 'TBD',
