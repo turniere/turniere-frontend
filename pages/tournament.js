@@ -94,7 +94,7 @@ function convertTournament(apiTournament) {
         } else {
             // playoff stage
             playoffStages.push({
-                id: stage.id, level: stage.level, matches: stage.matches.map(match => convertMatch(match))
+                id: stage.id, level: stage.level, matches: stage.matches.map(match => convertMatch(match, false))
             });
         }
     }
@@ -115,31 +115,35 @@ function convertGroup(apiGroup) {
         id: apiGroup.id,
         number: apiGroup.number,
         scores: apiGroup.group_scores,
-        matches: apiGroup.matches.map(match => convertMatch(match))
+        matches: apiGroup.matches.map(match => convertMatch(match, true))
     };
 }
 
-function convertMatch(apiMatch) {
+function convertMatch(apiMatch, allowUndecided) {
     const result = {
-        id: apiMatch.id, state: apiMatch.state, winnerTeamId: apiMatch.winner === null ? null : apiMatch.winner.id
+        id: apiMatch.id, state: apiMatch.state, allowUndecided: allowUndecided,
+        winnerTeamId: apiMatch.winner === null ? null : apiMatch.winner.id
     };
 
     if (apiMatch.match_scores.length === 2) {
         result.team1 = {
             name: apiMatch.match_scores[0].team.name,
             id: apiMatch.match_scores[0].team.id,
-            score: apiMatch.match_scores[0].points
+            score: apiMatch.match_scores[0].points,
+            scoreId: apiMatch.match_scores[0].id
         };
         result.team2 = {
             name: apiMatch.match_scores[1].team.name,
             id: apiMatch.match_scores[1].team.id,
-            score: apiMatch.match_scores[1].points
+            score: apiMatch.match_scores[1].points,
+            scoreId: apiMatch.match_scores[1].id
         };
     } else if (apiMatch.match_scores.length === 1) {
         result.team1 = {
             name: apiMatch.match_scores[0].team.name,
             id: apiMatch.match_scores[0].team.id,
-            score: apiMatch.match_scores[0].points
+            score: apiMatch.match_scores[0].points,
+            scoreId: apiMatch.match_scores[0].id
         };
         result.team2 = {
             name: 'TBD',

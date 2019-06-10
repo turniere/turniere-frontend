@@ -245,6 +245,31 @@ const reducerTournamentinfo = (state = defaultStateTournamentinfo, action) => {
             action.parameters.errorCallback();
         });
         return Object.assign({}, state, {});
+    case actionTypesTournamentinfo.SUBMIT_MATCH_SCORES:
+        patchRequest(action.state, '/match_scores/' + action.parameters.scoreIdTeam1, {
+            points: action.parameters.scoreTeam1
+        }).then(resp => {
+            storeOptionalToken(resp);
+
+            patchRequest(action.state, '/match_scores/' + action.parameters.scoreIdTeam2, {
+                points: action.parameters.scoreTeam2
+            }).then(resp => {
+                storeOptionalToken(resp);
+
+                action.parameters.successCallback();
+            }).catch(error => {
+                if (error.response) {
+                    storeOptionalToken(error.response);
+                }
+                action.parameters.errorCallback();
+            });
+        }).catch(error => {
+            if (error.response) {
+                storeOptionalToken(error.response);
+            }
+            action.parameters.errorCallback();
+        });
+        return Object.assign({}, state, {});
     case actionTypesTournamentinfo.END_MATCH:
         patchRequest(action.state, '/matches/' + action.parameters.matchId, {
             state: 'finished'
@@ -429,6 +454,21 @@ export function endMatch(matchId, successCallback, errorCallback) {
         type: actionTypesTournamentinfo.END_MATCH,
         parameters: {
             matchId: matchId,
+            successCallback: successCallback,
+            errorCallback: errorCallback
+        },
+        state: __store.getState()
+    });
+}
+
+export function submitMatchScores(scoreTeam1, scoreIdTeam1, scoreTeam2, scoreIdTeam2, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actionTypesTournamentinfo.SUBMIT_MATCH_SCORES,
+        parameters: {
+            scoreTeam1: scoreTeam1,
+            scoreIdTeam1: scoreIdTeam1,
+            scoreTeam2: scoreTeam2,
+            scoreIdTeam2: scoreIdTeam2,
             successCallback: successCallback,
             errorCallback: errorCallback
         },
