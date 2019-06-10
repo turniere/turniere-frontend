@@ -29,6 +29,12 @@ export function patchRequest(state, url, data) {
     });
 }
 
+export function putRequest(state, url, data) {
+    return axios.put(apiUrl + url, data, {
+        headers: generateHeaders(state)
+    });
+}
+
 function generateHeaders(state) {
     if (state.userinfo.isSignedIn) {
         return {

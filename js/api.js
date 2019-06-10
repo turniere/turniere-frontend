@@ -7,7 +7,7 @@ import {errorMessages} from './constants';
 import {actionTypesUserinfo, defaultStateUserinfo} from './redux/userInfo';
 import {actionTypesTournamentinfo, defaultStateTournamentinfo} from './redux/tournamentInfo';
 import {actionTypesTournamentlist, defaultStateTournamentlist} from './redux/tournamentList';
-import {deleteRequest, getRequest, patchRequest, postRequest} from './redux/backendApi';
+import {deleteRequest, getRequest, patchRequest, postRequest, putRequest} from './redux/backendApi';
 
 
 function storeOptionalToken(response) {
@@ -147,6 +147,16 @@ const reducerUserinfo = (state = defaultStateUserinfo, action) => {
             storeOptionalToken(resp);
         }).catch(() => {
             __store.dispatch({type: actionTypesUserinfo.CLEAR});
+        });
+        return Object.assign({}, state, {});
+    case actionTypesUserinfo.CHANGE_MAIL:
+        putRequest(action.state, '/users', {
+            email: action.parameters.newMail
+        }).then(resp => {
+            storeOptionalToken(resp);
+            action.parameters.successCallback();
+        }).catch(() => {
+            action.parameters.errorCallback();
         });
         return Object.assign({}, state, {});
     case actionTypesUserinfo.REHYDRATE:
@@ -373,6 +383,18 @@ export function logout(successCallback) {
         type: actionTypesUserinfo.LOGOUT,
         parameters: {
             successCallback: successCallback
+        },
+        state: __store.getState()
+    });
+}
+
+export function changeMail(newMail, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actionTypesUserinfo.CHANGE_MAIL,
+        parameters: {
+            newMail: newMail,
+            successCallback: successCallback,
+            errorCallback: errorCallback
         },
         state: __store.getState()
     });
