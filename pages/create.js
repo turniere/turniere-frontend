@@ -3,16 +3,15 @@ import React from 'react';
 import {notify} from 'react-notify-toast';
 import {connect} from 'react-redux';
 import posed from 'react-pose';
-import {Button, Card, CardBody, Container, CustomInput, Form, FormGroup,
-    Input, InputGroup, InputGroupAddon, Label} from 'reactstrap';
+import {Button, Card, CardBody, Col, Container, CustomInput, Form, FormGroup, Input, Label} from 'reactstrap';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
 
 import '../static/css/everypage.css';
-import '../static/css/create.css';
 import RequireLogin from '../js/components/RequireLogin';
+import NumericInput from '../js/components/NumericInput';
 
 class CreatePage extends React.Component {
     render() {
@@ -109,34 +108,20 @@ class CreateTournamentForm extends React.Component {
                     className="groupphasefader">
                     <FormGroup>
                         <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <Button onClick={this.decreaseGroupSize} className="btn-width"
-                                    color='primary' outline>-1</Button>
-                            </InputGroupAddon>
-                            <Input className='font-weight-bold' value={this.state.groupSize}
-                                disabled type='number' step='1' placeholder='0'/>
-                            <InputGroupAddon addonType="append">
-                                <Button onClick={this.increaseGroupSize} className="btn-width"
-                                    color='primary' outline>+1</Button>
-                            </InputGroupAddon>
-                        </InputGroup>
+                        <Col xs="3" className="pl-0">
+                            <NumericInput value={this.state.groupSize}
+                                incrementText="+1" incrementCallback={this.increaseGroupSize}
+                                decrementText="-1" decrementCallback={this.decreaseGroupSize}/>
+                        </Col>
                     </FormGroup>
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
-                                weiterkommen?</Label>
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <Button onClick={this.decreaseGroupAdvance} className="btn-width"
-                                    color='primary' outline>&#247;2</Button>
-                            </InputGroupAddon>
-                            <Input className='font-weight-bold' value={this.state.groupAdvance}
-                                disabled type='number' step='1' placeholder='0'/>
-                            <InputGroupAddon addonType="append">
-                                <Button onClick={this.increaseGroupAdvance} className="btn-width"
-                                    color='primary' outline>&#215;2</Button>
-                            </InputGroupAddon>
-                        </InputGroup>
+                            weiterkommen?</Label>
+                        <Col xs="3" className="pl-0">
+                            <NumericInput value={this.state.groupAdvance}
+                                incrementText="&#215;2" incrementCallback={this.increaseGroupAdvance}
+                                decrementText="&#247;2" decrementCallback={this.decreaseGroupAdvance}/>
+                        </Col>
                     </FormGroup>
                 </GroupphaseFader>
             </Form>
