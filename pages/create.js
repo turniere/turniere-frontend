@@ -11,6 +11,7 @@ import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
 
 import '../static/css/everypage.css';
+import '../static/css/create.css';
 import RequireLogin from '../js/components/RequireLogin';
 
 class CreatePage extends React.Component {
@@ -73,9 +74,10 @@ class CreateTournamentForm extends React.Component {
         this.handleNameInput = this.handleNameInput.bind(this);
         this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
         this.handlePublicInput = this.handlePublicInput.bind(this);
-        this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
         this.increaseGroupAdvance = this.increaseGroupAdvance.bind(this);
         this.decreaseGroupAdvance = this.decreaseGroupAdvance.bind(this);
+        this.increaseGroupSize = this.increaseGroupSize.bind(this);
+        this.decreaseGroupSize = this.decreaseGroupSize.bind(this);
         this.generateTournamentCreationObject = this.generateTournamentCreationObject.bind(this);
 
         this.create = this.create.bind(this);
@@ -107,24 +109,32 @@ class CreateTournamentForm extends React.Component {
                     className="groupphasefader">
                     <FormGroup>
                         <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                        <Input type="number" name="teams-per-group" min="3"
-                            value={this.state.groupSize} onChange={this.handleGroupSizeInput}/>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <Button onClick={this.decreaseGroupSize} className="btn-width"
+                                    color='primary' outline>-1</Button>
+                            </InputGroupAddon>
+                            <Input className='font-weight-bold' value={this.state.groupSize}
+                                disabled type='number' step='1' placeholder='0'/>
+                            <InputGroupAddon addonType="append">
+                                <Button onClick={this.increaseGroupSize} className="btn-width"
+                                    color='primary' outline>+1</Button>
+                            </InputGroupAddon>
+                        </InputGroup>
                     </FormGroup>
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
                                 weiterkommen?</Label>
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
-                                <Button onClick={this.decreaseGroupAdvance} color='primary' outline>
-                                    <img src="../static/icons/chevron-left.svg"/>
-                                </Button>
+                                <Button onClick={this.decreaseGroupAdvance} className="btn-width"
+                                    color='primary' outline>&#247;2</Button>
                             </InputGroupAddon>
                             <Input className='font-weight-bold' value={this.state.groupAdvance}
                                 disabled type='number' step='1' placeholder='0'/>
                             <InputGroupAddon addonType="append">
-                                <Button onClick={this.increaseGroupAdvance} color='primary' outline>
-                                    <img src="../static/icons/chevron-right.svg"/>
-                                </Button>
+                                <Button onClick={this.increaseGroupAdvance} className="btn-width"
+                                    color='primary' outline>&#215;2</Button>
                             </InputGroupAddon>
                         </InputGroup>
                     </FormGroup>
@@ -175,19 +185,22 @@ class CreateTournamentForm extends React.Component {
         }
     }
 
-    handleGroupSizeInput(input) {
-        const newSize = input.target.value;
+    increaseGroupSize() {
+        this.setState({groupSize: this.state.groupSize+1});
+    }
 
-        if (newSize === undefined || newSize < 2) {
-            return;
-        }
+    decreaseGroupSize() {
+        const newGroupSize = this.state.groupSize - 1;
 
-        if (newSize < this.state.groupAdvance) {
-            this.setState({
-                groupSize: newSize, groupAdvance: Math.floor(this.state.groupAdvance / 2)
-            });
-        } else {
-            this.setState({groupSize: newSize});
+        if (newGroupSize >= 3) {
+            if (newGroupSize >= this.state.groupAdvance) {
+                this.setState({groupSize: newGroupSize});
+            } else {
+                this.setState({
+                    groupSize: newGroupSize,
+                    groupAdvance: Math.floor(this.state.groupAdvance / 2)
+                });
+            }
         }
     }
 
