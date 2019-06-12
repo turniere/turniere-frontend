@@ -76,6 +76,7 @@ class CreateTournamentForm extends React.Component {
         this.handlePublicInput = this.handlePublicInput.bind(this);
         this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
         this.handleGroupAdvanceInput = this.handleGroupAdvanceInput.bind(this);
+        this.generateTournamentCreationObject = this.generateTournamentCreationObject.bind(this);
 
         this.create = this.create.bind(this);
     }
@@ -186,17 +187,27 @@ class CreateTournamentForm extends React.Component {
     }
 
     create() {
-        createTournament({
+        createTournament(this.generateTournamentCreationObject(), () => {
+            notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
+        }, () => {
+            notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
+        });
+    }
+
+    generateTournamentCreationObject() {
+        let tournament = {
             'name': this.state.name,
             'description': this.state.description,
             'public': this.state.public,
             'group_stage': this.state.groupPhaseEnabled,
             'teams': createTeamArray(this.state.groupPhaseEnabled, this.state.groups, this.state.teams)
-        }, () => {
-            notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
-        }, () => {
-            notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
-        });
+        };
+
+        if (this.state.groupPhaseEnabled) {
+            tournament.playoff_teams_amount = this.state.groupAdvance;
+        }
+
+        return tournament;
     }
 }
 
