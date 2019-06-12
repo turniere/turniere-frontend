@@ -3,9 +3,8 @@ import React from 'react';
 import {notify} from 'react-notify-toast';
 import {connect} from 'react-redux';
 import posed from 'react-pose';
-
-import {Button, Card, CardBody, Container, CustomInput, Form, FormGroup, Input, Label} from 'reactstrap';
-
+import {Button, Card, CardBody, Container, CustomInput, Form, FormGroup,
+    Input, InputGroup, InputGroupAddon, Label} from 'reactstrap';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 import EditableStringList from '../js/components/EditableStringList';
@@ -75,7 +74,8 @@ class CreateTournamentForm extends React.Component {
         this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
         this.handlePublicInput = this.handlePublicInput.bind(this);
         this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
-        this.handleGroupAdvanceInput = this.handleGroupAdvanceInput.bind(this);
+        this.increaseGroupAdvance = this.increaseGroupAdvance.bind(this);
+        this.decreaseGroupAdvance = this.decreaseGroupAdvance.bind(this);
         this.generateTournamentCreationObject = this.generateTournamentCreationObject.bind(this);
 
         this.create = this.create.bind(this);
@@ -113,8 +113,20 @@ class CreateTournamentForm extends React.Component {
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
                                 weiterkommen?</Label>
-                        <Input type="number" name="teams-group-to-playoff" min="1" max={this.state.groupSize - 1}
-                            value={this.state.groupAdvance} onChange={this.handleGroupAdvanceInput}/>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <Button onClick={this.decreaseGroupAdvance} color='primary' outline>
+                                    <img src="../static/icons/chevron-left.svg"/>
+                                </Button>
+                            </InputGroupAddon>
+                            <Input className='font-weight-bold' value={this.state.groupAdvance}
+                                disabled type='number' step='1' placeholder='0'/>
+                            <InputGroupAddon addonType="append">
+                                <Button onClick={this.increaseGroupAdvance} color='primary' outline>
+                                    <img src="../static/icons/chevron-right.svg"/>
+                                </Button>
+                            </InputGroupAddon>
+                        </InputGroup>
                     </FormGroup>
                 </GroupphaseFader>
             </Form>
@@ -143,6 +155,26 @@ class CreateTournamentForm extends React.Component {
         this.setState({groups: list});
     }
 
+    increaseGroupAdvance() {
+        const newGroupAdvance = this.state.groupAdvance * 2;
+
+        if (newGroupAdvance <= this.state.groupSize) {
+            this.setState({
+                groupAdvance: newGroupAdvance
+            });
+        }
+    }
+
+    decreaseGroupAdvance() {
+        const newGroupAdvance = Math.floor(this.state.groupAdvance / 2);
+
+        if (newGroupAdvance >= 1) {
+            this.setState({
+                groupAdvance: newGroupAdvance
+            });
+        }
+    }
+
     handleGroupSizeInput(input) {
         const newSize = input.target.value;
 
@@ -150,24 +182,13 @@ class CreateTournamentForm extends React.Component {
             return;
         }
 
-        if (newSize <= this.state.groupAdvance) {
+        if (newSize < this.state.groupAdvance) {
             this.setState({
-                groupSize: newSize, groupAdvance: newSize - 1
+                groupSize: newSize, groupAdvance: Math.floor(this.state.groupAdvance / 2)
             });
         } else {
             this.setState({groupSize: newSize});
         }
-    }
-
-    handleGroupAdvanceInput(input) {
-        const newAdvance = input.target.value;
-
-        if (newAdvance === undefined || newAdvance <= 0 ||
-            newAdvance >= this.state.groupSize) {
-            return;
-        }
-
-        this.setState({groupAdvance: newAdvance});
     }
 
     handleGroupPhaseEnabledInput(input) {
@@ -195,7 +216,7 @@ class CreateTournamentForm extends React.Component {
     }
 
     generateTournamentCreationObject() {
-        let tournament = {
+        const tournament = {
             'name': this.state.name,
             'description': this.state.description,
             'public': this.state.public,
