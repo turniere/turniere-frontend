@@ -6,7 +6,7 @@
     text-decoration: line-through;
 }
 
-.stages > div:nth-child(odd) {
+.stages > div > div:nth-child(odd) {
     background-color: #f8f8f8;
 }
 

@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
-import {Col, Container, ListGroup, ListGroupItem, Row} from 'reactstrap';
+import {Container, ListGroup, ListGroupItem} from 'reactstrap';
 
 import {ErrorPageComponent} from '../js/components/ErrorComponents';
 import {Footer} from '../js/components/Footer';
@@ -12,8 +12,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../static/css/everypage.css';
 import '../static/css/tournament.css';
-import {Match} from '../js/components/Match';
 import {getTournament} from '../js/redux/tournamentApi';
+import {PlayoffStages} from '../js/components/PlayoffStages';
 
 class PrivateTournamentPage extends React.Component {
     render() {
@@ -34,9 +34,8 @@ class PrivateTournamentPage extends React.Component {
                 </ListGroup>
             </Container>
             <div className='stages pt-5'>
-                {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername}
-                    level={getLevelName(stage.level)} matches={stage.matches}
-                    key={stage.level}/>)}
+                <PlayoffStages playoffStages={playoffStages} isSignedIn={isSignedIn}
+                    isOwner={username === ownerUsername}/>
             </div>
         </div>);
     }
@@ -57,30 +56,6 @@ function EditButton(props) {
     } else {
         return null;
     }
-}
-
-function getLevelName(levelNumber) {
-    const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
-    if (levelNumber < names.length) {
-        return names[levelNumber];
-    } else {
-        return Math.pow(2, levelNumber) + 'tel-Finale';
-    }
-}
-
-function Stage(props) {
-    const {isSignedIn, isOwner} = props;
-
-    return (<div>
-        <Container className='py-5'>
-            <h1 className='custom-font'>{props.level}</h1>
-            <Row>
-                {props.matches.map((match => (
-                    <Col className='minw-25' key={match.id}><Match match={match} isSignedIn={isSignedIn}
-                        isOwner={isOwner}/></Col>)))}
-            </Row>
-        </Container>
-    </div>);
 }
 
 class Main extends React.Component {
