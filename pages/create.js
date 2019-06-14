@@ -3,9 +3,7 @@ import React from 'react';
 import {notify} from 'react-notify-toast';
 import {connect} from 'react-redux';
 import posed from 'react-pose';
-
-import {Button, Card, CardBody, Container, CustomInput, Form, FormGroup, Input, Label} from 'reactstrap';
-
+import {Button, Card, CardBody, Col, Container, CustomInput, Form, FormGroup, Input, Label} from 'reactstrap';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 import EditableStringList from '../js/components/EditableStringList';
@@ -13,6 +11,7 @@ import {createTournament} from '../js/api';
 
 import '../static/css/everypage.css';
 import RequireLogin from '../js/components/RequireLogin';
+import NumericInput from '../js/components/NumericInput';
 
 class CreatePage extends React.Component {
     render() {
@@ -74,8 +73,11 @@ class CreateTournamentForm extends React.Component {
         this.handleNameInput = this.handleNameInput.bind(this);
         this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
         this.handlePublicInput = this.handlePublicInput.bind(this);
-        this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
-        this.handleGroupAdvanceInput = this.handleGroupAdvanceInput.bind(this);
+        this.increaseGroupAdvance = this.increaseGroupAdvance.bind(this);
+        this.decreaseGroupAdvance = this.decreaseGroupAdvance.bind(this);
+        this.increaseGroupSize = this.increaseGroupSize.bind(this);
+        this.decreaseGroupSize = this.decreaseGroupSize.bind(this);
+        this.generateTournamentCreationObject = this.generateTournamentCreationObject.bind(this);
 
         this.create = this.create.bind(this);
     }
@@ -106,14 +108,20 @@ class CreateTournamentForm extends React.Component {
                     className="groupphasefader">
                     <FormGroup>
                         <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                        <Input type="number" name="teams-per-group" min="3"
-                            value={this.state.groupSize} onChange={this.handleGroupSizeInput}/>
+                        <Col xs="3" className="pl-0">
+                            <NumericInput value={this.state.groupSize}
+                                incrementText="+1" incrementCallback={this.increaseGroupSize}
+                                decrementText="-1" decrementCallback={this.decreaseGroupSize}/>
+                        </Col>
                     </FormGroup>
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
-                                weiterkommen?</Label>
-                        <Input type="number" name="teams-group-to-playoff" min="1" max={this.state.groupSize - 1}
-                            value={this.state.groupAdvance} onChange={this.handleGroupAdvanceInput}/>
+                            weiterkommen?</Label>
+                        <Col xs="3" className="pl-0">
+                            <NumericInput value={this.state.groupAdvance}
+                                incrementText="&#215;2" incrementCallback={this.increaseGroupAdvance}
+                                decrementText="&#247;2" decrementCallback={this.decreaseGroupAdvance}/>
+                        </Col>
                     </FormGroup>
                 </GroupphaseFader>
             </Form>
@@ -142,31 +150,43 @@ class CreateTournamentForm extends React.Component {
         this.setState({groups: list});
     }
 
-    handleGroupSizeInput(input) {
-        const newSize = input.target.value;
+    increaseGroupAdvance() {
+        const newGroupAdvance = this.state.groupAdvance * 2;
 
-        if (newSize === undefined || newSize < 2) {
-            return;
-        }
-
-        if (newSize <= this.state.groupAdvance) {
+        if (newGroupAdvance <= this.state.groupSize) {
             this.setState({
-                groupSize: newSize, groupAdvance: newSize - 1
+                groupAdvance: newGroupAdvance
             });
-        } else {
-            this.setState({groupSize: newSize});
         }
     }
 
-    handleGroupAdvanceInput(input) {
-        const newAdvance = input.target.value;
+    decreaseGroupAdvance() {
+        const newGroupAdvance = Math.floor(this.state.groupAdvance / 2);
 
-        if (newAdvance === undefined || newAdvance <= 0 ||
-            newAdvance >= this.state.groupSize) {
-            return;
+        if (newGroupAdvance >= 1) {
+            this.setState({
+                groupAdvance: newGroupAdvance
+            });
         }
+    }
 
-        this.setState({groupAdvance: newAdvance});
+    increaseGroupSize() {
+        this.setState({groupSize: this.state.groupSize+1});
+    }
+
+    decreaseGroupSize() {
+        const newGroupSize = this.state.groupSize - 1;
+
+        if (newGroupSize >= 3) {
+            if (newGroupSize >= this.state.groupAdvance) {
+                this.setState({groupSize: newGroupSize});
+            } else {
+                this.setState({
+                    groupSize: newGroupSize,
+                    groupAdvance: Math.floor(this.state.groupAdvance / 2)
+                });
+            }
+        }
     }
 
     handleGroupPhaseEnabledInput(input) {
@@ -186,17 +206,27 @@ class CreateTournamentForm extends React.Component {
     }
 
     create() {
-        createTournament({
+        createTournament(this.generateTournamentCreationObject(), () => {
+            notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
+        }, () => {
+            notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
+        });
+    }
+
+    generateTournamentCreationObject() {
+        const tournament = {
             'name': this.state.name,
             'description': this.state.description,
             'public': this.state.public,
             'group_stage': this.state.groupPhaseEnabled,
             'teams': createTeamArray(this.state.groupPhaseEnabled, this.state.groups, this.state.teams)
-        }, () => {
-            notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
-        }, () => {
-            notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
-        });
+        };
+
+        if (this.state.groupPhaseEnabled) {
+            tournament.playoff_teams_amount = this.state.groupAdvance;
+        }
+
+        return tournament;
     }
 }
 
