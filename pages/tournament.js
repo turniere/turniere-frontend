@@ -14,11 +14,13 @@ import '../static/css/everypage.css';
 import '../static/css/tournament.css';
 import {getTournament} from '../js/redux/tournamentApi';
 import {PlayoffStages} from '../js/components/PlayoffStages';
+import GroupStage from '../js/components/GroupStage';
 
 class PrivateTournamentPage extends React.Component {
     render() {
-        const {id, description, isPublic, code, ownerUsername, playoffStages} = this.props.tournament;
+        const {id, description, isPublic, code, ownerUsername, playoffStages, groupStage} = this.props.tournament;
         const {isSignedIn, username} = this.props;
+        const isOwner = username === ownerUsername;
 
         // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
@@ -34,8 +36,10 @@ class PrivateTournamentPage extends React.Component {
                 </ListGroup>
             </Container>
             <div className='stages pt-5'>
+                {groupStage != null &&
+                <div><GroupStage groups={groupStage.groups} isSignedIn={isSignedIn} isOwner={isOwner}/></div>}
                 <PlayoffStages playoffStages={playoffStages} isSignedIn={isSignedIn}
-                    isOwner={username === ownerUsername}/>
+                    isOwner={isOwner}/>
             </div>
         </div>);
     }
