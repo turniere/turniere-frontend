@@ -60,7 +60,7 @@ class Group extends Component {
         return (<Col className='minw-25'>
             <Card>
                 <CardBody>
-                    <h3 className='custom-font'>Gruppe {this.state.id + 1}</h3>
+                    <h3 className='custom-font'>Gruppe {this.state.number}</h3>
                     <Collapse isOpen={this.props.showMatches}>
                         {this.state.matches.map((match => (
                             <Match match={match} isSignedIn={this.props.isSignedIn} isOwner={this.props.isOwner}
