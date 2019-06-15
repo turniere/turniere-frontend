@@ -1,6 +1,8 @@
 import {Button, Card, CardBody, Col, Collapse, Row, Table} from 'reactstrap';
 import {Match} from './Match';
 import React, {Component} from 'react';
+import {getGroup} from '../redux/tournamentApi';
+import {notify} from 'react-notify-toast';
 
 export default class GroupStage extends Component {
     constructor(props) {
@@ -33,19 +35,42 @@ function ShowMatchesToggleButton(props) {
     </Button>);
 }
 
-function Group(props) {
-    return (<Col className='minw-25'>
-        <Card>
-            <CardBody>
-                <h3 className='custom-font'>Gruppe {props.group.id + 1}</h3>
-                <Collapse isOpen={props.showMatches}>
-                    {props.group.matches.map((match => (
-                        <Match match={match} isSignedIn={props.isSignedIn} isOwner={props.isOwner} key={match.id}/>)))}
-                </Collapse>
-                <GroupScoresTable scores={props.group.scores}/>
-            </CardBody>
-        </Card>
-    </Col>);
+class Group extends Component {
+    constructor(props) {
+        super(props);
+        this.state = props.group;
+        this.reload = this.reload.bind(this);
+        this.onReloadSuccess = this.onReloadSuccess.bind(this);
+        this.onReloadError = this.onReloadError.bind(this);
+    }
+
+    reload() {
+        getGroup(this.state.id, this.onReloadSuccess, this.onReloadError);
+    }
+
+    onReloadSuccess(status, updatedGroup) {
+        this.setState(updatedGroup);
+    }
+
+    onReloadError() {
+        notify.show('Die Gruppe konnte nicht aktualisiert werden.', 'warning', 2000);
+    }
+
+    render() {
+        return (<Col className='minw-25'>
+            <Card>
+                <CardBody>
+                    <h3 className='custom-font'>Gruppe {this.state.id + 1}</h3>
+                    <Collapse isOpen={this.props.showMatches}>
+                        {this.state.matches.map((match => (
+                            <Match match={match} isSignedIn={this.props.isSignedIn} isOwner={this.props.isOwner}
+                                onChange={this.reload} key={match.id}/>)))}
+                    </Collapse>
+                    <GroupScoresTable scores={this.state.scores}/>
+                </CardBody>
+            </Card>
+        </Col>);
+    }
 }
 
 function GroupScoresTable(props) {

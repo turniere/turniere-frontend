@@ -9,6 +9,14 @@ export function getTournament(code, successCallback, errorCallback) {
         .catch(errorCallback);
 }
 
+export function getGroup(groupId, successCallback, errorCallback) {
+    getRequest(getState(), '/groups/' + groupId)
+        .then(response => {
+            successCallback(response.status, convertGroup(response.data));
+        })
+        .catch(errorCallback);
+}
+
 function convertTournament(apiTournament) {
     let groupStage = null;
     const playoffStages = [];
