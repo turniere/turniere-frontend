@@ -78,6 +78,7 @@ class CreateTournamentForm extends React.Component {
         this.increaseGroupSize = this.increaseGroupSize.bind(this);
         this.decreaseGroupSize = this.decreaseGroupSize.bind(this);
         this.generateTournamentCreationObject = this.generateTournamentCreationObject.bind(this);
+        this.valuesAreCredible = this.valuesAreCredible.bind(this);
 
         this.create = this.create.bind(this);
     }
@@ -197,11 +198,17 @@ class CreateTournamentForm extends React.Component {
     }
 
     create() {
-        createTournament(this.generateTournamentCreationObject(), () => {
-            notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
-        }, () => {
-            notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
-        });
+        if (this.valuesAreCredible()) {
+            createTournament(this.generateTournamentCreationObject(), () => {
+                notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
+            }, () => {
+                notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
+            });
+        }
+    }
+
+    valuesAreCredible() {
+        return this.state.groups.length >= this.state.groupAdvance;
     }
 
     generateTournamentCreationObject() {
