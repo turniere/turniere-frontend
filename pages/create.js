@@ -153,11 +153,9 @@ class CreateTournamentForm extends React.Component {
     increaseGroupAdvance() {
         const newGroupAdvance = this.state.groupAdvance * 2;
 
-        if (newGroupAdvance <= this.state.groupSize) {
-            this.setState({
-                groupAdvance: newGroupAdvance
-            });
-        }
+        this.setState({
+            groupAdvance: newGroupAdvance
+        });
     }
 
     decreaseGroupAdvance() {
@@ -171,21 +169,14 @@ class CreateTournamentForm extends React.Component {
     }
 
     increaseGroupSize() {
-        this.setState({groupSize: this.state.groupSize+1});
+        this.setState({groupSize: this.state.groupSize + 1});
     }
 
     decreaseGroupSize() {
         const newGroupSize = this.state.groupSize - 1;
 
         if (newGroupSize >= 3) {
-            if (newGroupSize >= this.state.groupAdvance) {
-                this.setState({groupSize: newGroupSize});
-            } else {
-                this.setState({
-                    groupSize: newGroupSize,
-                    groupAdvance: Math.floor(this.state.groupAdvance / 2)
-                });
-            }
+            this.setState({groupSize: newGroupSize});
         }
     }
 
