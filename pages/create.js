@@ -8,6 +8,7 @@ import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
+import {WarningPopup} from '../js/components/WarningPopup'
 
 import '../static/css/everypage.css';
 import RequireLogin from '../js/components/RequireLogin';
@@ -50,7 +51,7 @@ function CreateTournamentCard() {
 
 const GroupphaseFader = posed.div({
     visible: {
-        opacity: 1, height: 150
+        opacity: 1, height: 200
     }, hidden: {
         opacity: 0, height: 0
     }
@@ -118,11 +119,14 @@ class CreateTournamentForm extends React.Component {
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
                             weiterkommen?</Label>
-                        <Col xs="3" className="pl-0">
-                            <NumericInput value={this.state.groupAdvance}
-                                incrementText="&#215;2" incrementCallback={this.increaseGroupAdvance}
-                                decrementText="&#247;2" decrementCallback={this.decreaseGroupAdvance}/>
-                        </Col>
+                        <WarningPopup text="Füge bitte noch Teams hinzu, um so viele Teams im Playoff zu haben."
+                            shown={this.state.teams.length < this.state.groupAdvance}>
+                            <Col xs="3" className="pl-0">
+                                <NumericInput value={this.state.groupAdvance}
+                                    incrementText="&#215;2" incrementCallback={this.increaseGroupAdvance}
+                                    decrementText="&#247;2" decrementCallback={this.decreaseGroupAdvance}/>
+                            </Col>
+                        </WarningPopup>
                     </FormGroup>
                 </GroupphaseFader>
             </Form>
@@ -204,11 +208,13 @@ class CreateTournamentForm extends React.Component {
             }, () => {
                 notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
             });
+        } else {
+            notify.show('Bitte korrigiere deine Eingaben zuerst.', 'warning', 5000);
         }
     }
 
     valuesAreCredible() {
-        return this.state.groups.length >= this.state.groupAdvance;
+        return this.state.teams.length >= this.state.groupAdvance;
     }
 
     generateTournamentCreationObject() {
