@@ -24,6 +24,10 @@ export const defaultStateTournamentinfo = {
     ownerUsername: '',
     isPublic: '',
     stages: [],
-    teams: []
+    teams: [],
+
+    playoffTeamsAmount: 0,
+    instantFinalistAmount: 0,
+    intermediateRoundParticipants: 0
 };
 

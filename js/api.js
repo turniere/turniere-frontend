@@ -211,7 +211,11 @@ const reducerTournamentinfo = (state = defaultStateTournamentinfo, action) => {
             ownerUsername: action.parameters.owner_username,
             isPublic: action.parameters.public,
             stages: action.parameters.stages,
-            teams: action.parameters.teams
+            teams: action.parameters.teams,
+
+            playoffTeamsAmount: action.parameters.playoff_teams_amount,
+            instantFinalistAmount: action.parameters.instant_finalists_amount,
+            intermediateRoundParticipants: action.parameters.intermediate_round_participants_amount
         });
     case actionTypesTournamentinfo.MODIFY_TOURNAMENT:
         patchRequest(action.state, '/teams/' + action.parameters.teamid, {
