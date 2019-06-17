@@ -120,6 +120,7 @@ class CreateTournamentForm extends React.Component {
                                     decrementText="-1" decrementCallback={this.decreaseGroupSize}/>
                             </Col>
                         </Row>
+                        <WarningPopup text='Es gibt noch unvollständige Gruppen.' shown={this.areGroupsIncomplete()}/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
@@ -153,6 +154,10 @@ class CreateTournamentForm extends React.Component {
             <Button color="success" size="lg" className="w-100 shadow-sm mt-4" onClick={this.create}>Turnier
                     erstellen</Button>
         </div>);
+    }
+
+    areGroupsIncomplete() {
+        return this.state.groups.filter(group => group.length !== this.state.groupSize).length !== 0;
     }
 
     teamListUpdate(list) {
@@ -222,7 +227,7 @@ class CreateTournamentForm extends React.Component {
     }
 
     valuesAreCredible() {
-        return this.state.teams.length >= this.state.groupAdvance;
+        return this.state.teams.length >= this.state.groupAdvance && !this.areGroupsIncomplete();
     }
 
     generateTournamentCreationObject() {
