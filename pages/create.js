@@ -8,7 +8,7 @@ import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
-import {WarningPopup} from '../js/components/WarningPopup'
+import {WarningPopup} from '../js/components/WarningPopup';
 
 import '../static/css/everypage.css';
 import RequireLogin from '../js/components/RequireLogin';

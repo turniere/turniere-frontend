@@ -20,4 +20,4 @@ export class WarningPopup extends React.Component {
 WarningPopup.propTypes = {
     text: PropTypes.string.isRequired,
     shown: PropTypes.bool.isRequired
-}
+};
