@@ -131,7 +131,9 @@ class CreateTournamentForm extends React.Component {
                                     decrementText="&#247;2" decrementCallback={this.decreaseGroupAdvance}/>
                             </Col>
                         </Row>
-                        <WarningPopup text='Füge bitte noch Teams hinzu, um so viele Teams im Playoff zu haben.'
+                        <WarningPopup
+                            text={'Füge bitte noch ' + (this.state.groupAdvance - this.state.teams.length)
+                            + ' Team(s) hinzu, um ' + this.state.groupAdvance + ' Team(s) im Playoff zu haben.'}
                             shown={this.state.teams.length < this.state.groupAdvance}/>
                     </FormGroup>
                 </Collapse>
