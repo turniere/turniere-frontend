@@ -1,19 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Alert} from 'reactstrap';
+import {Alert, Collapse} from 'reactstrap';
 
 export class WarningPopup extends React.Component {
     render() {
-        if (this.props.shown) {
-            return (<div>
-                {this.props.children}
-                <Alert className="mt-2" color="danger">
-                    {this.props.text}
-                </Alert>
-            </div>);
-        } else {
-            return this.props.children;
-        }
+        return (<Collapse isOpen={this.props.shown}>
+            <Alert className='mt-2 py-1' color='danger'>
+                {this.props.text}
+            </Alert>
+        </Collapse>);
     }
 }
 

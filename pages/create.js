@@ -2,8 +2,20 @@ import Head from 'next/head';
 import React from 'react';
 import {notify} from 'react-notify-toast';
 import {connect} from 'react-redux';
-import posed from 'react-pose';
-import {Button, Card, CardBody, Col, Container, CustomInput, Form, FormGroup, Input, Label} from 'reactstrap';
+import {
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Collapse,
+    Container,
+    CustomInput,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    Row
+} from 'reactstrap';
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
 import EditableStringList from '../js/components/EditableStringList';
@@ -48,14 +60,6 @@ function CreateTournamentCard() {
         </Card>
     </Container>);
 }
-
-const GroupphaseFader = posed.div({
-    visible: {
-        opacity: 1, height: 200
-    }, hidden: {
-        opacity: 0, height: 0
-    }
-});
 
 class CreateTournamentForm extends React.Component {
     constructor(props) {
@@ -106,29 +110,31 @@ class CreateTournamentForm extends React.Component {
                         checked={this.state.groupPhaseEnabled}
                         onChange={this.handleGroupPhaseEnabledInput}/>
                 </FormGroup>
-                <GroupphaseFader pose={this.state.groupPhaseEnabled ? 'visible' : 'hidden'}
-                    className="groupphasefader">
+                <Collapse isOpen={this.state.groupPhaseEnabled}>
                     <FormGroup>
                         <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                        <Col xs="3" className="pl-0">
-                            <NumericInput value={this.state.groupSize}
-                                incrementText="+1" incrementCallback={this.increaseGroupSize}
-                                decrementText="-1" decrementCallback={this.decreaseGroupSize}/>
-                        </Col>
+                        <Row>
+                            <Col xs="3">
+                                <NumericInput value={this.state.groupSize}
+                                    incrementText="+1" incrementCallback={this.increaseGroupSize}
+                                    decrementText="-1" decrementCallback={this.decreaseGroupSize}/>
+                            </Col>
+                        </Row>
                     </FormGroup>
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
                             weiterkommen?</Label>
-                        <WarningPopup text="Füge bitte noch Teams hinzu, um so viele Teams im Playoff zu haben."
-                            shown={this.state.teams.length < this.state.groupAdvance}>
-                            <Col xs="3" className="pl-0">
+                        <Row>
+                            <Col xs="3">
                                 <NumericInput value={this.state.groupAdvance}
                                     incrementText="&#215;2" incrementCallback={this.increaseGroupAdvance}
                                     decrementText="&#247;2" decrementCallback={this.decreaseGroupAdvance}/>
                             </Col>
-                        </WarningPopup>
+                        </Row>
+                        <WarningPopup text='Füge bitte noch Teams hinzu, um so viele Teams im Playoff zu haben.'
+                            shown={this.state.teams.length < this.state.groupAdvance}/>
                     </FormGroup>
-                </GroupphaseFader>
+                </Collapse>
             </Form>
             <h3 className="custom-font mt-4">Teams</h3>
             <EditableStringList
