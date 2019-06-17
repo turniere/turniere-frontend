@@ -287,7 +287,7 @@ class EditTournamentForm extends React.Component {
     }
 
     decreaseInstantFinalistsAmount() {
-        if (this.state.instantFinalistAmount > 1) {
+        if (this.state.instantFinalistAmount > 0) {
             this.setState({instantFinalistAmount: this.state.instantFinalistAmount - 1});
         }
     }
@@ -297,7 +297,7 @@ class EditTournamentForm extends React.Component {
     }
 
     decreaseIntermediateRoundParticipants() {
-        if (this.state.intermediateRoundParticipants > 1) {
+        if (this.state.intermediateRoundParticipants > 0) {
             this.setState({intermediateRoundParticipants: this.state.intermediateRoundParticipants - 1});
         }
     }
