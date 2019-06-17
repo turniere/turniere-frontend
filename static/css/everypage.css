@@ -7,6 +7,10 @@
     font-family: Halt, sans-serif;
 }
 
+.default-font-family {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .navbar-brand {
     font-family: Halt, sans-serif;
     font-size: 2em;

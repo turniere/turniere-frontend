@@ -70,6 +70,7 @@ export class Match extends React.Component {
         updatedMatch.team1.score = scoreTeam1;
         updatedMatch.team2.score = scoreTeam2;
         this.setState({match: updatedMatch});
+        this.props.onChange !== undefined && this.props.onChange();
     }
 
     getMatchFinishedMessage() {
