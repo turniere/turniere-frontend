@@ -499,6 +499,19 @@ export function requestTournamentList(type, successCallback, errorCallback) {
     });
 }
 
+export function updateTournament(tournament, successCallback, errorCallback) {
+    patchRequest(getState(), '/tournaments/' + tournament.id, tournament)
+        .then(resp => {
+            storeOptionalToken(resp);
+            successCallback();
+        }).catch(err => {
+            if (err.response) {
+                storeOptionalToken(err.response);
+            }
+            errorCallback();
+        });
+}
+
 function rehydrateApplicationState() {
     const persistedState = localStorage.getItem('reduxState') ?
         JSON.parse(localStorage.getItem('reduxState')) :

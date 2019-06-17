@@ -13,7 +13,7 @@ import {UserRestrictor, Option} from '../js/components/UserRestrictor';
 import {Footer} from '../js/components/Footer';
 import {Login} from '../js/components/Login';
 import {ErrorPageComponent} from '../js/components/ErrorComponents';
-import {updateTeamName} from '../js/api';
+import {updateTournament, updateTeamName} from '../js/api';
 import NumericInput from '../js/components/NumericInput';
 import {WarningPopup} from '../js/components/WarningPopup';
 
@@ -235,7 +235,28 @@ class EditTournamentForm extends React.Component {
     }
 
     handleClick() {
-        // TODO: Apply changes to the tournament properties
+        if (this.state.name !== '' && this.state.playoffTeamsAmount === this.state.instantFinalistAmount +
+                (this.state.intermediateRoundParticipants / 2)) {
+            updateTournament(this.generateUpdatedTeam(), () => {
+                notify.show('Turnier wurde erfolgreich geändert.', 'success', 5000);
+            }, () => {
+                notify.show('Turnier konnte nicht aktualisiert werden.', 'warning', 5000);
+            });
+        } else {
+            notify.show('Bitte korrigiere deine Eingaben zuerst.', 'warning', 5000);
+        }
+    }
+
+    generateUpdatedTeam() {
+        return {
+            id: this.props.id,
+            name: this.state.name,
+            description: this.state.description,
+            public: this.state.isPublic,
+            playoff_teams_amount: this.state.playoffTeamsAmount,
+            instant_finalists_amount: this.state.instantFinalistAmount,
+            intermediate_round_participants_amount: this.state.intermediateRoundParticipants
+        };
     }
 
     handleNameInput(input) {
@@ -283,9 +304,9 @@ class EditTournamentForm extends React.Component {
 }
 
 function mapStateToTournamentFormProps(state) {
-    const {name, description, isPublic, stages, playoffTeamsAmount, instantFinalistAmount,
+    const {name, id, description, isPublic, stages, playoffTeamsAmount, instantFinalistAmount,
         intermediateRoundParticipants} = state.tournamentinfo;
-    return {name, description, isPublic, stages, playoffTeamsAmount, instantFinalistAmount,
+    return {name, id, description, isPublic, stages, playoffTeamsAmount, instantFinalistAmount,
         intermediateRoundParticipants};
 }
 
