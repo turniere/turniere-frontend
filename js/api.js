@@ -182,7 +182,7 @@ const reducerTournamentinfo = (state = defaultStateTournamentinfo, action) => {
     case actionTypesTournamentinfo.CREATE_TOURNAMENT:
         postRequest(action.state, '/tournaments', action.parameters.tournament).then(resp => {
             storeOptionalToken(resp);
-            action.parameters.successCallback();
+            action.parameters.successCallback(resp.data);
         }).catch(error => {
             if (error.response) {
                 storeOptionalToken(error.response);
