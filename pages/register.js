@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
+import {notify} from 'react-notify-toast';
+import Router from 'next/router';
 import {
     Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label
 } from 'reactstrap';
@@ -95,10 +97,20 @@ class RegisterForm extends React.Component {
             <FormText className="mb-2 mt-4">
                     Du akzeptierst die <a href="/privacy">Datenschutzbestimmungen</a>, wenn du auf Registrieren klickst.
             </FormText>
-            <Button onClick={register.bind(this, this.state.username, this.state.email, this.state.password)}
+            <Button onClick={() => this.registerUser()}
                 color="success" size="lg" className="w-100 shadow-sm">Registrieren</Button>
             <VisibleRegisterErrorList/>
         </Form>);
+    }
+
+    registerUser() {
+        register(
+            this.state.username, this.state.email, this.state.password, () => {
+                notify.show('Sie wurden erfolgreich registriert, ' + this.state.username + '!', 'success', 5000);
+                Router.push('/');
+            }, () => {
+                notify.show('Sie konnten nicht registriert werden.', 'warning', 5000);
+            });
     }
 
     handlePasswordInput(input) {

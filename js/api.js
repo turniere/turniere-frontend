@@ -50,6 +50,7 @@ const reducerUserinfo = (state = defaultStateUserinfo, action) => {
             __store.dispatch({
                 type: actionTypesUserinfo.REGISTER_RESULT_SUCCESS
             });
+            action.parameters.successCallback();
             storeOptionalToken(resp);
         }).catch(error => {
             if (error.response) {
@@ -70,6 +71,7 @@ const reducerUserinfo = (state = defaultStateUserinfo, action) => {
                     }
                 });
             }
+            action.parameters.errorCallback();
         });
         return Object.assign({}, state, {});
     case actionTypesUserinfo.REGISTER_RESULT_SUCCESS:
@@ -357,13 +359,15 @@ export function verifyCredentials() {
     }
 }
 
-export function register(username, email, password) {
+export function register(username, email, password, successCallback, errorCallback) {
     __store.dispatch({
         type: actionTypesUserinfo.REGISTER,
         parameters: {
             username: username,
             email: email,
-            password: password
+            password: password,
+            successCallback: successCallback,
+            errorCallback: errorCallback
         },
         state: __store.getState()
     });
