@@ -513,6 +513,6 @@ function rehydrateApplicationState() {
             type: actionTypesTournamentlist.REHYDRATE,
             parameters: Object.assign({}, persistedState.tournamentlist)
         });
-        applicationHydrated = true;
     }
+    applicationHydrated = true;
 }
