@@ -19,7 +19,7 @@ class PrivateTournamentsPage extends React.Component {
                     <title>Private Turniere: turnie.re</title>
                 </Head>
                 <TurniereNavigation/>
-                <PrivateTournamentsPageContent/>
+                <PrivateTournamentsPageContent isSignedIn={this.props.isSignedIn}/>
                 <Footer/>
             </div>
         </RequireLogin>);
@@ -35,13 +35,14 @@ const PrivateTournamentListPage = connect(mapStateToProperties)(PrivateTournamen
 
 export default PrivateTournamentListPage;
 
-function PrivateTournamentsPageContent() {
+function PrivateTournamentsPageContent(props) {
     return (<div>
         <Container className="pt-5">
             <PrivateTournamentsCard/>
         </Container>
         <Container className="pb-5 pt-3">
-            <a href='/list' className="btn btn-success shadow">zu den öffentlichen Turnieren</a>
+            <a href='/list' className="btn btn-primary shadow">zu den öffentlichen Turnieren</a>
+            {props.isSignedIn && <a href='/create' className="ml-3 btn btn-success shadow">neues Turnier erstellen</a>}
         </Container>
     </div>);
 }

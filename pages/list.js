@@ -38,7 +38,8 @@ function PublicTournaments(props) {
                 <PublicTournamentsCard/>
             </Container>
             <Container className="pb-5 pt-3">
-                <a href='/private' className="btn btn-success shadow">zu den privaten Turnieren</a>
+                <a href='/private' className="btn btn-primary shadow">zu den privaten Turnieren</a>
+                <a href='/create' className="ml-3 btn btn-success shadow">neues Turnier erstellen</a>
             </Container>
         </div>);
     } else {
