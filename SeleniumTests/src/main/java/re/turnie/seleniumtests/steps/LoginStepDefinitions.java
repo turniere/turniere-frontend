@@ -53,7 +53,7 @@ public class LoginStepDefinitions extends CucumberStepDefinition {
     public void checkErrorMessagesShowing() {
         checkDriverAvailability();
 
-        WebElement errorlist = new WebDriverWait(driver, 1)
+        WebElement errorlist = new WebDriverWait(driver, 5)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("error-list")));
         List<WebElement> errortags = errorlist.findElements(By.tagName("li"));
         if(errortags.isEmpty()) {
@@ -61,13 +61,14 @@ public class LoginStepDefinitions extends CucumberStepDefinition {
         } else {
             System.out.println("Test Passed");
         }
+        driver.quit();
     }
 
     @Then("^the user \"(.*)\" should be logged in$")
     public void checkForUserBeingLoggedIn(String username) {
         checkDriverAvailability();
 
-        WebElement usernameButton = new WebDriverWait(driver, 1)
+        WebElement usernameButton = new WebDriverWait(driver, 5)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("profile-button")));
 
         if(usernameButton != null && usernameButton.getText().equals(username)) {
@@ -75,6 +76,7 @@ public class LoginStepDefinitions extends CucumberStepDefinition {
         } else {
             System.out.println("Test Failed");
         }
+        driver.quit();
     }
 
     @Then("^the user should be redirected to index$")
@@ -87,5 +89,6 @@ public class LoginStepDefinitions extends CucumberStepDefinition {
         } else {
             System.out.println("Test Failed");
         }
+        driver.quit();
     }
 }
