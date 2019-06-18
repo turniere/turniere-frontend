@@ -1,8 +1,12 @@
 import Head from 'next/head';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {notify} from 'react-notify-toast';
+import Router from 'next/router';
 import {
-    Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label
+    Button, Card, CardBody, Container, Form, FormGroup, FormText, Input, Label,
+    Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
 
 import {TurniereNavigation} from '../js/components/Navigation';
@@ -69,12 +73,15 @@ class RegisterForm extends React.Component {
         super(props);
 
         this.state = {
-            username: '', email: '', password: ''
+            username: '', email: '', password: '',
+            showRegisterSuccessModal: false, code: -1
         };
     }
 
     render() {
         return (<Form>
+            <RegisterSuccessModal isOpen={this.state.showRegisterSuccessModal}
+                close={() => this.closeRegisterSuccessModal()}/>
             <FormGroup>
                 <Label for="username">Benutzername</Label>
                 <Input name="username" value={this.state.username} onChange={this.handleUsernameInput.bind(this)}/>
@@ -95,10 +102,28 @@ class RegisterForm extends React.Component {
             <FormText className="mb-2 mt-4">
                     Du akzeptierst die <a href="/privacy">Datenschutzbestimmungen</a>, wenn du auf Registrieren klickst.
             </FormText>
-            <Button onClick={register.bind(this, this.state.username, this.state.email, this.state.password)}
+            <Button onClick={() => this.registerUser()}
                 color="success" size="lg" className="w-100 shadow-sm">Registrieren</Button>
             <VisibleRegisterErrorList/>
         </Form>);
+    }
+
+    showRegisterSuccessModal() {
+        this.setState({
+            showRegisterSuccessModal: true
+        });
+    }
+
+    closeRegisterSuccessModal() {
+        Router.push('/');
+    }
+
+    registerUser() {
+        register(this.state.username, this.state.email, this.state.password, () => {
+            this.showRegisterSuccessModal();
+        }, () => {
+            notify.show('Sie konnten nicht registriert werden.', 'warning', 5000);
+        });
     }
 
     handlePasswordInput(input) {
@@ -113,6 +138,26 @@ class RegisterForm extends React.Component {
         this.setState({username: input.target.value});
     }
 }
+
+class RegisterSuccessModal extends React.Component {
+    render() {
+        return (<Modal isOpen={this.props.isOpen} toggle={this.props.close}>
+            <ModalHeader toggle={this.props.close}>Erfolgreich registriert</ModalHeader>
+            <ModalBody>
+                Sie wurden erfolgreich registriert. Um Ihren Account nutzen zu können
+                müssen Sie den Verifizierungslink, den wir Ihnen per E-Mail zugesandt haben, aufrufen.
+            </ModalBody>
+            <ModalFooter>
+                <Button color='secondary' onClick={this.props.close}>Verstanden</Button>
+            </ModalFooter>
+        </Modal>);
+    }
+}
+
+RegisterSuccessModal.proptypes = {
+    isOpen: PropTypes.bool.isRequired,
+    close: PropTypes.func.isRequired
+};
 
 function AccountRequirementMarketing() {
     return (<Container>
