@@ -213,7 +213,11 @@ const reducerTournamentinfo = (state = defaultStateTournamentinfo, action) => {
             ownerUsername: action.parameters.owner_username,
             isPublic: action.parameters.public,
             stages: action.parameters.stages,
-            teams: action.parameters.teams
+            teams: action.parameters.teams,
+
+            playoffTeamsAmount: action.parameters.playoff_teams_amount,
+            instantFinalistAmount: action.parameters.instant_finalists_amount,
+            intermediateRoundParticipants: action.parameters.intermediate_round_participants_amount
         });
     case actionTypesTournamentinfo.MODIFY_TOURNAMENT:
         patchRequest(action.state, '/teams/' + action.parameters.teamid, {
@@ -497,6 +501,19 @@ export function requestTournamentList(type, successCallback, errorCallback) {
         },
         state: __store.getState()
     });
+}
+
+export function updateTournament(tournament, successCallback, errorCallback) {
+    patchRequest(getState(), '/tournaments/' + tournament.id, tournament)
+        .then(resp => {
+            storeOptionalToken(resp);
+            successCallback();
+        }).catch(err => {
+            if (err.response) {
+                storeOptionalToken(err.response);
+            }
+            errorCallback();
+        });
 }
 
 function rehydrateApplicationState() {

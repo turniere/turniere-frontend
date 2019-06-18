@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {notify} from 'react-notify-toast';
 import {
-    Container, Button, Card, CardBody, Table
+    Col, Container, Button, Card, CardBody, Table, FormGroup, Label
 } from 'reactstrap';
 
 import {requestTournament} from '../js/api';
@@ -13,7 +13,9 @@ import {UserRestrictor, Option} from '../js/components/UserRestrictor';
 import {Footer} from '../js/components/Footer';
 import {Login} from '../js/components/Login';
 import {ErrorPageComponent} from '../js/components/ErrorComponents';
-import {updateTeamName} from '../js/api';
+import {updateTournament, updateTeamName} from '../js/api';
+import NumericInput from '../js/components/NumericInput';
+import {WarningPopup} from '../js/components/WarningPopup';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -142,8 +144,20 @@ class EditTournamentForm extends React.Component {
         super(props);
 
         this.state = {
-            name: '', description: '', isPublic: false
+            name: '',
+            description: '',
+            isPublic: false,
+            playoffTeamsAmount: 0,
+            instantFinalistAmount: 0,
+            intermediateRoundParticipants: 0
         };
+
+        this.increasePlayoffTeamsAmount = this.increasePlayoffTeamsAmount.bind(this);
+        this.decreasePlayoffTeamsAmount = this.decreasePlayoffTeamsAmount.bind(this);
+        this.increaseInstantFinalistsAmount = this.increaseInstantFinalistsAmount.bind(this);
+        this.decreaseInstantFinalistsAmount = this.decreaseInstantFinalistsAmount.bind(this);
+        this.increaseIntermediateRoundParticipants = this.increaseIntermediateRoundParticipants.bind(this);
+        this.decreaseIntermediateRoundParticipants = this.decreaseIntermediateRoundParticipants.bind(this);
     }
 
     render() {
@@ -167,6 +181,37 @@ class EditTournamentForm extends React.Component {
                     onChange={this.handlePublicInput.bind(this)}/>
                 <label htmlFor="isPublic" className="custom-control-label">Das Turnier öffentlich anzeigen</label>
             </div>
+            <FormGroup>
+                <Label for="playoff-teams-amount">Anzahl Teams in der Playoff-Stage</Label>
+                <Col xs="3" className="pl-0">
+                    <NumericInput value={this.state.playoffTeamsAmount}
+                        incrementText="&#215;2" incrementCallback={this.increasePlayoffTeamsAmount}
+                        decrementText="&#247;2" decrementCallback={this.decreasePlayoffTeamsAmount}/>
+                </Col>
+            </FormGroup>
+            <FormGroup>
+                <Label for="instant-finalists-amount">
+                    Anzahl Teams, die direkt in die Playoff-Stage weiter kommen</Label>
+                <Col xs="3" className="pl-0">
+                    <NumericInput value={this.state.instantFinalistAmount}
+                        incrementText="+1" incrementCallback={this.increaseInstantFinalistsAmount}
+                        decrementText="-1" decrementCallback={this.decreaseInstantFinalistsAmount}/>
+                </Col>
+            </FormGroup>
+            <FormGroup>
+                <Label for="intermediate-round-participants">
+                    Anzahl Teams, die in einer Zwischenrunde um die Playoff-Stage spielen müssen</Label>
+                <Col xs="3" className="pl-0">
+                    <NumericInput value={this.state.intermediateRoundParticipants}
+                        incrementText="+1" incrementCallback={this.increaseIntermediateRoundParticipants}
+                        decrementText="-1" decrementCallback={this.decreaseIntermediateRoundParticipants}/>
+                </Col>
+            </FormGroup>
+            <WarningPopup
+                text="Die Anzahl der Teams im Playoff muss der Anzahl an Teams, die direkt im Playoff sind
+                plus der Hälfte der Anzahl an Teams in der Zwischenrunde entsprechen."
+                shown={this.state.playoffTeamsAmount !== this.state.instantFinalistAmount +
+                (this.state.intermediateRoundParticipants / 2)}/>
             <div className="form-group">
                 <div className="input-group">
                     <Button color="success" className="px-5" id="edittournament-button"
@@ -177,15 +222,40 @@ class EditTournamentForm extends React.Component {
     }
 
     notifyOfContentUpdate() {
-        const {name, description, isPublic} = this.props;
+        const {name, description, isPublic, playoffTeamsAmount, instantFinalistAmount,
+            intermediateRoundParticipants} = this.props;
 
         this.setState({
+            playoffTeamsAmount: playoffTeamsAmount,
+            instantFinalistAmount: instantFinalistAmount,
+            intermediateRoundParticipants: intermediateRoundParticipants,
             name: name ? name : '', description: description ? description : '', isPublic: isPublic
         });
     }
 
     handleClick() {
-        // TODO: Apply changes to the tournament properties
+        if (this.state.name !== '' && this.state.playoffTeamsAmount === this.state.instantFinalistAmount +
+                (this.state.intermediateRoundParticipants / 2)) {
+            updateTournament(this.generateUpdatedTeam(), () => {
+                notify.show('Turnier wurde erfolgreich geändert.', 'success', 5000);
+            }, () => {
+                notify.show('Turnier konnte nicht aktualisiert werden.', 'warning', 5000);
+            });
+        } else {
+            notify.show('Bitte korrigiere deine Eingaben zuerst.', 'warning', 5000);
+        }
+    }
+
+    generateUpdatedTeam() {
+        return {
+            id: this.props.id,
+            name: this.state.name,
+            description: this.state.description,
+            public: this.state.isPublic,
+            playoff_teams_amount: this.state.playoffTeamsAmount,
+            instant_finalists_amount: this.state.instantFinalistAmount,
+            intermediate_round_participants_amount: this.state.intermediateRoundParticipants
+        };
     }
 
     handleNameInput(input) {
@@ -199,11 +269,44 @@ class EditTournamentForm extends React.Component {
     handlePublicInput(input) {
         this.setState({public: input.target.value});
     }
+
+
+    increasePlayoffTeamsAmount() {
+        this.setState({playoffTeamsAmount: this.state.playoffTeamsAmount * 2});
+    }
+
+    decreasePlayoffTeamsAmount() {
+        if (this.state.playoffTeamsAmount > 1) {
+            this.setState({playoffTeamsAmount: Math.floor(this.state.playoffTeamsAmount / 2)});
+        }
+    }
+
+    increaseInstantFinalistsAmount() {
+        this.setState({instantFinalistAmount: this.state.instantFinalistAmount + 1});
+    }
+
+    decreaseInstantFinalistsAmount() {
+        if (this.state.instantFinalistAmount > 0) {
+            this.setState({instantFinalistAmount: this.state.instantFinalistAmount - 1});
+        }
+    }
+
+    increaseIntermediateRoundParticipants() {
+        this.setState({intermediateRoundParticipants: this.state.intermediateRoundParticipants + 1});
+    }
+
+    decreaseIntermediateRoundParticipants() {
+        if (this.state.intermediateRoundParticipants > 0) {
+            this.setState({intermediateRoundParticipants: this.state.intermediateRoundParticipants - 1});
+        }
+    }
 }
 
 function mapStateToTournamentFormProps(state) {
-    const {name, description, isPublic} = state.tournamentinfo;
-    return {name, description, isPublic};
+    const {name, id, description, isPublic, stages, playoffTeamsAmount, instantFinalistAmount,
+        intermediateRoundParticipants} = state.tournamentinfo;
+    return {name, id, description, isPublic, stages, playoffTeamsAmount, instantFinalistAmount,
+        intermediateRoundParticipants};
 }
 
 const VisibleEditTournamentForm = connect(mapStateToTournamentFormProps, null, null,
