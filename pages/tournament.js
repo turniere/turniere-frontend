@@ -42,10 +42,18 @@ function StatusBar(props) {
         <Container className='px-3'>
             <Navbar.Brand>
                 {props.tournament.name}
-                <EditButton id={props.id} isOwner={props.isOwner} isSignedIn={props.isSignedIn}/>
+                <EditButton tournamentId={props.tournament.id} isOwner={props.isOwner} isSignedIn={props.isSignedIn}/>
+                <StatisticsButton tournamentId={props.tournament.id}/>
             </Navbar.Brand>
         </Container>
     </Navbar>);
+}
+
+function StatisticsButton(props) {
+    return (<a href={'/t/' + props.tournamentId + '/statistics'}
+        className='ml-3 btn btn-outline-secondary default-font-family'>
+        Statistiken
+    </a>);
 }
 
 
@@ -77,10 +85,10 @@ function mapStateToTournamentPageProperties(state) {
 const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTournamentPage);
 
 function EditButton(props) {
-    const {id, isOwner, isSignedIn} = props;
+    const {tournamentId, isOwner, isSignedIn} = props;
 
     if (isSignedIn && isOwner) {
-        return (<a href={'/t/' + id + '/edit'} className='ml-3 btn btn-outline-secondary default-font-family'>
+        return (<a href={'/t/' + tournamentId + '/edit'} className='ml-3 btn btn-outline-secondary default-font-family'>
             Turnier bearbeiten
         </a>);
     } else {
