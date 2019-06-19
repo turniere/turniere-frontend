@@ -17,18 +17,24 @@ export function getGroup(groupId, successCallback, errorCallback) {
         .catch(errorCallback);
 }
 
+export function getStage(stageId, successCallback, errorCallback) {
+    getRequest(getState(), '/stages/' + stageId)
+        .then(response => {
+            successCallback(response.status, convertPlayoffStage(response.data));
+        })
+        .catch(errorCallback);
+}
+
 function convertTournament(apiTournament) {
     let groupStage = null;
     const playoffStages = [];
-    for (const stage of apiTournament.stages) {
-        if (stage.groups.length > 0) {
+    for (const apiStage of apiTournament.stages) {
+        if (apiStage.groups.length > 0) {
             // group stage
-            groupStage = {groups: stage.groups.map(group => convertGroup(group))};
+            groupStage = {groups: apiStage.groups.map(group => convertGroup(group))};
         } else {
             // playoff stage
-            playoffStages.push({
-                id: stage.id, level: stage.level, matches: stage.matches.map(match => convertMatch(match, false))
-            });
+            playoffStages.push(convertPlayoffStage(apiStage));
         }
     }
     return {
@@ -40,6 +46,12 @@ function convertTournament(apiTournament) {
         ownerUsername: apiTournament.owner_username,
         groupStage: groupStage,
         playoffStages: playoffStages
+    };
+}
+
+function convertPlayoffStage(apiStage) {
+    return {
+        id: apiStage.id, level: apiStage.level, matches: apiStage.matches.map(match => convertMatch(match, false))
     };
 }
 
