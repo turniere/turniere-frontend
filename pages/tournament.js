@@ -2,11 +2,12 @@ import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
 import {Container, ListGroup, ListGroupItem} from 'reactstrap';
+import Navbar from 'react-bootstrap/Navbar';
+
 
 import {ErrorPageComponent} from '../js/components/ErrorComponents';
 import {Footer} from '../js/components/Footer';
 import {TurniereNavigation} from '../js/components/Navigation';
-import {BigImage} from '../js/components/BigImage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,24 +19,14 @@ import GroupStage from '../js/components/GroupStage';
 
 class PrivateTournamentPage extends React.Component {
     render() {
-        const {id, description, isPublic, code, ownerUsername, playoffStages, groupStage} = this.props.tournament;
+        const {ownerUsername, playoffStages, groupStage} = this.props.tournament;
         const {isSignedIn, username} = this.props;
         const isOwner = username === ownerUsername;
 
-        // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
-            <Container>
-                <EditButton id={id} ownerName={ownerUsername} isSignedIn={isSignedIn} username={username}/>
-                <p>{description}</p>
-                <ListGroup>
-                    <ListGroupItem>
-                        {isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
-                    </ListGroupItem>
-                    <ListGroupItem>Turnier-Code: <b>{code}</b></ListGroupItem>
-                    <ListGroupItem>von <b>{ownerUsername}</b></ListGroupItem>
-                </ListGroup>
-            </Container>
-            <div className='stages pt-5'>
+            <TournamentBigImage {...this.props.tournament}/>
+            <StatusBar tournament={this.props.tournament} isOwner={isOwner} isSignedIn={isSignedIn}/>
+            <div className='stages'>
                 {groupStage != null &&
                 <div><GroupStage groups={groupStage.groups} isSignedIn={isSignedIn} isOwner={isOwner}
                     showMatches={playoffStages !== null}/></div>}
@@ -46,6 +37,38 @@ class PrivateTournamentPage extends React.Component {
     }
 }
 
+function StatusBar(props) {
+    return (<Navbar sticky='top' bg='light' className='border-bottom border-top'>
+        <Container className='px-3'>
+            <Navbar.Brand>
+                {props.tournament.name}
+                <EditButton id={props.id} isOwner={props.isOwner} isSignedIn={props.isSignedIn}/>
+            </Navbar.Brand>
+        </Container>
+    </Navbar>);
+}
+
+
+function TournamentBigImage(props) {
+    return (<div className="big-image mb-0">
+        <h1 className="display-1">{props.name}</h1>
+        <Container>
+            <TournamentProperties {...props}/>
+        </Container>
+    </div>);
+}
+
+function TournamentProperties(props) {
+    return (<ListGroup className='text-dark text-left shadow'>
+        {props.description && <ListGroupItem>{props.description}</ListGroupItem>}
+        <ListGroupItem>
+            {props.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
+        </ListGroupItem>
+        <ListGroupItem>Turnier-Code: <b>{props.code}</b></ListGroupItem>
+        <ListGroupItem>von <b>{props.ownerUsername}</b></ListGroupItem>
+    </ListGroup>);
+}
+
 function mapStateToTournamentPageProperties(state) {
     const {isSignedIn, username} = state.userinfo;
     return {isSignedIn, username};
@@ -54,10 +77,12 @@ function mapStateToTournamentPageProperties(state) {
 const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTournamentPage);
 
 function EditButton(props) {
-    const {id, ownerName, isSignedIn, username} = props;
+    const {id, isOwner, isSignedIn} = props;
 
-    if (isSignedIn && ownerName === username) {
-        return (<a href={'/t/' + id + '/edit'} className='btn btn-outline-secondary'>Turnier bearbeiten</a>);
+    if (isSignedIn && isOwner) {
+        return (<a href={'/t/' + id + '/edit'} className='ml-3 btn btn-outline-secondary default-font-family'>
+            Turnier bearbeiten
+        </a>);
     } else {
         return null;
     }
@@ -106,7 +131,6 @@ class Main extends React.Component {
                     <title>{tournamentName}: turnie.re</title>
                 </Head>
                 <TurniereNavigation/>
-                <BigImage text={tournamentName}/>
                 <TournamentPage tournament={tournament}/>
                 <Footer/>
             </div>);
