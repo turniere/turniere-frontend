@@ -8,6 +8,11 @@ import {actionTypesUserinfo, defaultStateUserinfo} from './redux/userInfo';
 import {actionTypesTournamentinfo, defaultStateTournamentinfo} from './redux/tournamentInfo';
 import {actionTypesTournamentlist, defaultStateTournamentlist} from './redux/tournamentList';
 import {deleteRequest, getRequest, patchRequest, postRequest, putRequest} from './redux/backendApi';
+import {
+    actionTypesTournamentStatistics,
+    defaultStateTournamentStatistics,
+    transformTournamentInfoToStatistics, transformTournamentStatsToStatistics
+} from './redux/tournamentStatistics';
 
 
 function storeOptionalToken(response) {
@@ -319,16 +324,64 @@ const reducerTournamentlist = (state = defaultStateTournamentlist, action) => {
     }
 };
 
+const reducerTournamentStatistics = (state = defaultStateTournamentStatistics, action) => {
+    switch (action.type) {
+    case actionTypesTournamentStatistics.REQUEST_TOURNAMENT_STATISTICS:
+        getRequest(action.state, '/tournaments/' + action.parameters.code).then(resp => {
+            storeOptionalToken(resp);
+            __store.dispatch({
+                type: actionTypesTournamentStatistics.INT_REQUEST_TOURNAMENT_STATISTICS,
+                state: action.state,
+                parameters: {
+                    code: action.parameters.code,
+                    tournamentInfo: transformTournamentInfoToStatistics(resp.data),
+                    successCallback: action.parameters.successCallback,
+                    errorCallback: action.parameters.errorCallback
+                }
+            });
+        }).catch(error => {
+            if (error.response) {
+                storeOptionalToken(error.response);
+            }
+            action.parameters.errorCallback();
+        });
+        return state;
+    case actionTypesTournamentStatistics.INT_REQUEST_TOURNAMENT_STATISTICS:
+        getRequest(action.state, '/tournaments/' + action.parameters.code + '/statistics').then(resp => {
+            storeOptionalToken(resp);
+            __store.dispatch({
+                type: actionTypesTournamentStatistics.REQUEST_TOURNAMENT_STATISTICS_SUCCESS,
+                parameters: {
+                    tournamentStatistics: transformTournamentStatsToStatistics(resp.data),
+                    successCallback: action.parameters.successCallback
+                }
+            });
+        }).catch(error => {
+            if (error.response) {
+                storeOptionalToken(error.response);
+            }
+            action.parameters.errorCallback();
+        });
+        return Object.assign({}, state, action.parameters.tournamentInfo);
+    case actionTypesTournamentStatistics.REQUEST_TOURNAMENT_STATISTICS_SUCCESS:
+        action.parameters.successCallback();
+        return Object.assign({}, state, action.parameters.tournamentStatistics);
+    default: return state;
+    }
+};
+
 const reducers = {
     userinfo: reducerUserinfo,
     tournamentinfo: reducerTournamentinfo,
-    tournamentlist: reducerTournamentlist
+    tournamentlist: reducerTournamentlist,
+    tournamentStatistics: reducerTournamentStatistics
 };
 
 const defaultApplicationState = {
     userinfo: defaultStateUserinfo,
     tournamentinfo: defaultStateTournamentinfo,
-    tournamentlist: defaultStateTournamentlist
+    tournamentlist: defaultStateTournamentlist,
+    tournamentStatistics: defaultStateTournamentStatistics
 };
 
 let __store;
@@ -499,6 +552,18 @@ export function requestTournamentList(type, successCallback, errorCallback) {
     });
 }
 
+export function requestTournamentStatistics(code, successCallback, errorCallback) {
+    __store.dispatch({
+        type: actionTypesTournamentStatistics.REQUEST_TOURNAMENT_STATISTICS,
+        parameters: {
+            code: code,
+            successCallback: successCallback,
+            errorCallback: errorCallback
+        },
+        state: __store.getState()
+    });
+}
+
 function rehydrateApplicationState() {
     const persistedState = localStorage.getItem('reduxState') ?
         JSON.parse(localStorage.getItem('reduxState')) :
@@ -516,6 +581,10 @@ function rehydrateApplicationState() {
         __store.dispatch({
             type: actionTypesTournamentlist.REHYDRATE,
             parameters: Object.assign({}, persistedState.tournamentlist)
+        });
+        __store.dispatch({
+            type: actionTypesTournamentStatistics.REHYDRATE,
+            parameters: Object.assign({}, persistedState.tournamentstatistics)
         });
     }
     applicationHydrated = true;
