@@ -30,7 +30,7 @@ export function transformTournamentInfoToStatistics(data) {
         description: data.description,
         id: data.id,
         name: data.name,
-        owner_username: data.owner_username,
+        ownerUsername: data.owner_username,
         isPublic: data.public
     };
 }

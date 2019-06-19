@@ -1,19 +1,16 @@
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
-import {
-    Col,
-    Container,
-    Row
-} from 'reactstrap';
+import {Col, Container, Row} from 'reactstrap';
 
 import {TurniereNavigation} from '../js/components/Navigation';
-import {TournamentInformationView} from '../js/components/TournamentInformationView';
-import {BigImage} from '../js/components/BigImage';
 import {StandingsTable} from '../js/components/StandingsTable';
 import {DominanceShower} from '../js/components/DominanceShower';
 import {Footer} from '../js/components/Footer';
 import {requestTournamentStatistics} from '../js/api';
+import {EditButton, TournamentStatusBar, TournamentStatusBarButton} from '../js/components/TournamentStatusBar';
+import Navbar from 'react-bootstrap/Navbar';
+import {TournamentBigImage} from '../js/components/TournamentBigImage';
 
 class StatisticsTournamentPage extends React.Component {
     static async getInitialProps({query}) {
@@ -33,9 +30,19 @@ class StatisticsTournamentPage extends React.Component {
                     <title>{tournamentStatistics.name}: turnie.re</title>
                 </Head>
                 <TurniereNavigation/>
-                <BigImage text={tournamentStatistics.name}/>
+                <TournamentBigImage {...tournamentStatistics}/>
+                <TournamentStatusBar>
+                    <Navbar.Brand>
+                        {tournamentStatistics.name}
+                        <EditButton tournamentId={tournamentStatistics.id}
+                            isOwner={this.props.username === tournamentStatistics.ownerUsername}
+                            isSignedIn={this.props.isSignedIn}/>
+                        <TournamentStatusBarButton href={'/t/' + tournamentStatistics.id}>
+                            zurück zum Turnier
+                        </TournamentStatusBarButton>
+                    </Navbar.Brand>
+                </TournamentStatusBar>
                 <div className='pb-5'>
-                    <TournamentInformationView tournament={tournamentStatistics} currentpage='statistics'/>
                     <StatisticsView tournamentStatistics={tournamentStatistics} />
                 </div>
                 <Footer/>
@@ -72,7 +79,8 @@ function StatisticsView(props) {
 
 function mapTournamentStatisticsToProps(state) {
     const {tournamentStatistics} = state;
-    return {tournamentStatistics};
+    const {isSignedIn, username} = state.userinfo;
+    return {tournamentStatistics, isSignedIn, username};
 }
 
 export default connect(
