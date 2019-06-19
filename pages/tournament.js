@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
-import {Container, ListGroup, ListGroupItem} from 'reactstrap';
 import Navbar from 'react-bootstrap/Navbar';
 
 
@@ -16,6 +15,8 @@ import '../static/css/tournament.css';
 import {getTournament} from '../js/redux/tournamentApi';
 import {PlayoffStages} from '../js/components/PlayoffStages';
 import GroupStage from '../js/components/GroupStage';
+import {TournamentBigImage} from '../js/components/TournamentBigImage';
+import {EditButton, TournamentStatusBar, TournamentStatusBarButton} from '../js/components/TournamentStatusBar';
 
 class PrivateTournamentPage extends React.Component {
     render() {
@@ -38,36 +39,21 @@ class PrivateTournamentPage extends React.Component {
 }
 
 function StatusBar(props) {
-    return (<Navbar sticky='top' bg='light' className='border-bottom border-top'>
-        <Container className='px-3'>
-            <Navbar.Brand>
-                {props.tournament.name}
-                <EditButton id={props.id} isOwner={props.isOwner} isSignedIn={props.isSignedIn}/>
-            </Navbar.Brand>
-        </Container>
-    </Navbar>);
+    return (<TournamentStatusBar>
+        <Navbar.Brand>
+            {props.tournament.name}
+            <EditButton tournamentId={props.tournament.id} isOwner={props.isOwner} isSignedIn={props.isSignedIn}/>
+            <StatisticsButton tournamentId={props.tournament.id}/>
+        </Navbar.Brand>
+    </TournamentStatusBar>);
 }
 
-
-function TournamentBigImage(props) {
-    return (<div className="big-image mb-0">
-        <h1 className="display-1">{props.name}</h1>
-        <Container>
-            <TournamentProperties {...props}/>
-        </Container>
-    </div>);
+function StatisticsButton(props) {
+    return (<TournamentStatusBarButton href={'/t/' + props.tournamentId + '/statistics'}>
+        Statistiken
+    </TournamentStatusBarButton>);
 }
 
-function TournamentProperties(props) {
-    return (<ListGroup className='text-dark text-left shadow'>
-        {props.description && <ListGroupItem>{props.description}</ListGroupItem>}
-        <ListGroupItem>
-            {props.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
-        </ListGroupItem>
-        <ListGroupItem>Turnier-Code: <b>{props.code}</b></ListGroupItem>
-        <ListGroupItem>von <b>{props.ownerUsername}</b></ListGroupItem>
-    </ListGroup>);
-}
 
 function mapStateToTournamentPageProperties(state) {
     const {isSignedIn, username} = state.userinfo;
@@ -75,18 +61,6 @@ function mapStateToTournamentPageProperties(state) {
 }
 
 const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTournamentPage);
-
-function EditButton(props) {
-    const {id, isOwner, isSignedIn} = props;
-
-    if (isSignedIn && isOwner) {
-        return (<a href={'/t/' + id + '/edit'} className='ml-3 btn btn-outline-secondary default-font-family'>
-            Turnier bearbeiten
-        </a>);
-    } else {
-        return null;
-    }
-}
 
 class Main extends React.Component {
     static async getInitialProps({query}) {

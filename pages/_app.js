@@ -15,8 +15,8 @@ class TurniereApp extends App {
     render() {
         const {Component, pageProps, reduxStore} = this.props;
         return (<Container>
-            <Notifications/>
-            <Favicon url="../static/icons/favicon.ico"/>
+            <Notifications />
+            <Favicon url="/static/icons/favicon.ico"/>
             <Provider store={reduxStore}>
                 <Component {...pageProps} />
             </Provider>
