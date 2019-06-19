@@ -3,7 +3,7 @@ import {Match} from './Match';
 import React from 'react';
 
 export function Stage(props) {
-    const {isSignedIn, isOwner} = props;
+    const {isSignedIn, isOwner, updateNextStage} = props;
 
     return (<div>
         <Container className='py-5'>
@@ -11,7 +11,7 @@ export function Stage(props) {
             <Row>
                 {props.matches.map((match => (
                     <Col className='minw-25' key={match.id}><Match match={match} isSignedIn={isSignedIn}
-                        isOwner={isOwner}/></Col>)))}
+                        isOwner={isOwner} onFinish={updateNextStage}/></Col>)))}
             </Row>
         </Container>
     </div>);

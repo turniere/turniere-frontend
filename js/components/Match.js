@@ -58,6 +58,7 @@ export class Match extends React.Component {
         updatedMatch.winnerTeamId = winner === null ? null : winner.id;
         this.setState({match: updatedMatch});
         this.toggleModal();
+        this.props.onFinish !== undefined && this.props.onFinish();
     }
 
     onEndMatchError() {
