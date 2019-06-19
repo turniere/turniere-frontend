@@ -50,6 +50,7 @@ const reducerUserinfo = (state = defaultStateUserinfo, action) => {
             __store.dispatch({
                 type: actionTypesUserinfo.REGISTER_RESULT_SUCCESS
             });
+            action.parameters.successCallback();
             storeOptionalToken(resp);
         }).catch(error => {
             if (error.response) {
@@ -70,6 +71,7 @@ const reducerUserinfo = (state = defaultStateUserinfo, action) => {
                     }
                 });
             }
+            action.parameters.errorCallback();
         });
         return Object.assign({}, state, {});
     case actionTypesUserinfo.REGISTER_RESULT_SUCCESS:
@@ -182,7 +184,7 @@ const reducerTournamentinfo = (state = defaultStateTournamentinfo, action) => {
     case actionTypesTournamentinfo.CREATE_TOURNAMENT:
         postRequest(action.state, '/tournaments', action.parameters.tournament).then(resp => {
             storeOptionalToken(resp);
-            action.parameters.successCallback();
+            action.parameters.successCallback(resp.data);
         }).catch(error => {
             if (error.response) {
                 storeOptionalToken(error.response);
@@ -357,13 +359,15 @@ export function verifyCredentials() {
     }
 }
 
-export function register(username, email, password) {
+export function register(username, email, password, successCallback, errorCallback) {
     __store.dispatch({
         type: actionTypesUserinfo.REGISTER,
         parameters: {
             username: username,
             email: email,
-            password: password
+            password: password,
+            successCallback: successCallback,
+            errorCallback: errorCallback
         },
         state: __store.getState()
     });

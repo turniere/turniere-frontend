@@ -21,6 +21,7 @@ import {Footer} from '../js/components/Footer';
 import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
 import {WarningPopup} from '../js/components/WarningPopup';
+import Router from 'next/router';
 
 import '../static/css/everypage.css';
 import RequireLogin from '../js/components/RequireLogin';
@@ -216,8 +217,8 @@ class CreateTournamentForm extends React.Component {
 
     create() {
         if (this.valuesAreCredible()) {
-            createTournament(this.generateTournamentCreationObject(), () => {
-                notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
+            createTournament(this.generateTournamentCreationObject(), data => {
+                Router.push('/t/' + data.id);
             }, () => {
                 notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
             });
