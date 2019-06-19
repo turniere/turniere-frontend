@@ -1,37 +1,72 @@
 import Head from 'next/head';
 import React from 'react';
 import {connect} from 'react-redux';
-import {Col, Container, Row} from 'reactstrap';
+import {Container, ListGroup, ListGroupItem} from 'reactstrap';
+import Navbar from 'react-bootstrap/Navbar';
+
 
 import {ErrorPageComponent} from '../js/components/ErrorComponents';
 import {Footer} from '../js/components/Footer';
 import {TurniereNavigation} from '../js/components/Navigation';
-import {BigImage} from '../js/components/BigImage';
-import {TournamentInformationView} from '../js/components/TournamentInformationView';
-import {getState} from '../js/api';
-import {getRequest} from '../js/redux/backendApi';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../static/css/everypage.css';
 import '../static/css/tournament.css';
-import {Match} from '../js/components/Match';
+import {getTournament} from '../js/redux/tournamentApi';
+import {PlayoffStages} from '../js/components/PlayoffStages';
+import GroupStage from '../js/components/GroupStage';
 
 class PrivateTournamentPage extends React.Component {
     render() {
-        const {ownerUsername, playoffStages} = this.props.tournament;
+        const {ownerUsername, playoffStages, groupStage} = this.props.tournament;
         const {isSignedIn, username} = this.props;
+        const isOwner = username === ownerUsername;
 
-        // TODO: Change href-prop of the anchor tag to contain the tournament code
         return (<div className='pb-5'>
-            <TournamentInformationView tournament={this.props.tournament} currentpage='tournament'/>
-            <div className='stages pt-5'>
-                {playoffStages.map(stage => <Stage isSignedIn={isSignedIn} isOwner={username === ownerUsername}
-                    level={getLevelName(stage.level)} matches={stage.matches}
-                    key={stage.level}/>)}
+            <TournamentBigImage {...this.props.tournament}/>
+            <StatusBar tournament={this.props.tournament} isOwner={isOwner} isSignedIn={isSignedIn}/>
+            <div className='stages'>
+                {groupStage != null &&
+                <div><GroupStage groups={groupStage.groups} isSignedIn={isSignedIn} isOwner={isOwner}
+                    showMatches={playoffStages !== null}/></div>}
+                <PlayoffStages playoffStages={playoffStages} isSignedIn={isSignedIn}
+                    isOwner={isOwner}/>
             </div>
         </div>);
     }
+}
+
+function StatusBar(props) {
+    return (<Navbar sticky='top' bg='light' className='border-bottom border-top'>
+        <Container className='px-3'>
+            <Navbar.Brand>
+                {props.tournament.name}
+                <EditButton id={props.id} isOwner={props.isOwner} isSignedIn={props.isSignedIn}/>
+            </Navbar.Brand>
+        </Container>
+    </Navbar>);
+}
+
+
+function TournamentBigImage(props) {
+    return (<div className="big-image mb-0">
+        <h1 className="display-1">{props.name}</h1>
+        <Container>
+            <TournamentProperties {...props}/>
+        </Container>
+    </div>);
+}
+
+function TournamentProperties(props) {
+    return (<ListGroup className='text-dark text-left shadow'>
+        {props.description && <ListGroupItem>{props.description}</ListGroupItem>}
+        <ListGroupItem>
+            {props.isPublic ? 'Das Turnier ist öffentlich.' : 'Das Turnier ist privat.'}
+        </ListGroupItem>
+        <ListGroupItem>Turnier-Code: <b>{props.code}</b></ListGroupItem>
+        <ListGroupItem>von <b>{props.ownerUsername}</b></ListGroupItem>
+    </ListGroup>);
 }
 
 function mapStateToTournamentPageProperties(state) {
@@ -41,106 +76,16 @@ function mapStateToTournamentPageProperties(state) {
 
 const TournamentPage = connect(mapStateToTournamentPageProperties)(PrivateTournamentPage);
 
-function getLevelName(levelNumber) {
-    const names = ['Finale', 'Halbfinale', 'Viertelfinale', 'Achtelfinale'];
-    if (levelNumber < names.length) {
-        return names[levelNumber];
+function EditButton(props) {
+    const {id, isOwner, isSignedIn} = props;
+
+    if (isSignedIn && isOwner) {
+        return (<a href={'/t/' + id + '/edit'} className='ml-3 btn btn-outline-secondary default-font-family'>
+            Turnier bearbeiten
+        </a>);
     } else {
-        return Math.pow(2, levelNumber) + 'tel-Finale';
+        return null;
     }
-}
-
-function Stage(props) {
-    const {isSignedIn, isOwner} = props;
-
-    return (<div>
-        <Container className='py-5'>
-            <h1 className='custom-font'>{props.level}</h1>
-            <Row>
-                {props.matches.map((match => (
-                    <Col className='minw-25' key={match.id}><Match match={match} isSignedIn={isSignedIn}
-                        isOwner={isOwner}/></Col>)))}
-            </Row>
-        </Container>
-    </div>);
-}
-
-function convertTournament(apiTournament) {
-    let groupStage = null;
-    const playoffStages = [];
-    for (const stage of apiTournament.stages) {
-        if (stage.groups.length > 0) {
-            // group stage
-            groupStage = {groups: stage.groups.map(group => convertGroup(group))};
-        } else {
-            // playoff stage
-            playoffStages.push({
-                id: stage.id, level: stage.level, matches: stage.matches.map(match => convertMatch(match))
-            });
-        }
-    }
-    return {
-        id: apiTournament.id,
-        code: apiTournament.code,
-        description: apiTournament.description,
-        name: apiTournament.name,
-        isPublic: apiTournament.public,
-        ownerUsername: apiTournament.owner_username,
-        groupStage: groupStage,
-        playoffStages: playoffStages
-    };
-}
-
-function convertGroup(apiGroup) {
-    return {
-        id: apiGroup.id,
-        number: apiGroup.number,
-        scores: apiGroup.group_scores,
-        matches: apiGroup.matches.map(match => convertMatch(match))
-    };
-}
-
-function convertMatch(apiMatch) {
-    const result = {
-        id: apiMatch.id, state: apiMatch.state, winnerTeamId: apiMatch.winner === null ? null : apiMatch.winner.id
-    };
-
-    if (apiMatch.match_scores.length === 2) {
-        result.team1 = {
-            name: apiMatch.match_scores[0].team.name,
-            id: apiMatch.match_scores[0].team.id,
-            score: apiMatch.match_scores[0].points
-        };
-        result.team2 = {
-            name: apiMatch.match_scores[1].team.name,
-            id: apiMatch.match_scores[1].team.id,
-            score: apiMatch.match_scores[1].points
-        };
-    } else if (apiMatch.match_scores.length === 1) {
-        result.team1 = {
-            name: apiMatch.match_scores[0].team.name,
-            id: apiMatch.match_scores[0].team.id,
-            score: apiMatch.match_scores[0].points
-        };
-        result.team2 = {
-            name: 'TBD',
-            id: null,
-            score: 0
-        };
-    } else {
-        result.team1 = {
-            name: 'TBD',
-            id: null,
-            score: 0
-        };
-        result.team2 = {
-            name: 'TBD',
-            id: null,
-            score: 0
-        };
-    }
-
-    return result;
 }
 
 class Main extends React.Component {
@@ -154,22 +99,24 @@ class Main extends React.Component {
         this.state = {
             tournament: null
         };
+        this.onTournamentRequestSuccess = this.onTournamentRequestSuccess.bind(this);
+        this.onTournamentRequestError = this.onTournamentRequestError.bind(this);
     }
 
     componentDidMount() {
-        const code = this.props.query.code;
+        getTournament(this.props.query.code, this.onTournamentRequestSuccess, this.onTournamentRequestError);
+    }
 
-        getRequest(getState(), '/tournaments/' + code)
-            .then(response => {
-                this.setState({status: response.status, tournament: convertTournament(response.data)});
-            })
-            .catch(err => {
-                if (err.response) {
-                    this.setState({status: err.response.status});
-                } else {
-                    this.setState({status: -1});
-                }
-            });
+    onTournamentRequestSuccess(requestStatus, tournament) {
+        this.setState({status: requestStatus, tournament: tournament});
+    }
+
+    onTournamentRequestError(error) {
+        if (error.response) {
+            this.setState({status: error.response.status});
+        } else {
+            this.setState({status: -1});
+        }
     }
 
 
@@ -184,7 +131,6 @@ class Main extends React.Component {
                     <title>{tournamentName}: turnie.re</title>
                 </Head>
                 <TurniereNavigation/>
-                <BigImage text={tournamentName}/>
                 <TournamentPage tournament={tournament}/>
                 <Footer/>
             </div>);

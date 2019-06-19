@@ -2,51 +2,45 @@ import Head from 'next/head';
 import React from 'react';
 import {notify} from 'react-notify-toast';
 import {connect} from 'react-redux';
-import posed from 'react-pose';
-
 import {
-    Button, Card, CardBody, Container, CustomInput, Form, FormGroup, Input, Label
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Collapse,
+    Container,
+    CustomInput,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    Row
 } from 'reactstrap';
-
 import {TurniereNavigation} from '../js/components/Navigation';
 import {Footer} from '../js/components/Footer';
-import {UserRestrictor, Option} from '../js/components/UserRestrictor';
-import {Login} from '../js/components/Login';
 import EditableStringList from '../js/components/EditableStringList';
 import {createTournament} from '../js/api';
+import {WarningPopup} from '../js/components/WarningPopup';
+import Router from 'next/router';
 
 import '../static/css/everypage.css';
+import RequireLogin from '../js/components/RequireLogin';
+import NumericInput from '../js/components/NumericInput';
 
 class CreatePage extends React.Component {
     render() {
-        const {isSignedIn} = this.props;
-
-        return (<UserRestrictor>
-            <Option condition={isSignedIn}>
-                <div className="main generic-fullpage-bg">
-                    <Head>
-                        <title>Turnier erstellen: turnie.re</title>
-                    </Head>
-                    <TurniereNavigation/>
-                    <div>
-                        <CreateTournamentCard/>
-                    </div>
-                    <Footer/>
+        return (<RequireLogin loginMessage='Sie müssen angemeldet sein, um ein neues Turnier zu erstellen.'>
+            <div className="main generic-fullpage-bg">
+                <Head>
+                    <title>Turnier erstellen: turnie.re</title>
+                </Head>
+                <TurniereNavigation/>
+                <div>
+                    <CreateTournamentCard/>
                 </div>
-            </Option>
-            <Option condition={true}>
-                <div className="main generic-fullpage-bg">
-                    <Head>
-                        <title>Anmeldung</title>
-                    </Head>
-                    <TurniereNavigation/>
-                    <div>
-                        <Login hint="Sie müssen angemeldet sein, um diesen Inhalt anzuzeigen!"/>
-                    </div>
-                    <Footer/>
-                </div>
-            </Option>
-        </UserRestrictor>);
+                <Footer/>
+            </div>
+        </RequireLogin>);
     }
 }
 
@@ -68,14 +62,6 @@ function CreateTournamentCard() {
     </Container>);
 }
 
-const GroupphaseFader = posed.div({
-    visible: {
-        opacity: 1, height: 150
-    }, hidden: {
-        opacity: 0, height: 0
-    }
-});
-
 class CreateTournamentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -93,8 +79,12 @@ class CreateTournamentForm extends React.Component {
         this.handleNameInput = this.handleNameInput.bind(this);
         this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
         this.handlePublicInput = this.handlePublicInput.bind(this);
-        this.handleGroupSizeInput = this.handleGroupSizeInput.bind(this);
-        this.handleGroupAdvanceInput = this.handleGroupAdvanceInput.bind(this);
+        this.increaseGroupAdvance = this.increaseGroupAdvance.bind(this);
+        this.decreaseGroupAdvance = this.decreaseGroupAdvance.bind(this);
+        this.increaseGroupSize = this.increaseGroupSize.bind(this);
+        this.decreaseGroupSize = this.decreaseGroupSize.bind(this);
+        this.generateTournamentCreationObject = this.generateTournamentCreationObject.bind(this);
+        this.valuesAreCredible = this.valuesAreCredible.bind(this);
 
         this.create = this.create.bind(this);
     }
@@ -121,20 +111,34 @@ class CreateTournamentForm extends React.Component {
                         checked={this.state.groupPhaseEnabled}
                         onChange={this.handleGroupPhaseEnabledInput}/>
                 </FormGroup>
-                <GroupphaseFader pose={this.state.groupPhaseEnabled ? 'visible' : 'hidden'}
-                    className="groupphasefader">
+                <Collapse isOpen={this.state.groupPhaseEnabled}>
                     <FormGroup>
                         <Label for="teams-per-group">Anzahl Teams pro Gruppe</Label>
-                        <Input type="number" name="teams-per-group" min="3"
-                            value={this.state.groupSize} onChange={this.handleGroupSizeInput}/>
+                        <Row>
+                            <Col xs="3">
+                                <NumericInput value={this.state.groupSize}
+                                    incrementText="+1" incrementCallback={this.increaseGroupSize}
+                                    decrementText="-1" decrementCallback={this.decreaseGroupSize}/>
+                            </Col>
+                        </Row>
+                        <WarningPopup text='Es gibt noch unvollständige Gruppen.' shown={this.areGroupsIncomplete()}/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="teams-group-to-playoff">Wie viele Teams sollen nach der Gruppenphase
-                                weiterkommen?</Label>
-                        <Input type="number" name="teams-group-to-playoff" min="1" max={this.state.groupSize - 1}
-                            value={this.state.groupAdvance} onChange={this.handleGroupAdvanceInput}/>
+                            weiterkommen?</Label>
+                        <Row>
+                            <Col xs="3">
+                                <NumericInput value={this.state.groupAdvance}
+                                    incrementText="&#215;2" incrementCallback={this.increaseGroupAdvance}
+                                    decrementText="&#247;2" decrementCallback={this.decreaseGroupAdvance}/>
+                            </Col>
+                        </Row>
+                        <WarningPopup
+                            text={'Füge bitte noch ' + (this.state.groupAdvance - this.state.teams.length)
+                            + ' Team(s) hinzu, um ' + this.state.groupAdvance + ' Team(s) im Playoff zu haben.'}
+                            shown={this.state.teams.length < this.state.groupAdvance}/>
                     </FormGroup>
-                </GroupphaseFader>
+                </Collapse>
             </Form>
             <h3 className="custom-font mt-4">Teams</h3>
             <EditableStringList
@@ -153,6 +157,10 @@ class CreateTournamentForm extends React.Component {
         </div>);
     }
 
+    areGroupsIncomplete() {
+        return this.state.groups.filter(group => group.length !== this.state.groupSize).length !== 0;
+    }
+
     teamListUpdate(list) {
         this.setState({teams: list});
     }
@@ -161,31 +169,34 @@ class CreateTournamentForm extends React.Component {
         this.setState({groups: list});
     }
 
-    handleGroupSizeInput(input) {
-        const newSize = input.target.value;
+    increaseGroupAdvance() {
+        const newGroupAdvance = this.state.groupAdvance * 2;
 
-        if (newSize === undefined || newSize < 2) {
-            return;
-        }
+        this.setState({
+            groupAdvance: newGroupAdvance
+        });
+    }
 
-        if (newSize <= this.state.groupAdvance) {
+    decreaseGroupAdvance() {
+        const newGroupAdvance = Math.floor(this.state.groupAdvance / 2);
+
+        if (newGroupAdvance >= 1) {
             this.setState({
-                groupSize: newSize, groupAdvance: newSize - 1
+                groupAdvance: newGroupAdvance
             });
-        } else {
-            this.setState({groupSize: newSize});
         }
     }
 
-    handleGroupAdvanceInput(input) {
-        const newAdvance = input.target.value;
+    increaseGroupSize() {
+        this.setState({groupSize: this.state.groupSize + 1});
+    }
 
-        if (newAdvance === undefined || newAdvance <= 0 ||
-            newAdvance >= this.state.groupSize) {
-            return;
+    decreaseGroupSize() {
+        const newGroupSize = this.state.groupSize - 1;
+
+        if (newGroupSize >= 3) {
+            this.setState({groupSize: newGroupSize});
         }
-
-        this.setState({groupAdvance: newAdvance});
     }
 
     handleGroupPhaseEnabledInput(input) {
@@ -205,17 +216,35 @@ class CreateTournamentForm extends React.Component {
     }
 
     create() {
-        createTournament({
+        if (this.valuesAreCredible()) {
+            createTournament(this.generateTournamentCreationObject(), data => {
+                Router.push('/t/' + data.id);
+            }, () => {
+                notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
+            });
+        } else {
+            notify.show('Bitte korrigiere deine Eingaben zuerst.', 'warning', 5000);
+        }
+    }
+
+    valuesAreCredible() {
+        return this.state.teams.length >= this.state.groupAdvance && !this.areGroupsIncomplete();
+    }
+
+    generateTournamentCreationObject() {
+        const tournament = {
             'name': this.state.name,
             'description': this.state.description,
             'public': this.state.public,
             'group_stage': this.state.groupPhaseEnabled,
             'teams': createTeamArray(this.state.groupPhaseEnabled, this.state.groups, this.state.teams)
-        }, () => {
-            notify.show('Das Turnier wurde erfolgreich erstellt.', 'success', 5000);
-        }, () => {
-            notify.show('Das Turnier konnte nicht erstellt werden.', 'warning', 5000);
-        });
+        };
+
+        if (this.state.groupPhaseEnabled) {
+            tournament.playoff_teams_amount = this.state.groupAdvance;
+        }
+
+        return tournament;
     }
 }
 
