@@ -72,3 +72,19 @@ footer {
     background-size: cover;
     min-height: 100vh;
 }
+
+.loading-logo {
+    animation: blink .8s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0% {
+        filter: grayscale(100%);
+    }
+    70% {
+        filter: grayscale(0%);
+    }
+    100% {
+        filter: grayscale(100%);
+    }
+}
