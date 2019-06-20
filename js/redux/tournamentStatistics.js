@@ -16,6 +16,7 @@ export const defaultStateTournamentStatistics = {
     owner_username: '',
     isPublic: '',
 
+    loaded: false,
     statistics_available: false,
 
     most_dominant_team: {},

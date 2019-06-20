@@ -344,6 +344,7 @@ const reducerTournamentStatistics = (state = defaultStateTournamentStatistics, a
                 storeOptionalToken(error.response);
             }
             action.parameters.errorCallback();
+            return Object.assign({}, state, {loaded: true});
         });
         return state;
     case actionTypesTournamentStatistics.INT_REQUEST_TOURNAMENT_STATISTICS:
@@ -361,11 +362,12 @@ const reducerTournamentStatistics = (state = defaultStateTournamentStatistics, a
                 storeOptionalToken(error.response);
             }
             action.parameters.errorCallback();
+            return Object.assign({}, state, {loaded: true});
         });
-        return Object.assign({}, state, action.parameters.tournamentInfo);
+        return Object.assign({}, state, action.parameters.tournamentInfo, {loaded: true});
     case actionTypesTournamentStatistics.REQUEST_TOURNAMENT_STATISTICS_SUCCESS:
         action.parameters.successCallback();
-        return Object.assign({}, state, action.parameters.tournamentStatistics);
+        return Object.assign({}, state, action.parameters.tournamentStatistics, {loaded: true});
     default: return state;
     }
 };
