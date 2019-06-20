@@ -12,11 +12,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../static/css/everypage.css';
 import '../static/css/tournament.css';
-import {getTournament} from '../js/redux/tournamentApi';
 import {PlayoffStages} from '../js/components/PlayoffStages';
 import GroupStage from '../js/components/GroupStage';
 import {TournamentBigImage} from '../js/components/TournamentBigImage';
 import {EditButton, TournamentStatusBar, TournamentStatusBarButton} from '../js/components/TournamentStatusBar';
+import {LoadingPage} from '../js/components/LoadingPage';
+import {getTournament} from '../js/redux/tournamentApi';
 
 class PrivateTournamentPage extends React.Component {
     render() {
@@ -71,7 +72,8 @@ class Main extends React.Component {
         super(props);
 
         this.state = {
-            tournament: null
+            tournament: null,
+            loaded: false
         };
         this.onTournamentRequestSuccess = this.onTournamentRequestSuccess.bind(this);
         this.onTournamentRequestError = this.onTournamentRequestError.bind(this);
@@ -82,14 +84,14 @@ class Main extends React.Component {
     }
 
     onTournamentRequestSuccess(requestStatus, tournament) {
-        this.setState({status: requestStatus, tournament: tournament});
+        this.setState({status: requestStatus, tournament: tournament, loaded: true});
     }
 
     onTournamentRequestError(error) {
         if (error.response) {
-            this.setState({status: error.response.status});
+            this.setState({status: error.response.status, loaded: true});
         } else {
-            this.setState({status: -1});
+            this.setState({status: -1, loaded: true});
         }
     }
 
@@ -109,6 +111,9 @@ class Main extends React.Component {
                 <Footer/>
             </div>);
         } else {
+            if (!this.state.loaded) {
+                return <LoadingPage title='turnie.re' text='Turnier wird geladen...'/>;
+            }
             return <ErrorPageComponent code={status}/>;
         }
     }
