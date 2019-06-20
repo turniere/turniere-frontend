@@ -19,6 +19,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../static/css/everypage.css';
 import '../static/css/index.css';
+import {LoadingPage} from '../js/components/LoadingPage';
 
 class EditTournamentPage extends React.Component {
     static async getInitialProps({query}) {
@@ -29,25 +30,30 @@ class EditTournamentPage extends React.Component {
         super(props);
 
         this.state = {
-            validCode: false
+            validCode: false,
+            loaded: false
         };
     }
 
     componentDidMount() {
         requestTournament(this.props.query.code, () => {
-            this.setState({validCode: true});
+            this.setState({validCode: true, loaded: true});
 
             if (this._edittournamentcontent != null) {
                 this._edittournamentcontent.notifyOfContentUpdate();
             }
         }, () => {
-            this.setState({validCode: false});
+            this.setState({validCode: false, loaded: true});
         });
     }
 
     render() {
-        const {validCode} = this.state;
+        const {validCode, loaded} = this.state;
         const {tournamentname, ownerUsername, isSignedIn, username} = this.props;
+
+        if (!loaded) {
+            return <LoadingPage title='turnie.re' text='Turnier-Einstellungen werden geladen...'/>;
+        }
 
         return (<UserRestrictor>
             <Option condition={validCode && isSignedIn && ownerUsername === username}>
