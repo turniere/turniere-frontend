@@ -11,19 +11,36 @@ spec:
     port: 80
     targetPort: 80
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
-  name: frontend-ingress
+  name: frontend-ingress-http
   namespace: turniere-frontend
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
-  rules:
-  - host: frontend01.turnie.re
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: frontend-service
-          servicePort: http
+  entryPoints:
+    - http
+  routes:
+    - match: Host(`frontend01.turnie.re`)
+      kind: Rule
+      services:
+        - name: frontend-service
+          port: 80
+      middlewares:
+        - name: redirect
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frontend-ingress-https
+  namespace: turniere-frontend
+spec:
+  entryPoints:
+    - https
+  routes:
+    - match: Host(`frontend01.turnie.re`)
+      kind: Rule
+      services:
+        - name: frontend-service
+          port: 80
+  tls:
+    certResolver: default
