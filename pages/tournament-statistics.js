@@ -11,6 +11,7 @@ import {requestTournamentStatistics} from '../js/api';
 import {EditButton, TournamentStatusBar, TournamentStatusBarButton} from '../js/components/TournamentStatusBar';
 import Navbar from 'react-bootstrap/Navbar';
 import {TournamentBigImage} from '../js/components/TournamentBigImage';
+import {LoadingPage} from '../js/components/LoadingPage';
 
 class StatisticsTournamentPage extends React.Component {
     static async getInitialProps({query}) {
@@ -23,6 +24,10 @@ class StatisticsTournamentPage extends React.Component {
 
     render() {
         const {tournamentStatistics} = this.props;
+
+        if (!tournamentStatistics.loaded) {
+            return <LoadingPage title='turnie.re' text='Statistiken zum Turnier werden geladen...'/>;
+        }
 
         return (
             <div>
