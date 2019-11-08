@@ -20,7 +20,7 @@ spec:
   entryPoints:
     - http
   routes:
-    - match: Host(`frontend01.turnie.re`)
+    - match: Host(`frontend01.turnie.re`) || Host(`turnie.re`)
       kind: Rule
       services:
         - name: frontend-service
@@ -37,7 +37,7 @@ spec:
   entryPoints:
     - https
   routes:
-    - match: Host(`frontend01.turnie.re`)
+    - match: Host(`frontend01.turnie.re`) || Host(`turnie.re`)
       kind: Rule
       services:
         - name: frontend-service
