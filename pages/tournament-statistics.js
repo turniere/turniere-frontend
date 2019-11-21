@@ -45,6 +45,9 @@ class StatisticsTournamentPage extends React.Component {
                         <TournamentStatusBarButton href={'/t/' + tournamentStatistics.id}>
                             zurück zum Turnier
                         </TournamentStatusBarButton>
+                        <TournamentStatusBarButton href={'/t/' + tournamentStatistics.id + '/fullscreen'}>
+                            Turnier-Vollbild-Ansicht
+                        </TournamentStatusBarButton>
                     </Navbar.Brand>
                 </TournamentStatusBar>
                 <div className='pb-5'>
