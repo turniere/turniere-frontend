@@ -1,5 +1,5 @@
 ### STAGE 1: Build ###
-FROM node:8-alpine as build
+FROM node:10-alpine as build
 WORKDIR /srv
 COPY js /srv/js
 COPY pages /srv/pages
