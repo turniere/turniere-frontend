@@ -4,7 +4,7 @@ WORKDIR /srv
 COPY js /srv/js
 COPY pages /srv/pages
 COPY static /srv/static
-COPY next.config.js package.json package-lock.json server.js yarn.lock /srv/
+COPY next.config.js package.json yarn.lock server.js yarn.lock /srv/
 RUN yarn install
 RUN yarn build
 RUN yarn cache clean
