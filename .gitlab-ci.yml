@@ -18,7 +18,10 @@ kubernetes:
     - turniere-deploy
   stage: deploy
   only:
-    - master
+    refs:
+      - master
+    variables:
+      - $FORCE_DEPLOY
   image: ruby
   variables:
     KUBERNETES_SERVICE_ACCOUNT_OVERWRITE: gitlab-deploy
@@ -37,7 +40,10 @@ deploy_watchtower:
     - docker
   stage: deploy
   only:
-    - master
+    refs:
+      - master
+    variables:
+      - $FORCE_DEPLOY
   image: docker
   services:
     - docker:dind
